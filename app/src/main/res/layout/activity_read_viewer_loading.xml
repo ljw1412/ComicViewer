@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_chapters_loading"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ljw.comicviewer.ui.ReadViewerLoadingActivity"
+    android:background="@color/black">
+
+    <LinearLayout
+        android:id="@+id/load_fail"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/btn_refresh"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:src="@drawable/ico_refresh"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"/>
+        <TextView
+            android:text="@string/reader_data_load_fail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:textColor="@color/white" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/loading"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="visible">
+
+        <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+            android:id="@+id/progress_bar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:background="@color/circular_blue">
+
+        </com.gc.materialdesign.views.ProgressBarCircularIndeterminate>
+
+        <TextView
+            android:text="@string/reader_data_loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reader_loading_text"
+            android:gravity="center_vertical|center_horizontal"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <WebView
+        android:id="@+id/webview_in_loading"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_height="200dp">
+    </WebView>
+</RelativeLayout>

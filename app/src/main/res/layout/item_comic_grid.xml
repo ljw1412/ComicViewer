@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="125.4dp"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="153dp"
+        android:layout_gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:id="@+id/comic_status"
+            android:elevation="1dp"
+            android:layout_height="48dp" />
+
+        <ImageView
+            android:id="@+id/comic_img"
+            android:adjustViewBounds="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:background="@color/black_shadow"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom">
+
+            <TextView
+                android:text="更新情况"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/comic_updateStatus"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textSize="11sp"
+                android:layout_weight="1"
+                android:paddingLeft="3dp"
+                android:textColor="@android:color/background_light"
+                android:layout_gravity="left" />
+
+            <TextView
+                android:text="评分"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/comic_score"
+                android:layout_gravity="bottom"
+                android:textColor="@android:color/background_light"
+                android:gravity="right"
+                android:paddingRight="3dp"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/comic_name"
+        android:gravity="center"
+        android:text="漫画名"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@android:color/background_dark" />
+    <TextView
+        android:text="更新日期"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/comic_updateDate"
+        android:textAlignment="center"
+        android:layout_weight="1"
+        android:textColor="?attr/editTextColor"
+        android:textSize="12sp" />
+</LinearLayout>

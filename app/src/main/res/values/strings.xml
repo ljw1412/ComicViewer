@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">ComicViewer</string>
+    <string name="creator">100-A</string>
+    <string name="txt_comic">漫画</string>
+    <string name="txt_collection">收藏</string>
+    <string name="txt_mine">我的</string>
+    <string name="action_settings">设置</string>
+    <string name="title_activity_settings">设置</string>
+    <string name="title_activity_details">详细页</string>
+    <string name="details_to_read">阅读</string>
+    <string name="details_add_collection">收藏</string>
+    <string name="details_txt_chapters">漫画章节</string>
+    <string name="dialog_title_warming">警告</string>
+    <string name="dialog_content_warming">该漫画中有部份章节可能含有暴力、血腥、色情或不当的语言等内容，根据中国法律法规，我们将对其进行屏蔽。</string>
+    <string name="dialog_text_ok">我已满18周岁了</string>
+    <string name="dialog_text_cancel">算了</string>
+    <string name="chapter_type0">—单行本—</string>
+    <string name="chapter_type1">—单　话—</string>
+    <string name="chapter_type2">—番外篇—</string>
+    <string name="reader_data_loading">数据加载中…</string>
+    <string name="reader_data_load_fail">数据加载失败…</string>
+    <string name="reader_data_load_success">数据加载成功,\n等待图片加载。</string>
+    <string name="error_network_connections">网络连接异常，请检查网络状态。</string>
+</resources>

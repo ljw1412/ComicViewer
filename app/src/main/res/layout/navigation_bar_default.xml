@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_navibar"
+    android:layout_width="fill_parent"
+    android:layout_height="48dp">
+
+    <ImageView
+        android:gravity="center_vertical"
+        android:id="@+id/back"
+        android:paddingLeft="13.0dip"
+        android:paddingTop="8.0dip"
+        android:paddingRight="8.0dip"
+        android:paddingBottom="8.0dip"
+        android:clickable="true"
+        android:layout_height="fill_parent"
+        android:layout_centerVertical="true"
+        android:onClick="onBack"
+        android:layout_width="48.0dp"
+        android:elevation="1dp"
+        app:srcCompat="@drawable/img_back"
+        android:alpha="0.5" />
+
+    <TextView
+        android:id="@+id/title"
+        android:ellipsize="marquee"
+        android:gravity="center"
+        android:paddingLeft="48.0dip"
+        android:paddingRight="48.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:text="title"
+        android:textSize="18sp"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:textStyle="normal|bold" />
+
+</RelativeLayout>
