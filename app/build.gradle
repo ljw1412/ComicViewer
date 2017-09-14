@@ -55,4 +55,5 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     //Material Designer （进度条，界面控件）
     compile 'com.github.vajro:MaterialDesignLibrary:1.6'
+    compile project(':PullToRefresh')
 }

@@ -19,6 +19,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshGridView;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +47,7 @@ import ljw.comicviewer.http.ComicFetcher;
  */
 
 public class ComicGridFragment extends Fragment
-        implements OnRefreshListener, AbsListView.OnScrollListener, ComicService.RequestCallback  {
+        implements AbsListView.OnScrollListener, ComicService.RequestCallback  {
     private String TAG = ComicGridFragment.class.getSimpleName()+"----";
     private Context context;
     private PictureGridAdapter pictureGridAdapter;
@@ -54,16 +57,18 @@ public class ComicGridFragment extends Fragment
     private boolean isLoadingNext = false;
     // map设定：键为null未加载 0加载中 1加载完毕
     private Map<Integer,Integer> imageState = new HashMap<>();
-    @BindView(R.id.swipe_refresh_list)
-    SwipeRefreshLayout fileListSwipe;
-    @BindView(R.id.comic_info_view)
+//    @BindView(R.id.swipe_refresh_list)
+//    SwipeRefreshLayout fileListSwipe;
+    @BindView(R.id.comic_info_pull_refresh_grid)
+    PullToRefreshGridView pullToRefreshGridView;
+//    @BindView(R.id.comic_info_view)
     GridView gridView;
     @BindView(R.id.grid_net_error)
     TextView txt_netError;
-    @BindView(R.id.grid_tips)
-    TextView txt_tips;
-    @BindView(R.id.grid_tips_view)
-    RelativeLayout tips_view;
+//    @BindView(R.id.grid_tips)
+//    TextView txt_tips;
+//    @BindView(R.id.grid_tips_view)
+//    RelativeLayout tips_view;
     public ComicGridFragment() {
     }
 
@@ -78,30 +83,58 @@ public class ComicGridFragment extends Fragment
         View rootView = inflater.inflate(R.layout.fragment_comic_grid,null);
         ButterKnife.bind(this,rootView);
 
+        initPTRGridView(rootView);
+        initGridView();
+        myCache = context.getExternalCacheDir();
+
+        getListItems(1);
+        return rootView;
+    }
+
+    private void initPTRGridView(View view) {
+        // 得到下拉刷新的GridView
+        pullToRefreshGridView = (PullToRefreshGridView) view.findViewById(R.id.comic_info_pull_refresh_grid);
+        // 设置监听器，这个监听器是可以监听双向滑动的，这样可以触发不同的事件
+        pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
+//                Toast.makeText(context, "下拉", Toast.LENGTH_SHORT).show();
+                loadedPage = 1;
+                comicList.clear();
+                imageState.clear();
+                // 获取对象，重新获取当前目录对象
+                getListItems(loadedPage);
+                //2秒刷新事件
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pullToRefreshGridView.onRefreshComplete();
+                    }
+                }, 2000);
+            }
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
+//                Toast.makeText(context, "上拉", Toast.LENGTH_SHORT).show();
+                isLoadingNext = true;
+                getListItems(++loadedPage);
+                Log.d(TAG,"is last; currentLoadingPage = "+loadedPage);
+            }
+        });
+    }
+
+    private void initGridView() {
+        gridView = pullToRefreshGridView.getRefreshableView();
+
         //根据屏幕宽度设置列数
-        int columns = DisplayUtil.getGridNumColumns(context,120);
-        gridView.setNumColumns(columns);
+        gridView.setColumnWidth(GridView.AUTO_FIT);
+//        int columns = DisplayUtil.getGridNumColumns(context,120);
+//        gridView.setNumColumns(columns);
 
         pictureGridAdapter = new PictureGridAdapter(context,comicList);
         gridView.setAdapter(pictureGridAdapter);
         gridView.setOnScrollListener(this);
         gridView.setOnItemClickListener(new ItemClickListener());
-        myCache = context.getExternalCacheDir();
 
-        //(3) 下拉刷新
-        fileListSwipe.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        fileListSwipe.setOnRefreshListener(this);//增加刷新方法
-        getListItems(1);
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     //获得漫画列表对象并存入comicList
@@ -109,36 +142,11 @@ public class ComicGridFragment extends Fragment
         ComicService.get().getListItems(this,page);
     }
 
-    @Override
-    public void onRefresh() {
-        loadedPage = 1;
-        txt_netError.setVisibility(View.GONE);
-        comicList.clear();
-        imageState.clear();
-        fileListSwipe.setRefreshing(true);
-        // 获取对象，重新获取当前目录对象
-        getListItems(loadedPage);
-        //2秒刷新事件
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                fileListSwipe.setRefreshing(false);
-            }
-        }, 2000);
-    }
 
     //TODO:滑动事件--------
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-       if(scrollState==SCROLL_STATE_IDLE){
-           if(view.getLastVisiblePosition()+1 == view.getCount() && !isLoadingNext){
-               txt_tips.setText(R.string.gird_tips_loading_next_page);
-               tips_view.setVisibility(View.VISIBLE);
-               isLoadingNext = true;
-               getListItems(++loadedPage);
-               Log.d(TAG,"is last; currentLoadingPage = "+loadedPage);
-           }
-       }
+
     }
 
     @Override
@@ -157,8 +165,9 @@ public class ComicGridFragment extends Fragment
 //                Toast.makeText(context,"获得数据"+comicList.size(),Toast.LENGTH_LONG).show();
                 pictureGridAdapter.notifyDataSetChanged();
                 //得到数据立刻取消刷新状态
-                fileListSwipe.setRefreshing(false);
-                tips_view.setVisibility(View.GONE);
+                pullToRefreshGridView.onRefreshComplete();
+                txt_netError.setVisibility(View.GONE);
+                pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
                 isLoadingNext = false;
                 break;
             case Global.REQUEST_COMICS_IMAGE:
@@ -176,20 +185,14 @@ public class ComicGridFragment extends Fragment
     public void onError(String msg ,String what) {
         switch (what){
             case Global.REQUEST_COMICS_LIST:
-                txt_tips.setText(R.string.gird_tips_loading_next_page_fail);
-
-                if (isLoadingNext == false){
-                    //第一次加载数据失败时，非加载下一页
-                    txt_netError.setVisibility(View.VISIBLE);
+                pullToRefreshGridView.onRefreshComplete();
+                if(isLoadingNext) {
+                    Toast.makeText(context, R.string.gird_tips_loading_next_page_fail, Toast.LENGTH_LONG).show();
                 }else{
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            tips_view.setVisibility(View.GONE);
-                            isLoadingNext = false;
-                        }
-                    },2000);
+                    pullToRefreshGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                    txt_netError.setVisibility(View.VISIBLE);
                 }
+                isLoadingNext = false;
                 break;
         }
         Log.e(TAG, "Error: " + msg);
