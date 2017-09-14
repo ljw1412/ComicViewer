@@ -27,9 +27,32 @@ android:gravity="center">
         android:verticalSpacing="5dp"
         android:stretchMode="columnWidth"
         android:numColumns="3"
-        android:elevation="0dp">
+        android:elevation="0dp"
+            android:scrollbars="none">
         </GridView>
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingTop="10dp"
+        android:background="@color/black"
+        android:alpha="0.8"
+        android:visibility="gone"
+        android:id="@+id/grid_tips_view">
+
+        <TextView
+            android:text="TIPS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/grid_tips"
+            android:layout_centerInParent="true"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentTop="false"
+            android:textColor="@color/white" />
+    </RelativeLayout>
 
 
 </RelativeLayout>

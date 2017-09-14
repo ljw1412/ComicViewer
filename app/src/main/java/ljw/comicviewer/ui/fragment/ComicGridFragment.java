@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,19 +44,26 @@ import ljw.comicviewer.http.ComicFetcher;
  */
 
 public class ComicGridFragment extends Fragment
-        implements OnRefreshListener, AbsListView.OnScrollListener, ComicService.RequestCallback {
+        implements OnRefreshListener, AbsListView.OnScrollListener, ComicService.RequestCallback  {
     private String TAG = ComicGridFragment.class.getSimpleName()+"----";
     private Context context;
     private PictureGridAdapter pictureGridAdapter;
     private List<Comic> comicList = new ArrayList<>();
     private File myCache;
+    private int loadedPage = 1;
+    private boolean isLoadingNext = false;
+    // map设定：键为null未加载 0加载中 1加载完毕
+    private Map<Integer,Integer> imageState = new HashMap<>();
     @BindView(R.id.swipe_refresh_list)
     SwipeRefreshLayout fileListSwipe;
     @BindView(R.id.comic_info_view)
     GridView gridView;
     @BindView(R.id.grid_net_error)
     TextView txt_netError;
-
+    @BindView(R.id.grid_tips)
+    TextView txt_tips;
+    @BindView(R.id.grid_tips_view)
+    RelativeLayout tips_view;
     public ComicGridFragment() {
     }
 
@@ -103,12 +111,13 @@ public class ComicGridFragment extends Fragment
 
     @Override
     public void onRefresh() {
+        loadedPage = 1;
         txt_netError.setVisibility(View.GONE);
         comicList.clear();
         imageState.clear();
         fileListSwipe.setRefreshing(true);
         // 获取对象，重新获取当前目录对象
-        getListItems(1);
+        getListItems(loadedPage);
         //2秒刷新事件
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -120,15 +129,24 @@ public class ComicGridFragment extends Fragment
 
     //TODO:滑动事件--------
     @Override
-    public void onScrollStateChanged(AbsListView absListView, int i) {
-       
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+       if(scrollState==SCROLL_STATE_IDLE){
+           if(view.getLastVisiblePosition()+1 == view.getCount() && !isLoadingNext){
+               txt_tips.setText(R.string.gird_tips_loading_next_page);
+               tips_view.setVisibility(View.VISIBLE);
+               isLoadingNext = true;
+               getListItems(++loadedPage);
+               Log.d(TAG,"is last; currentLoadingPage = "+loadedPage);
+           }
+       }
     }
 
     @Override
     public void onScroll(AbsListView absListView, int firstItem, int visibleItem, int totalItem) {
         //firstItem 为第一个可见对象的下标, visibleItem可见对象的数量, totalItem 可见对象的总数
-//        getCover(firstItem,firstItem+visibleItem);
+
     }
+
 
     //TODO:网络请求，更新UI
     @Override
@@ -136,10 +154,12 @@ public class ComicGridFragment extends Fragment
         switch (what){
             case Global.REQUEST_COMICS_LIST:
                 comicList.addAll(ComicFetcher.getComicList(data.toString()));
-                Toast.makeText(context,"获得数据"+comicList.size(),Toast.LENGTH_LONG).show();
+//                Toast.makeText(context,"获得数据"+comicList.size(),Toast.LENGTH_LONG).show();
                 pictureGridAdapter.notifyDataSetChanged();
                 //得到数据立刻取消刷新状态
                 fileListSwipe.setRefreshing(false);
+                tips_view.setVisibility(View.GONE);
+                isLoadingNext = false;
                 break;
             case Global.REQUEST_COMICS_IMAGE:
                 CallBackData callBackData = (CallBackData) data;
@@ -153,9 +173,27 @@ public class ComicGridFragment extends Fragment
     }
 
     @Override
-    public void onError(String msg) {
+    public void onError(String msg ,String what) {
+        switch (what){
+            case Global.REQUEST_COMICS_LIST:
+                txt_tips.setText(R.string.gird_tips_loading_next_page_fail);
+
+                if (isLoadingNext == false){
+                    //第一次加载数据失败时，非加载下一页
+                    txt_netError.setVisibility(View.VISIBLE);
+                }else{
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            tips_view.setVisibility(View.GONE);
+                            isLoadingNext = false;
+                        }
+                    },2000);
+                }
+                break;
+        }
         Log.e(TAG, "Error: " + msg);
-        txt_netError.setVisibility(View.VISIBLE);
+
     }
 
     //-------------------
@@ -173,22 +211,6 @@ public class ComicGridFragment extends Fragment
         }
     }
 
-    // map设定：键为null未加载 0加载中 1加载完毕
-    private Map<Integer,Integer> imageState = new HashMap<>();
-    //请求封面从start到end
-    public void getCover(int start,int end){
-        for (int i =start;i<end;i++) {
-            if(imageState.get(i)!=null &&
-                    (imageState.get(i)==0 || imageState.get(i)==1)){
-                continue;
-            }
 
-            if(comicList.get(i).getImageUrl()!=null && comicList.get(i).getCover()==null){
-                imageState.put(i,0);
-                ComicService.get().getImage(this,comicList.get(i).getImageUrl(),i);
-            }
-        }
-
-    }
 
 }

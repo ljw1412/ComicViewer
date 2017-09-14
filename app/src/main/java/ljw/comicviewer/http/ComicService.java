@@ -64,19 +64,20 @@ public class ComicService {
     //获得指定页数的漫画列表对象
     public void getListItems(final RequestCallback requestCallback,int page){
         Call<String> call = ComicService.get().getList(page);
+        final String what = Global.REQUEST_COMICS_LIST;
         //网络请求回馈
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if(response.body()!=null){
-                    requestCallback.onFinish(response.body().toString(),Global.REQUEST_COMICS_LIST);
+                    requestCallback.onFinish(response.body().toString(),what);
                 }else {
-                    requestCallback.onError("获得response.body()为null，可能是代码失效！");
+                    requestCallback.onError("获得response.body()为null，可能是代码失效！",what);
                 }
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                requestCallback.onError("网络请求失败");
+                requestCallback.onError("网络请求失败",what);
             }
         });
     }
@@ -85,6 +86,7 @@ public class ComicService {
     public void getImage(final RequestCallback requestCallback,
                          String url, final int number) {//url = comicList.get(i).getImageUrl()
         Call<ResponseBody> call = ComicService.get().getCover(url);
+        final String what = Global.REQUEST_COMICS_IMAGE;
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -101,12 +103,12 @@ public class ComicService {
                     msg += (bCover==null ?"失败" :"成功");
                 }
                 callBackData.setMsg(msg);
-                requestCallback.onFinish(callBackData,Global.REQUEST_COMICS_IMAGE);
+                requestCallback.onFinish(callBackData,what);
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                requestCallback.onError(number + "加载失败,网络请求失败！");
+                requestCallback.onError(number + "加载失败,网络请求失败！",what);
             }
         });
     }
@@ -114,19 +116,20 @@ public class ComicService {
     //加载漫画数据
     public void getComicInfo(final RequestCallback requestCallback, String comic_id){
         Call<String> call = ComicService.get().getDetails(comic_id);
+        final String what = Global.REQUEST_COMICS_INFO;
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if(response.body()!=null){
-                    requestCallback.onFinish(response.body().toString(),Global.REQUEST_COMICS_INFO);
+                    requestCallback.onFinish(response.body().toString(),what);
                 }else {
-                    requestCallback.onError("获得response.body()为null，可能是代码失效！");
+                    requestCallback.onError("获得response.body()为null，可能是代码失效！",what);
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                requestCallback.onError("网络请求失败！");
+                requestCallback.onError("网络请求失败！",what);
             }
         });
     }
@@ -138,7 +141,7 @@ public class ComicService {
         //data为返回的数据，what是什么请求，用于分辨是谁的请求结果用于有多个请求同时时的处理。
         void onFinish(T data,String what);
 
-        void onError(String msg);
+        void onError(String msg,String what);
     }
 
 }

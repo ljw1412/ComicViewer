@@ -232,7 +232,7 @@ public class DetailsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onError(String msg) {
+    public void onError(String msg,String what) {
         Log.e(TAG, "Error: " + msg);
     }
 }
