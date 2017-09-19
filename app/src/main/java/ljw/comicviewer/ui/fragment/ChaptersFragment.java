@@ -19,7 +19,9 @@ import java.util.List;
 
 import ljw.comicviewer.others.MyGridView;
 import ljw.comicviewer.R;
+import ljw.comicviewer.store.ComicReadStore;
 import ljw.comicviewer.ui.ReadViewerLoadingActivity;
+import ljw.comicviewer.ui.adapter.ChaptersAdapter;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.bean.Chapter;
 
@@ -62,8 +64,12 @@ public class ChaptersFragment extends Fragment  {
     class  ItemClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            //将同类型的全部章节存入store
+            ComicReadStore.get().setObj(chapters);
+            ComicReadStore.get().setCurrentIndex(position);
+
             Chapter chapter = chapters.get(position);
-            Log.d(TAG,chapters.get(position).getChapter_name());
+            Log.d(TAG,"加载章节:"+chapter.getChapter_name());
             Intent intent = new Intent(context,ReadViewerLoadingActivity.class);
             intent.putExtra("comic_id",chapter.getComic_id());
             intent.putExtra("comic_name",comicName);
@@ -72,61 +78,6 @@ public class ChaptersFragment extends Fragment  {
             intent.putExtra("position",1);
             startActivity(intent);
         }
-    }
-
-    //自定义适配器
-    class ChaptersAdapter extends BaseAdapter {
-        private LayoutInflater inflater;
-        private List<Chapter> chapters;
-        //用map防止滚动图片位置乱跑
-        private HashMap<Integer, View> viewMap = new HashMap<>();
-
-        public ChaptersAdapter(Context context, List<Chapter> chapters)
-        {
-            super();
-            inflater = LayoutInflater.from(context);
-            this.chapters = chapters;
-        }
-
-        @Override
-        public int getCount()
-        {
-            return chapters.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return chapters.get(i);
-        }
-
-
-        @Override
-        public long getItemId(int position)
-        {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent)
-        {
-            ViewHolder viewHolder;
-            if (!viewMap.containsKey(position) || viewMap.get(position) == null){
-                convertView = inflater.inflate(R.layout.item_chapters, null);
-                viewHolder = new ViewHolder();
-                viewHolder.name = (TextView) convertView.findViewById(R.id.chapters_name);
-                convertView.setTag(viewHolder);
-                viewMap.put(position, convertView);
-            } else  {
-                convertView = viewMap.get(position);
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            viewHolder.name.setText(chapters.get(position).getChapter_name());
-            return convertView;
-        }
-    }
-    class ViewHolder
-    {
-        public TextView name;
     }
 
 

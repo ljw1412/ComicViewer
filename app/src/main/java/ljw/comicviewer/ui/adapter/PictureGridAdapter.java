@@ -59,20 +59,20 @@ public class PictureGridAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
     {
-        ViewHolder viewHolder;
+        PictureGridViewHolder pictureGridViewHolder;
         if (!viewMap.containsKey(position) || viewMap.get(position) == null){
             convertView = inflater.inflate(R.layout.item_comic_grid, null);
-            viewHolder = new ViewHolder(convertView);
-            convertView.setTag(viewHolder);
+            pictureGridViewHolder = new PictureGridViewHolder(convertView);
+            convertView.setTag(pictureGridViewHolder);
             viewMap.put(position, convertView);
         } else  {
             convertView = viewMap.get(position);
-            viewHolder = (ViewHolder) convertView.getTag();
+            pictureGridViewHolder = (PictureGridViewHolder) convertView.getTag();
         }
-        viewHolder.name.setText(comics.get(position).getName());
-        viewHolder.score.setText(comics.get(position).getScore());
-        viewHolder.update.setText(comics.get(position).getUpdate());
-        viewHolder.updateStatus.setText(comics.get(position).getUpdateStatus());
+        pictureGridViewHolder.name.setText(comics.get(position).getName());
+        pictureGridViewHolder.score.setText(comics.get(position).getScore());
+        pictureGridViewHolder.update.setText(comics.get(position).getUpdate());
+        pictureGridViewHolder.updateStatus.setText(comics.get(position).getUpdateStatus());
 
         //设置封面
         RequestOptions options = new RequestOptions();
@@ -85,22 +85,22 @@ public class PictureGridAdapter extends BaseAdapter {
                 .asBitmap()
                 .load(comics.get(position).getImageUrl())
                 .apply(options)
-                .into(viewHolder.image);
+                .into(pictureGridViewHolder.image);
 //            if(comics.get(position).getCover()!=null){
 //                //加载图片的同时显示连载情况
-//                viewHolder.image.setImageBitmap(comics.get(position).getCover());
-//                viewHolder.isEnd.setImageResource(comics.get(position).isEnd()?R.drawable.state_finish:R.drawable.state_serialise);
+//                pictureGridViewHolder.image.setImageBitmap(comics.get(position).getCover());
+//                pictureGridViewHolder.isEnd.setImageResource(comics.get(position).isEnd()?R.drawable.state_finish:R.drawable.state_serialise);
 //            }else if (imageState.get(position)!=null && imageState.get(position)==1){
 //                //如果封面为null且为加载完成状态，认为加载失败
-//                viewHolder.image.setImageResource(R.drawable.img_load_failed);
+//                pictureGridViewHolder.image.setImageResource(R.drawable.img_load_failed);
 //            }else{
 //                //图片加载中
-//                viewHolder.image.setImageResource(R.drawable.img_load_before);
+//                pictureGridViewHolder.image.setImageResource(R.drawable.img_load_before);
 //            }
         return convertView;
     }
 }
-class ViewHolder
+class PictureGridViewHolder
 {
     @BindView(R.id.comic_score)
     TextView score;
@@ -115,7 +115,7 @@ class ViewHolder
     @BindView(R.id.comic_status)
     ImageView isEnd;
 
-    public ViewHolder(View view) {
+    public PictureGridViewHolder(View view) {
         ButterKnife.bind(this,view);
     }
 }

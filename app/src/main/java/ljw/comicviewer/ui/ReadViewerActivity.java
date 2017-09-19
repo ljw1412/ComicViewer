@@ -27,7 +27,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
+import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.others.MyViewPager;
+import ljw.comicviewer.store.ComicReadStore;
 import ljw.comicviewer.ui.adapter.PicturePagerAdapter;
 import ljw.comicviewer.ui.listeners.OnItemLongClickListener;
 import ljw.comicviewer.util.AnimationUtil;
@@ -68,6 +70,8 @@ public class ReadViewerActivity extends Activity {
     TextView txtComicChapterName;
     @BindView(R.id.read_viewer_tools_page)
     TextView txtToolsPage;
+    @BindView(R.id.read_viewer_chapter_name)
+    TextView txtChapterName;
 
     @Override
 
@@ -85,6 +89,9 @@ public class ReadViewerActivity extends Activity {
         String[] urls= (String[]) getIntent().getExtras().get("urls");
         imgUrls = DisplayUtil.strArrayToList(urls);
 
+        //store数据打印
+        ComicReadStore.get().printList();
+
         onItemLongClickListener = new MyOnItemLongClickListener();
         initView();
         setTime();
@@ -93,6 +100,7 @@ public class ReadViewerActivity extends Activity {
     private void initView() {
         txtComicName.setText(comic_name);
         txtComicChapterName.setText(chapter_name);
+        txtChapterName.setText(chapter_name);
         setPageText(currPos+"",""+imgUrls.size());
         viewPager.setVisibility(View.VISIBLE);
         rvPicture.setVisibility(View.GONE);
@@ -148,7 +156,6 @@ public class ReadViewerActivity extends Activity {
         viewPager.addOnPageChangeListener(listener);
         viewPager.setOffscreenPageLimit(3);//TODO:之后改为可以设置的
         viewPager.setCurrentItem(0);//TODO:跳页
-
 
     }
 
@@ -268,5 +275,11 @@ public class ReadViewerActivity extends Activity {
 
     public void onBack(View view){
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 }

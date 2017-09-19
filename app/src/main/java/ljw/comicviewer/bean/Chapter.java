@@ -44,7 +44,7 @@ public class Chapter {
 
     @Override
     public String toString() {
-        return "Chapter{" +
+        return "Chapter:{" +
                 "comic_id='" + comic_id + '\'' +
                 ", chapter_id='" + chapter_id + '\'' +
                 ", Chapter_name='" + Chapter_name + '\'' +

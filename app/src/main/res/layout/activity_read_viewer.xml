@@ -62,13 +62,24 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:id="@+id/read_viewer_status"
-        android:layout_height="wrap_content"
+        android:layout_height="16dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:elevation="10dp"
         android:background="@drawable/shape_corner_up_left"
         android:paddingLeft="1dp"
         android:paddingRight="1dp">
+
+        <TextView
+            android:text="chapterName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/read_viewer_chapter_name"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:maxWidth="200dp"
+            android:ellipsize="end"
+            android:maxLines="1"/>
 
         <TextView
             android:text="page"
