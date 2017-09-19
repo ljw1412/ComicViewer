@@ -1,18 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/black">
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/read_viewer_head"
+        android:layout_alignParentTop="true"
+        android:elevation="20dp"
+        android:background="@color/black_70">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/img_back_white"
+            android:id="@+id/read_viewer_back"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:onClick="onBack"
+            android:adjustViewBounds="false"
+            android:elevation="24dp" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginRight="48dp">
+
+            <TextView
+                android:text="comic_name"
+                android:layout_width="match_parent"
+                android:id="@+id/read_viewer_comic_name"
+                android:elevation="1dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="@color/white"
+                android:layout_height="28dp"
+                android:textSize="18sp" />
+
+            <TextView
+                android:text="chapter_name"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:id="@+id/read_viewer_comic_chapter_name"
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:id="@+id/read_viewer_status"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:elevation="10dp"
+        android:background="@drawable/shape_corner_up_left"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp">
+
+        <TextView
+            android:text="page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/read_viewer_page"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
+
+        <TextView
+            android:text="time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/read_viewer_time"
+            android:layout_weight="1"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:id="@+id/read_viewer_tools"
+        android:layout_alignParentBottom="true"
+        android:layout_height="72dp"
+        android:elevation="20dp"
+        android:background="@color/black_70">
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="page"
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:id="@+id/read_viewer_tools_page"
+                android:textColor="@color/white"
+                android:gravity="center_vertical|center_horizontal" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"></LinearLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/black"
         android:fitsSystemWindows="false"
         android:id="@+id/read_viewer_container">
 
@@ -33,4 +145,4 @@
             tools:listitem="@layout/item_read_viewer"/>
     </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>

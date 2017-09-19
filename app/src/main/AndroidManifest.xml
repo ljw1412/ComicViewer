@@ -41,9 +41,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ljw.comicviewer.ui.HomeActivity" />
         </activity>
-        <activity android:name=".ui.ReadViewerActivity" />
+        <activity android:name=".ui.ReadViewerActivity"
+            android:theme="@style/Theme.NoTitleBar.Fullscreen"></activity>
         <activity android:name=".ui.ReadViewerLoadingActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+            android:theme="@style/Theme.NoTitleBar.Fullscreen"></activity>
     </application>
 
 </manifest>

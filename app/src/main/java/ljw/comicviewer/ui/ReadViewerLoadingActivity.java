@@ -21,11 +21,12 @@ import ljw.comicviewer.R;
 import ljw.comicviewer.bean.ManhuaguiComicInfo;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.others.MyWebView;
+import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.WebViewUtil;
 
 public class ReadViewerLoadingActivity extends Activity {
     private String TAG = getClass().getSimpleName()+"----";
-    private String comic_id,chapter_id,chapter_name;
+    private String comic_id,comic_name,chapter_id,chapter_name;
     private List<String> imgUrls = new ArrayList<>();
     private int currPos;
     private int tryTime = 0;
@@ -46,6 +47,7 @@ public class ReadViewerLoadingActivity extends Activity {
         context = this;
         ButterKnife.bind(this);
         comic_id = (String) getIntent().getExtras().get("comic_id");
+        comic_name = (String) getIntent().getExtras().get("comic_name");
         chapter_id = (String) getIntent().getExtras().get("chapter_id");
         chapter_name = (String) getIntent().getExtras().get("chapter_name");
         currPos = (int) getIntent().getExtras().get("position");
@@ -102,21 +104,15 @@ public class ReadViewerLoadingActivity extends Activity {
         }, 1500);
     }
 
-    public String[] strListToArray(List<String> list){
-        String[] array = new String[list.size()];
-        for (int i = 0;i<list.size();i++){
-            array[i] = list.get(i);
-        }
-        return array;
-    }
 
     public void gotoReadView(){
         Intent intent = new Intent(context,ReadViewerActivity.class);
         intent.putExtra("comic_id",comic_id);
+        intent.putExtra("comic_name",comic_name);
         intent.putExtra("chapter_id",chapter_id);
         intent.putExtra("chapter_name",chapter_name);
         intent.putExtra("position",currPos);
-        intent.putExtra("urls",strListToArray(imgUrls));
+        intent.putExtra("urls", DisplayUtil.strListToArray(imgUrls));
         startActivity(intent);
         finish();
     }

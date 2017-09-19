@@ -76,9 +76,8 @@ public class DetailsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.activity_details);
-        //全屏化
+        //全屏化,设置头部padding-top 为状态栏高度
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        //设置头部padding-top 为状态栏高度
         int statusBarHeight = DisplayUtil.getStatusBarHeight(context);
         findViewById(R.id.activity_details).setPadding(0,statusBarHeight==-1 ? 50:statusBarHeight,0,0);
 
@@ -165,6 +164,7 @@ public class DetailsActivity extends AppCompatActivity
         }
         for(int i = 0 ; i<TYPE_MAX ;i++){
             chaptersFragment_map.get(i).addChapters(map.get(i));
+            chaptersFragment_map.get(i).setComicName(comic.getName());
             if(map.get(i).size()>0){
                 //显示章节类型文字
                 findViewById(typeTextId[i]).setVisibility(View.VISIBLE);

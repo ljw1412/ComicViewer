@@ -5,6 +5,9 @@ import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by ljw on 2017-08-29 029.
  */
@@ -35,4 +38,19 @@ public class DisplayUtil {
         return statusBarHeight;
     }
 
+    public static List<String> strArrayToList(String[] array){
+        List<String> list = new ArrayList<>();
+        for (int i = 0;i<array.length;i++){
+            list.add(array[i]);
+        }
+        return list;
+    }
+
+    public static String[] strListToArray(List<String> list){
+        String[] array = new String[list.size()];
+        for (int i = 0;i<list.size();i++){
+            array[i] = list.get(i);
+        }
+        return array;
+    }
 }

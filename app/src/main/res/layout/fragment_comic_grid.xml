@@ -28,17 +28,6 @@ android:gravity="center">
         android:scrollbars="none"
         ptr:ptrMode="both"/>
 
-        <!--<GridView android:id="@+id/comic_info_view"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:horizontalSpacing="5dp"-->
-            <!--android:verticalSpacing="5dp"-->
-            <!--android:stretchMode="columnWidth"-->
-            <!--android:numColumns="3"-->
-            <!--android:elevation="0dp"-->
-            <!--android:scrollbars="none">-->
-        <!--</GridView>-->
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

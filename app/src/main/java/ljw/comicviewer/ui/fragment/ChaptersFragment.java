@@ -32,6 +32,11 @@ public class ChaptersFragment extends Fragment  {
     private MyGridView grid_chapters_list;
     private ChaptersAdapter chaptersAdapter;
     private List<Chapter> chapters = new ArrayList<>();
+    private String comicName;
+
+    public void setComicName(String comicName) {
+        this.comicName = comicName;
+    }
 
     public ChaptersFragment() {
     }
@@ -46,12 +51,6 @@ public class ChaptersFragment extends Fragment  {
 //        //根据屏幕宽度设置列数
         int columns = DisplayUtil.getGridNumColumns(context,80);
         grid_chapters_list.setNumColumns(columns);
-
-//        for(int i = 0;i<100;i++) {
-//            Chapter chapter = new Chapter();
-//            chapter.setChapter_name("test");
-//            chapters.add(chapter);
-//        }
         chaptersAdapter = new ChaptersAdapter(context,chapters);
         grid_chapters_list.setAdapter(chaptersAdapter);
         grid_chapters_list.setOnItemClickListener(new ItemClickListener());
@@ -65,19 +64,13 @@ public class ChaptersFragment extends Fragment  {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Chapter chapter = chapters.get(position);
             Log.d(TAG,chapters.get(position).getChapter_name());
-//            Intent intent = new Intent(context, ReadViewerActivity.class);
             Intent intent = new Intent(context,ReadViewerLoadingActivity.class);
             intent.putExtra("comic_id",chapter.getComic_id());
+            intent.putExtra("comic_name",comicName);
             intent.putExtra("chapter_id",chapter.getChapter_id());
             intent.putExtra("chapter_name",chapter.getChapter_name());
-            intent.putExtra("position",0);
+            intent.putExtra("position",1);
             startActivity(intent);
-//            Comic comic = comicList.get(position);
-//            Intent intent = new Intent(context, DetailsActivity.class);
-//            intent.putExtra("id",comic.getId());
-//            intent.putExtra("score",comic.getScore());
-//            intent.putExtra("title",comic.getName());
-//            startActivity(intent);
         }
     }
 
