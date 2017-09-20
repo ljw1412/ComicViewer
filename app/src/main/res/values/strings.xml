@@ -13,7 +13,11 @@
     <string name="dialog_title_warming">警告</string>
     <string name="dialog_content_warming">该漫画中有部份章节可能含有暴力、血腥、色情或不当的语言等内容，根据中国法律法规，我们将对其进行屏蔽。</string>
     <string name="dialog_text_ok">我已满18周岁了</string>
+    <string name="dialog_title">标题</string>
     <string name="dialog_text_cancel">算了</string>
+    <string name="dialog_btn_copy">复制</string>
+    <string name="dialog_btn_ok">确定</string>
+    <string name="dialog_btn_cancel">取消</string>
     <string name="chapter_type0">—单行本—</string>
     <string name="chapter_type1">—单　话—</string>
     <string name="chapter_type2">—番外篇—</string>

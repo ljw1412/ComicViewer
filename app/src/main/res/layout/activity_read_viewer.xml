@@ -40,11 +40,11 @@
                 android:text="comic_name"
                 android:layout_width="match_parent"
                 android:id="@+id/read_viewer_comic_name"
-                android:elevation="1dp"
                 android:gravity="center_vertical|center_horizontal"
-                android:textColor="@color/white"
                 android:layout_height="28dp"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                style="@style/read_viewer_text"
+                android:ellipsize="end"/>
 
             <TextView
                 android:text="chapter_name"
@@ -52,7 +52,7 @@
                 android:layout_height="20dp"
                 android:id="@+id/read_viewer_comic_chapter_name"
                 android:gravity="center_vertical|center_horizontal"
-                android:textColor="@color/white"/>
+                style="@style/read_viewer_text"/>
 
         </LinearLayout>
 
@@ -76,10 +76,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/read_viewer_chapter_name"
             android:layout_weight="1"
-            android:textColor="@color/white"
             android:maxWidth="200dp"
             android:ellipsize="end"
-            android:maxLines="1"/>
+            style="@style/read_viewer_text"/>
 
         <TextView
             android:text="page"
@@ -154,6 +153,15 @@
             tools:visibility="gone"
             app:layoutManager="LinearLayoutManager"
             tools:listitem="@layout/item_read_viewer"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/read_viewer_mask"
+        android:elevation="24dp"
+        android:visibility="gone">
+
     </RelativeLayout>
 
 </RelativeLayout>

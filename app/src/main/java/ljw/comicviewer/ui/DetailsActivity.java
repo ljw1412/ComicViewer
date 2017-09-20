@@ -1,6 +1,10 @@
 package ljw.comicviewer.ui;
 
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +18,7 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,6 +101,32 @@ public class DetailsActivity extends AppCompatActivity
         //设置标题栏的标题
         String title = (String) getIntent().getExtras().get("title");
         txt_title.setText(title);
+        txt_title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage(txt_title.getText());
+                builder.setTitle(R.string.dialog_title);
+                builder.setNegativeButton(R.string.dialog_btn_copy, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                        // 创建普通字符型ClipData
+                        ClipData mClipData = ClipData.newPlainText("Label", txt_title.getText());
+                        // 将ClipData内容放到系统剪贴板里。
+                        cm.setPrimaryClip(mClipData);
+                        Toast.makeText(context, "复制成功!", Toast.LENGTH_LONG).show();
+                    }
+                });
+                builder.setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.create().show();
+            }
+        });
 
         //预先设置comic的id和评分
         comic_id = (String) getIntent().getExtras().get("id");

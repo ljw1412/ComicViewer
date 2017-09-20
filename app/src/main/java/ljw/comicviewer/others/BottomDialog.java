@@ -54,8 +54,6 @@ public class BottomDialog extends Dialog {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.y=0;
         window.setAttributes(lp);
-
-        window.setWindowAnimations(R.style.dialog_animation);
     }
 
     public void hiddenTitle(boolean hidden){

@@ -2,8 +2,11 @@ package ljw.comicviewer.util;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +18,22 @@ import java.util.List;
 public class DisplayUtil {
     private static String TAG = "DisplayUtil----";
 
-    //根据屏幕大小获取网格列数
-    public static int getGridNumColumns(Context context,int itemWidth){
+    public static float pxToDp(Context context,float px){
+        Resources resources = context.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        return px/dm.density;
+    }
+
+    public static float getScreenWidth(Context context){
         Resources resources = context.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
         //屏幕宽度算法:"屏幕宽度（像素）/屏幕密度"
-        float screenWidth = dm.widthPixels/dm.density;//屏幕宽度(dp)
+        return  dm.widthPixels/dm.density;//屏幕宽度(dp)
+    }
+
+    //根据屏幕大小获取网格列数
+    public static int getGridNumColumns(Context context,int itemWidth){
+        float screenWidth = getScreenWidth(context);
         int columns = Math.round(screenWidth/itemWidth);
         Log.d(TAG, "getGridNumColumns: 屏幕宽度(DP):"+screenWidth+",屏幕列数:"+columns);
         return columns;
@@ -53,4 +66,5 @@ public class DisplayUtil {
         }
         return array;
     }
+
 }

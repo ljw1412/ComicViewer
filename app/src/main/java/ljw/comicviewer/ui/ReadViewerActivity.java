@@ -75,6 +75,8 @@ public class ReadViewerActivity extends Activity {
     TextView txtToolsPage;
     @BindView(R.id.read_viewer_chapter_name)
     TextView txtChapterName;
+    @BindView(R.id.read_viewer_mask)
+    RelativeLayout viewMask;
 
     @Override
 
@@ -88,13 +90,14 @@ public class ReadViewerActivity extends Activity {
         comic_name = (String) getIntent().getExtras().get("comic_name");
         chapter_id = (String) getIntent().getExtras().get("chapter_id");
         chapter_name = (String) getIntent().getExtras().get("chapter_name");
-        currPos = (int) getIntent().getExtras().get("position");
+        currPos = (int) getIntent().getExtras().get("position") - 1;
         String[] urls= (String[]) getIntent().getExtras().get("urls");
         imgUrls = DisplayUtil.strArrayToList(urls);
 
         //store数据打印
         ComicReadStore.get().printList();
 
+        viewMask.setOnClickListener(null);
         onItemLongClickListener = new MyOnItemLongClickListener();
         initView();
         setTime();
@@ -104,7 +107,7 @@ public class ReadViewerActivity extends Activity {
         txtComicName.setText(comic_name);
         txtComicChapterName.setText(chapter_name);
         txtChapterName.setText(chapter_name);
-        setPageText(currPos+"",""+imgUrls.size());
+        setPageText((currPos+1)+"",""+imgUrls.size());
         viewPager.setVisibility(View.VISIBLE);
         rvPicture.setVisibility(View.GONE);
 
@@ -116,7 +119,8 @@ public class ReadViewerActivity extends Activity {
             public void left() {
                 if(isShowTools){
                     showOrHideTools();
-                }else if(!isScroll){
+                }
+                if(!isScroll){
                     prevPage();
                     Log.d(TAG,"left");
                 }
@@ -126,7 +130,8 @@ public class ReadViewerActivity extends Activity {
             public void right() {
                 if(isShowTools){
                     showOrHideTools();
-                }else if(!isScroll){
+                }
+                if(!isScroll){
                     nextPage();
                     Log.d(TAG,"right");
                 }
@@ -142,38 +147,14 @@ public class ReadViewerActivity extends Activity {
         });
         viewPager.setAdapter(picturePagerAdapter);
         viewPager.setOnTouchListener(new View.OnTouchListener() {
-            float DownX,DownY,moveX,moveY;
-            long currentMS;
+            //TIPS:PhotoViewAttacher加载时会拦截此监听
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        DownX = motionEvent.getX();//float DownX
-                        DownY = motionEvent.getY();//float DownY
-                        moveX = 0;
-                        moveY = 0;
-                        currentMS = System.currentTimeMillis();//long currentMS     获取系统时间
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        moveX += Math.abs(motionEvent.getX() - DownX);//X轴距离
-                        moveY += Math.abs(motionEvent.getY() - DownY);//y轴距离
-                        DownX = motionEvent.getX();
-                        DownY = motionEvent.getY();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        long moveTime = System.currentTimeMillis() - currentMS;//移动时间
-                        if (moveTime>160&&(moveX>20||moveY>20)){
-//                            return true;
-                        }else {
-                            viewPager.getAreaClickHelper().onClick(DownX,DownY);
-                        }
-                        break;
-
+                if (!isScroll){
+                    float DownX = motionEvent.getX();
+                    float DownY = motionEvent.getY();
+                    viewPager.getAreaClickHelper().onClick(DownX,DownY);
                 }
-//                float x = motionEvent.getX();
-//                float y = motionEvent.getY();
-//                Log.d(TAG, "onTouch: "+x+","+y);
-//                viewPager.getAreaClickHelper().onClick(x,y);
                 return false;
             }
         });
@@ -187,28 +168,40 @@ public class ReadViewerActivity extends Activity {
             public void onPageSelected(int position) {
                 currPos = position;
                 setPageText((position+1)+"",picturePagerAdapter.getCount()+"");
+                viewMask.setVisibility(View.GONE);
             }
 
+            private int prePage = -1;
             @Override
             public void onPageScrollStateChanged(int state) {
-                switch (state){
+                switch (state) {
                     case ViewPager.SCROLL_STATE_DRAGGING:
-                        //表示用户手指“按在屏幕上并且开始拖动”的状态（手指按下但是还没有拖动的时候还不是这个状态，只有按下并且手指开始拖动后log才打出。）
-                        if(isShowTools){
+                        //（1）表示用户手指“按在屏幕上并且开始拖动”的状态（手指按下但是还没有拖动的时候还不是这个状态，只有按下并且手指开始拖动后log才打出。）
+                        prePage = currPos;
+                        if (isShowTools) {
                             showOrHideTools();
                         }
                         isScroll = true;
                         break;
                     case ViewPager.SCROLL_STATE_SETTLING:
-                        //在“手指离开屏幕”的状态
+                        //（2）在“手指离开屏幕”的状态
+                        viewMask.setVisibility(View.VISIBLE);//用遮罩层阻止其他事件并发，减少效果错误
                         break;
                     case ViewPager.SCROLL_STATE_IDLE:
-                        //滑动动画做完的状态。
+                        //（0）滑动动画做完的状态。
+                        viewMask.setVisibility(View.GONE);
+                        Log.d(TAG, "onPageScrollStateChanged: prePage=" + prePage + ",currPos:" + currPos);
+                        if (currPos == 0 && prePage == currPos) {
+                            Log.d(TAG, "onPageScrollStateChanged: " + "第一页");
+                        }
+                        if (currPos == picturePagerAdapter.getCount() - 1 && prePage == currPos) {
+                            Log.d(TAG, "onPageScrollStateChanged: " + "最后一页");
+                        }
                         isScroll = false;
                         break;
                 }
-
             }
+
         });
         viewPager.setOffscreenPageLimit(3);//TODO:之后改为可以设置的
         viewPager.setCurrentItem(0);//TODO:跳页
@@ -246,8 +239,8 @@ public class ReadViewerActivity extends Activity {
                 mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
                     @Override
                     public void onViewTap(View view, float x, float y) {
-                        if (mAttacher.getScale() <= 1) {
-//                            Log.d(TAG,x+" "+y);
+                        if (mAttacher.getScale() <= 1 && !isScroll) {
+                            Log.d(TAG,"onViewTap :"+x+" "+y);
                             areaClickHelper.onClick(x, y);
                         }
                     }
