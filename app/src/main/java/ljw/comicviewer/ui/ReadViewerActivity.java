@@ -10,7 +10,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,6 +49,7 @@ public class ReadViewerActivity extends Activity {
     private List<String> imgUrls;
     private MyOnItemLongClickListener onItemLongClickListener;
     private boolean isShowTools = false;
+    private boolean isScroll = false;
     private int currPos = 0;
     @BindView(R.id.container)
     RelativeLayout container;
@@ -107,40 +110,77 @@ public class ReadViewerActivity extends Activity {
 
         picturePagerAdapter = new PicturePagerAdapter(this, imgUrls);
         picturePagerAdapter.setOnItemLongClickListener(onItemLongClickListener);
-        picturePagerAdapter.setAreaClickListener(new AreaClickHelper.OnLeftRightClickListener() {
+
+        viewPager.setAreaClickListener(new AreaClickHelper.OnLeftRightClickListener() {
             @Override
             public void left() {
                 if(isShowTools){
                     showOrHideTools();
-                }else{
+                }else if(!isScroll){
                     prevPage();
+                    Log.d(TAG,"left");
                 }
-                Log.d(TAG,"left");
             }
 
             @Override
             public void right() {
                 if(isShowTools){
                     showOrHideTools();
-                }else {
+                }else if(!isScroll){
                     nextPage();
+                    Log.d(TAG,"right");
                 }
-                Log.d(TAG,"right");
             }
 
             @Override
             public void center() {
-                showOrHideTools();
-                Log.d(TAG,"center");
+                if(!isScroll) {
+                    showOrHideTools();
+                    Log.d(TAG,"center");
+                }
             }
         });
         viewPager.setAdapter(picturePagerAdapter);
-        ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener(){
+        viewPager.setOnTouchListener(new View.OnTouchListener() {
+            float DownX,DownY,moveX,moveY;
+            long currentMS;
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        DownX = motionEvent.getX();//float DownX
+                        DownY = motionEvent.getY();//float DownY
+                        moveX = 0;
+                        moveY = 0;
+                        currentMS = System.currentTimeMillis();//long currentMS     获取系统时间
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        moveX += Math.abs(motionEvent.getX() - DownX);//X轴距离
+                        moveY += Math.abs(motionEvent.getY() - DownY);//y轴距离
+                        DownX = motionEvent.getX();
+                        DownY = motionEvent.getY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        long moveTime = System.currentTimeMillis() - currentMS;//移动时间
+                        if (moveTime>160&&(moveX>20||moveY>20)){
+//                            return true;
+                        }else {
+                            viewPager.getAreaClickHelper().onClick(DownX,DownY);
+                        }
+                        break;
+
+                }
+//                float x = motionEvent.getX();
+//                float y = motionEvent.getY();
+//                Log.d(TAG, "onTouch: "+x+","+y);
+//                viewPager.getAreaClickHelper().onClick(x,y);
+                return false;
+            }
+        });
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener(){
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if(isShowTools){
-                    showOrHideTools();
-                }
+
             }
 
             @Override
@@ -151,17 +191,34 @@ public class ReadViewerActivity extends Activity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
+                switch (state){
+                    case ViewPager.SCROLL_STATE_DRAGGING:
+                        //表示用户手指“按在屏幕上并且开始拖动”的状态（手指按下但是还没有拖动的时候还不是这个状态，只有按下并且手指开始拖动后log才打出。）
+                        if(isShowTools){
+                            showOrHideTools();
+                        }
+                        isScroll = true;
+                        break;
+                    case ViewPager.SCROLL_STATE_SETTLING:
+                        //在“手指离开屏幕”的状态
+                        break;
+                    case ViewPager.SCROLL_STATE_IDLE:
+                        //滑动动画做完的状态。
+                        isScroll = false;
+                        break;
+                }
+
             }
-        };
-        viewPager.addOnPageChangeListener(listener);
+        });
         viewPager.setOffscreenPageLimit(3);//TODO:之后改为可以设置的
         viewPager.setCurrentItem(0);//TODO:跳页
 
     }
 
-    public void loadImage(final String url, final Object viewHolder, final AreaClickHelper areaClickHelper){
+    public void loadImage(final String url, final Object viewHolder){
         final PhotoView pic = ((PicturePagerAdapter.PictureViewHolder) viewHolder).ivPicture;
         final PhotoViewAttacher mAttacher = new PhotoViewAttacher(pic);
+        final AreaClickHelper areaClickHelper = viewPager.getAreaClickHelper();
 
         RequestOptions options = new RequestOptions();
 
@@ -190,13 +247,12 @@ public class ReadViewerActivity extends Activity {
                     @Override
                     public void onViewTap(View view, float x, float y) {
                         if (mAttacher.getScale() <= 1) {
-                            Log.d(TAG,x+" "+y);
+//                            Log.d(TAG,x+" "+y);
                             areaClickHelper.onClick(x, y);
                         }
                     }
                 });
 
-//                pictureViewHolder.ivPicture.update(resource.getIntrinsicWidth(),resource.getIntrinsicHeight());
                 Log.d(TAG,"OK");
             }
 
@@ -224,22 +280,26 @@ public class ReadViewerActivity extends Activity {
     }
 
     private void showOrHideTools(){
-        if (!isShowTools){
-            viewBottomStatus.setVisibility(View.GONE);
-            viewBottomStatus.setAnimation(AnimationUtil.fadeOut());
-            viewBottomTools.setVisibility(View.VISIBLE);
-            viewBottomTools.setAnimation(AnimationUtil.moveToViewBottomIn());
-            viewHead.setVisibility(View.VISIBLE);
-            viewHead.setAnimation(AnimationUtil.moveToViewTopIn());
-        }else {
-            viewBottomStatus.setVisibility(View.VISIBLE);
-            viewBottomStatus.setAnimation(AnimationUtil.fadeIn());
-            viewBottomTools.setVisibility(View.GONE);
-            viewBottomTools.setAnimation(AnimationUtil.moveToViewBottomOut());
-            viewHead.setVisibility(View.GONE);
-            viewHead.setAnimation(AnimationUtil.moveToViewTopOut());
+        if(!isScroll){
+            if (!isShowTools){
+                Log.d(TAG, "showOrHideTools: 显示");
+                viewBottomStatus.setVisibility(View.GONE);
+                viewBottomStatus.setAnimation(AnimationUtil.fadeOut());
+                viewBottomTools.setVisibility(View.VISIBLE);
+                viewBottomTools.setAnimation(AnimationUtil.moveToViewBottomIn());
+                viewHead.setVisibility(View.VISIBLE);
+                viewHead.setAnimation(AnimationUtil.moveToViewTopIn());
+            }else {
+                Log.d(TAG, "showOrHideTools: 隐藏");
+                viewBottomStatus.setVisibility(View.VISIBLE);
+                viewBottomStatus.setAnimation(AnimationUtil.fadeIn());
+                viewBottomTools.setVisibility(View.GONE);
+                viewBottomTools.setAnimation(AnimationUtil.moveToViewBottomOut());
+                viewHead.setVisibility(View.GONE);
+                viewHead.setAnimation(AnimationUtil.moveToViewTopOut());
+            }
+            isShowTools = !isShowTools;
         }
-        isShowTools = !isShowTools;
     }
 
     private class MyOnItemLongClickListener implements OnItemLongClickListener {

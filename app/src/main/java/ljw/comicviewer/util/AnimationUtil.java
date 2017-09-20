@@ -19,7 +19,7 @@ public class AnimationUtil {
         TranslateAnimation anim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
                 Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
                 0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
-        anim.setDuration(500);
+        anim.setDuration(300);
         return anim;
     }
 
@@ -31,7 +31,7 @@ public class AnimationUtil {
         TranslateAnimation anim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
                 Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
                 1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        anim.setDuration(500);
+        anim.setDuration(300);
         return anim;
     }
 
@@ -43,7 +43,7 @@ public class AnimationUtil {
         TranslateAnimation anim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
                 Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
                 0.0f, Animation.RELATIVE_TO_SELF, -1.0f);
-        anim.setDuration(500);
+        anim.setDuration(300);
         return anim;
     }
 
@@ -55,7 +55,7 @@ public class AnimationUtil {
         TranslateAnimation anim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
                 Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
                 -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        anim.setDuration(500);
+        anim.setDuration(300);
         return anim;
     }
 
@@ -65,7 +65,7 @@ public class AnimationUtil {
      */
     public static AlphaAnimation fadeIn(){
         AlphaAnimation anim = new AlphaAnimation(0.0f,1.0f);
-        anim.setDuration(500);
+        anim.setDuration(300);
         return anim;
     }
 
@@ -75,7 +75,7 @@ public class AnimationUtil {
      */
     public static AlphaAnimation fadeOut(){
         AlphaAnimation anim = new AlphaAnimation(1.0f,0.0f);
-        anim.setDuration(500);
+        anim.setDuration(300);
         return anim;
     }
 }
