@@ -17,6 +17,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.ManhuaguiComicInfo;
 import ljw.comicviewer.http.ComicFetcher;
@@ -31,6 +32,7 @@ public class ReadViewerLoadingActivity extends Activity {
     private int currPos;
     private int tryTime = 0;
     private Context context;
+    private Object animMode;
     @BindView(R.id.webview_in_loading)
     WebView webView;
     @BindView(R.id.btn_refresh)
@@ -51,9 +53,13 @@ public class ReadViewerLoadingActivity extends Activity {
         chapter_id = (String) getIntent().getExtras().get("chapter_id");
         chapter_name = (String) getIntent().getExtras().get("chapter_name");
         currPos = (int) getIntent().getExtras().get("position");
+        animMode = getIntent().getExtras().get("anim_mode");
+        if(animMode==null){
+            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+        }
 
         //破解屏蔽
-        WebViewUtil.syncCookie(context,Global.MANHUAGUI_DOMAIN,"country=US");
+        WebViewUtil.syncCookie(context, Global.MANHUAGUI_DOMAIN,"country=US");
 
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
@@ -114,6 +120,20 @@ public class ReadViewerLoadingActivity extends Activity {
         intent.putExtra("position",currPos);
         intent.putExtra("urls", DisplayUtil.strListToArray(imgUrls));
         startActivity(intent);
+
+        if(animMode != null){
+            switch ((int) animMode){
+                case Global.LEFT:
+                    overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+                    break;
+                case Global.RIGHT:
+                    overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+                    break;
+            }
+        }else {
+            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+        }
+
         finish();
     }
 

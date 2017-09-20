@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import ljw.comicviewer.ui.Global;
+import ljw.comicviewer.Global;
 import ljw.comicviewer.bean.CallBackData;
 import okhttp3.ResponseBody;
 import retrofit2.Call;

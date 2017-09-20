@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +26,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 import ljw.comicviewer.util.DialogUtil;
 import ljw.comicviewer.util.DisplayUtil;

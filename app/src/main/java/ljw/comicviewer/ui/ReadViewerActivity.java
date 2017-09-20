@@ -2,6 +2,7 @@ package ljw.comicviewer.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,7 @@ import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -28,6 +30,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.others.MyViewPager;
@@ -93,6 +96,7 @@ public class ReadViewerActivity extends Activity {
         currPos = (int) getIntent().getExtras().get("position") - 1;
         String[] urls= (String[]) getIntent().getExtras().get("urls");
         imgUrls = DisplayUtil.strArrayToList(urls);
+
 
         //store数据打印
         ComicReadStore.get().printList();
@@ -191,11 +195,16 @@ public class ReadViewerActivity extends Activity {
                         //（0）滑动动画做完的状态。
                         viewMask.setVisibility(View.GONE);
                         Log.d(TAG, "onPageScrollStateChanged: prePage=" + prePage + ",currPos:" + currPos);
-                        if (currPos == 0 && prePage == currPos) {
-                            Log.d(TAG, "onPageScrollStateChanged: " + "第一页");
-                        }
-                        if (currPos == picturePagerAdapter.getCount() - 1 && prePage == currPos) {
-                            Log.d(TAG, "onPageScrollStateChanged: " + "最后一页");
+                        Log.d(TAG, "onPageScrollStateChanged: "+viewPager.getMoveStatus());
+                        if(currPos == prePage){
+                            if (currPos == 0 && viewPager.getMoveStatus() == MyViewPager.MOVE_LEFT) {
+                                gotoLoading(false);
+                                Log.d(TAG, "onPageScrollStateChanged: " + "第一页");
+                            }
+                            if (currPos == picturePagerAdapter.getCount() - 1 && viewPager.getMoveStatus() == MyViewPager.MOVE_RIGHT) {
+                                gotoLoading(true);
+                                Log.d(TAG, "onPageScrollStateChanged: " + "最后一页");
+                            }
                         }
                         isScroll = false;
                         break;
@@ -264,12 +273,16 @@ public class ReadViewerActivity extends Activity {
         int currItem = viewPager.getCurrentItem();
         if (currItem > 0)
             viewPager.setCurrentItem(currItem - 1);
+        else
+            gotoLoading(false);
     }
 
     private void nextPage(){
         int currItem = viewPager.getCurrentItem();
         if (currItem + 1 < viewPager.getAdapter().getCount())
             viewPager.setCurrentItem(currItem + 1);
+        else
+            gotoLoading(true);
     }
 
     private void showOrHideTools(){
@@ -333,6 +346,48 @@ public class ReadViewerActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
 
+    public void gotoLoading(boolean isAdd){
+        ComicReadStore comicReadStore = ComicReadStore.get();
+        int index = comicReadStore.getCurrentIndex();
+        if (index == 0 && !isAdd){
+            Toast.makeText(context, R.string.tips_is_first,Toast.LENGTH_LONG).show();
+        }else if (index == comicReadStore.getSize()-1 && isAdd){
+            Toast.makeText(context,R.string.tips_is_last,Toast.LENGTH_LONG).show();
+        }else{
+            if (isAdd){
+                index++;
+            }else{
+                index--;
+            }
+            Chapter preChapter = comicReadStore.getObj().get(index);
+            comicReadStore.setCurrentIndex(index);
+            gotoReadView(preChapter.getChapter_id(),preChapter.getChapter_name(),
+                    isAdd ? Global.RIGHT : Global.LEFT);
+        }
+    }
+
+    public void gotoReadView(String chapterId,String chapterName,int animDirection){
+        Intent intent = new Intent(context,ReadViewerLoadingActivity.class);
+        intent.putExtra("comic_id",comic_id);
+        intent.putExtra("comic_name",comic_name);
+        intent.putExtra("chapter_id",chapterId);
+        intent.putExtra("chapter_name",chapterName);
+        intent.putExtra("position",1);
+        intent.putExtra("anim_mode",animDirection);
+        startActivity(intent);
+
+        //设置切换动画
+        switch (animDirection){
+            case Global.LEFT:
+                overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+                break;
+            case Global.RIGHT:
+                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+                break;
+        }
+
+        finish();
     }
 }

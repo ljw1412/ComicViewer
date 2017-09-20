@@ -55,4 +55,8 @@ public class ComicReadStore {
         }
         Log.d(TAG, out+"]}");
     }
+
+    public int getSize(){
+        return list.size();
+    }
 }
