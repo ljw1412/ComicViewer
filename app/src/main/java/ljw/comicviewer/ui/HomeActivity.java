@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 import butterknife.BindView;
@@ -27,6 +28,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private String TAG = HomeActivity.class.getSimpleName()+"----";
     private static Context context;
+    private Fragment currentFragment;
     private ComicGridFragment comicGridFragment;
     private MineFragment mineFragment;
     private FragmentManager fragmentManager;
@@ -44,14 +46,18 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     ImageView img_collection;
     @BindView(R.id.img_mine)
     ImageView img_mine;
+    @BindView(R.id.title)
+    TextView nav_title;
+    @BindView(R.id.nav_btn_search)
+    ImageView btnSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         //fragment事务管理
         fragmentManager = getSupportFragmentManager();
@@ -89,6 +95,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
         hideAllFragment(ft);
         ft.show(fragment).commit();
+        currentFragment = fragment;
     }
 
     //让所有底部导航栏为未选中状态
@@ -107,7 +114,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //点击事件
-    @OnClick({R.id.goto_comic,R.id.goto_collection,R.id.goto_mine})
+    @OnClick({R.id.goto_comic,R.id.goto_collection,R.id.goto_mine,R.id.nav_btn_search})
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -115,6 +122,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 setBtnSelected(img_comic);
                 setCurrentFragment(comicGridFragment);
                 setTitle(R.string.app_name);
+                btnSearch.setVisibility(View.VISIBLE);
                 break;
             case R.id.goto_collection:
                 setBtnSelected(img_collection);
@@ -122,7 +130,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     collectionFragment = new CollectionFragment();
                 }
                 setCurrentFragment(collectionFragment);
-                setTitle("收藏");
+                setTitle(R.string.txt_collection);
+                btnSearch.setVisibility(View.VISIBLE);
                 break;
             case R.id.goto_mine:
                 setBtnSelected(img_mine);
@@ -130,9 +139,24 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     mineFragment = new MineFragment();
                 }
                 setCurrentFragment(mineFragment);
-                setTitle("我的");
+                setTitle(R.string.txt_mine);
+                btnSearch.setVisibility(View.GONE);
+                break;
+            case R.id.nav_btn_search:
+                Intent intent = new Intent(context,SearchActivity.class);
+                startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        nav_title.setText(title);
+    }
+
+    @Override
+    public void setTitle(int titleId) {
+        nav_title.setText(getString(titleId));
     }
 
     @Override

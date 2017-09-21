@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +74,12 @@ public class DetailsActivity extends AppCompatActivity
     TextView txt_score;
     @BindView(R.id.details_chapters)
     LinearLayout details_chapters;
+    @BindView(R.id.details_instruction)
+    LinearLayout instruction;
+    @BindView(R.id.detail_error)
+    TextView txtError;
+    @BindView(R.id.details_main)
+    ScrollView viewMain;
 //    @BindView(R.id.webview_details)
 //    WebView webview;
 
@@ -90,7 +97,8 @@ public class DetailsActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         //隐藏加载前界面
-        details_container.setVisibility(View.GONE);
+        viewMain.setVisibility(View.GONE);
+        details_container.setRefreshing(true);
         details_container.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
@@ -136,7 +144,7 @@ public class DetailsActivity extends AppCompatActivity
         //加载数据
         loadComicInformation();
 
-        findViewById(R.id.details_instruction).setOnClickListener(new View.OnClickListener() {
+        instruction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
             if (txt_info.getMaxLines()==2){
@@ -148,7 +156,6 @@ public class DetailsActivity extends AppCompatActivity
             }
             }
         });
-
 
         for (int i = 0 ; i < TYPE_MAX ; i++){
             ChaptersFragment chaptersFragment = new ChaptersFragment();
@@ -211,18 +218,20 @@ public class DetailsActivity extends AppCompatActivity
 
     @Override
     public void onRefresh() {
+        viewMain.setVisibility(View.GONE);
         for(int i = 0 ; i<TYPE_MAX ;i++){
+            findViewById(typeTextId[i]).setVisibility(View.GONE);
             chaptersFragment_map.get(i).clearChapters();
         }
         details_container.setRefreshing(true);
         // 获取对象，重新获取当前目录对象
         loadComicInformation();
         //2秒刷新事件
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {details_container.setRefreshing(false);
-            }
-        }, 2000);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {details_container.setRefreshing(false);
+//            }
+//        }, 2000);
     }
 
     //TODO:网络请求，更新UI
@@ -245,7 +254,8 @@ public class DetailsActivity extends AppCompatActivity
                     DialogUtil.showBottomDialog(context);
                 }
                 //显示详细界面
-                details_container.setVisibility(View.VISIBLE);
+                viewMain.setVisibility(View.VISIBLE);
+                txtError.setVisibility(View.GONE);
                 details_container.setRefreshing(false);
                 Log.d(TAG, "onResponse: "+comic.toString());
                 break;
@@ -265,5 +275,7 @@ public class DetailsActivity extends AppCompatActivity
     @Override
     public void onError(String msg,String what) {
         Log.e(TAG, "Error: " + msg);
+        details_container.setRefreshing(false);
+        txtError.setVisibility(View.VISIBLE);
     }
 }

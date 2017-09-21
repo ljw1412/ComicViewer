@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_home"
@@ -10,120 +10,117 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="48dp"
+        android:id="@+id/home_nav">
 
-        <FrameLayout
+        <include
+            layout="@layout/navigation_bar_home_default"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <include
-                layout="@layout/app_bar_home"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </FrameLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:layout_alignParentBottom="true">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/black_shadow">
-
-            </FrameLayout>
-
-            <LinearLayout
-                android:id="@+id/bottom_tab"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/background_light"
-                >
-
-                <LinearLayout
-                    android:id="@+id/goto_comic"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="32dp"
-                        app:srcCompat="@drawable/main_index_tab_selector_cart"
-                        android:id="@+id/img_comic" />
-
-                    <TextView
-                        android:id="@+id/txt_comic"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:textColor="@color/black_shadow"
-                        android:text="@string/txt_comic"
-                        android:elevation="0dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/goto_collection"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="32dp"
-                        app:srcCompat="@drawable/main_index_tab_selector_collection"
-                        android:id="@+id/img_collection" />
-
-                    <TextView
-                        android:id="@+id/txt_collection"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:drawablePadding="3dp"
-                        android:gravity="center"
-                        android:textColor="@color/black_shadow"
-                        android:text="@string/txt_collection" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/goto_mine"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="2dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        app:srcCompat="@drawable/main_index_tab_selector_mine"
-                        android:id="@+id/img_mine"
-                        android:layout_height="32dp" />
-
-                    <TextView
-                        android:id="@+id/txt_mine"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:drawablePadding="3dp"
-                        android:gravity="center"
-                        android:textColor="@color/black_shadow"
-                        android:text="@string/txt_mine" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
+            android:layout_height="48dp" />
 
 
     </LinearLayout>
 
-</LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="56dp"
+        android:id="@+id/content_home"
+        android:layout_marginTop="48dp"></LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@color/black_shadow"
+        android:layout_weight="1"
+        android:layout_above="@+id/bottom_tab"
+        android:id="@+id/tab_line">
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_tab"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="@android:color/background_light"
+        android:layout_alignParentBottom="true"
+        android:layout_height="56dp">
+
+        <LinearLayout
+            android:id="@+id/goto_comic"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                app:srcCompat="@drawable/main_index_tab_selector_cart"
+                android:id="@+id/img_comic" />
+
+            <TextView
+                android:id="@+id/txt_comic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="@color/black_shadow"
+                android:text="@string/txt_comic"
+                android:elevation="0dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/goto_collection"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                app:srcCompat="@drawable/main_index_tab_selector_collection"
+                android:id="@+id/img_collection" />
+
+            <TextView
+                android:id="@+id/txt_collection"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:textColor="@color/black_shadow"
+                android:text="@string/txt_collection" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/goto_mine"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                app:srcCompat="@drawable/main_index_tab_selector_mine"
+                android:id="@+id/img_mine"
+                android:layout_height="32dp" />
+
+            <TextView
+                android:id="@+id/txt_mine"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:textColor="@color/black_shadow"
+                android:text="@string/txt_mine" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

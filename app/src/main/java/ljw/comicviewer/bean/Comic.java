@@ -22,6 +22,7 @@ public class Comic {
     private boolean ban;//屏蔽情况
     private String tag;
     private List<Chapter> Chapters;
+    private int comeFrom;
 
     public Comic() {
     }
@@ -130,6 +131,14 @@ public class Comic {
         Chapters = chapters;
     }
 
+    public int getComeFrom() {
+        return comeFrom;
+    }
+
+    public void setComeFrom(int comeFrom) {
+        this.comeFrom = comeFrom;
+    }
+
     @Override
     public String toString() {
         return "Comic{" +
@@ -146,6 +155,7 @@ public class Comic {
                 ", ban=" + ban +
                 ", tag='" + tag + '\'' +
                 ", Chapters_Size='" + (Chapters==null? "null" : Chapters.size()) + '\'' +
+                ", comeFrom=" + comeFrom +
                 '}';
     }
 }

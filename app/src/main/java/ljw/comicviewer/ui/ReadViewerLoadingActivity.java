@@ -103,6 +103,7 @@ public class ReadViewerLoadingActivity extends Activity {
                                 imgUrls.add(Global.MANHUAGUI_IMAGE_HOST+info.getPath()+info.getFiles().get(i));
                             }
                             gotoReadView();
+                            return;
                         }
                     }
                 });
@@ -137,4 +138,9 @@ public class ReadViewerLoadingActivity extends Activity {
         finish();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        webView = null;
+    }
 }
