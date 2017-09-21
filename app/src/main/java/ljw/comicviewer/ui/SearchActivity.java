@@ -11,7 +11,7 @@ import butterknife.ButterKnife;
 import ljw.comicviewer.R;
 
 public class SearchActivity extends AppCompatActivity {
-    @BindView(R.id.nav_btn_search)
+    @BindView(R.id.search_button)
     Button btn_search;
 
 

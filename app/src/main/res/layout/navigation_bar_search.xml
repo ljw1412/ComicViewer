@@ -9,7 +9,7 @@
     <ImageView
         android:layout_height="match_parent"
         app:srcCompat="@drawable/img_back_white"
-        android:id="@+id/imageView"
+        android:id="@+id/search_back"
         android:layout_width="40dp"
         android:padding="6dp"
         android:onClick="onBack" />
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:ems="10"
-            android:id="@+id/editText"
+            android:id="@+id/search_edit"
             android:inputType="text"
             android:hint="@string/tips_search"
             android:textColor="@color/black"
@@ -51,7 +51,7 @@
 
         <Button
             android:text="@string/txt_search"
-            android:id="@+id/button"
+            android:id="@+id/search_button"
             android:background="@drawable/line_color_px"
             android:layout_gravity="center_vertical"
             android:layout_height="30dp"
