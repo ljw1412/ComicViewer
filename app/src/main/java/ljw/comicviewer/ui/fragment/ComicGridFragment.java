@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,8 @@ public class ComicGridFragment extends Fragment
     GridView gridView;
     @BindView(R.id.grid_net_error)
     TextView txt_netError;
+    @BindView(R.id.grid_loading)
+    RelativeLayout loading;
 //    @BindView(R.id.grid_tips)
 //    TextView txt_tips;
 //    @BindView(R.id.grid_tips_view)
@@ -83,6 +86,8 @@ public class ComicGridFragment extends Fragment
         initGridView();
         myCache = context.getExternalCacheDir();
 
+        pullToRefreshGridView.setMode(PullToRefreshBase.Mode.DISABLED);
+
         getListItems(1);
         return rootView;
     }
@@ -100,13 +105,6 @@ public class ComicGridFragment extends Fragment
                 imageState.clear();
                 // 获取对象，重新获取当前目录对象
                 getListItems(loadedPage);
-                //2秒刷新事件
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        pullToRefreshGridView.onRefreshComplete();
-                    }
-                }, 2000);
             }
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
@@ -163,6 +161,7 @@ public class ComicGridFragment extends Fragment
                 //得到数据立刻取消刷新状态
                 pullToRefreshGridView.onRefreshComplete();
                 txt_netError.setVisibility(View.GONE);
+                loading.setVisibility(View.GONE);
                 pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
                 isLoadingNext = false;
                 break;
@@ -186,6 +185,7 @@ public class ComicGridFragment extends Fragment
                     Toast.makeText(context, R.string.gird_tips_loading_next_page_fail, Toast.LENGTH_LONG).show();
                 }else{
                     pullToRefreshGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                    loading.setVisibility(View.GONE);
                     txt_netError.setVisibility(View.VISIBLE);
                 }
                 isLoadingNext = false;

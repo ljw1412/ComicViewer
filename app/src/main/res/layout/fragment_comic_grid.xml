@@ -10,7 +10,21 @@ android:gravity="center">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/comic_grid_nav">
+        >
+
+        <RelativeLayout
+            android:id="@+id/grid_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:background="@color/green"
+                android:layout_centerInParent="true">
+            </com.gc.materialdesign.views.ProgressBarCircularIndeterminate>
+        </RelativeLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -33,27 +47,6 @@ android:gravity="center">
             android:scrollbars="none"
             ptr:ptrMode="both" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:paddingTop="10dp"
-            android:background="@color/black"
-            android:alpha="0.8"
-            android:visibility="gone"
-            android:id="@+id/grid_tips_view">
-
-            <TextView
-                android:text="TIPS"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/grid_tips"
-                android:layout_centerInParent="true"
-                android:layout_alignParentBottom="false"
-                android:layout_alignParentEnd="false"
-                android:layout_alignParentTop="false"
-                android:textColor="@color/white" />
-        </RelativeLayout>
     </RelativeLayout>
 
 
