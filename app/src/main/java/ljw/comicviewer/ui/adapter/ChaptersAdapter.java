@@ -65,7 +65,9 @@ public class ChaptersAdapter extends BaseAdapter {
         chapterViewHolder.name.setText(chapters.get(position).getChapter_name());
         return convertView;
     }
-}
-class ChapterViewHolder {
-    public TextView name;
+
+
+    public class ChapterViewHolder {
+        public TextView name;
+    }
 }

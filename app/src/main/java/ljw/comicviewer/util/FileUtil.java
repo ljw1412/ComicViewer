@@ -1,8 +1,16 @@
 package ljw.comicviewer.util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import java.io.File;
+
+import ljw.comicviewer.R;
 
 /**
  * Created by ljw on 2017-09-06 006.
@@ -27,4 +35,5 @@ public class FileUtil {
             }
         }
     }
+
 }

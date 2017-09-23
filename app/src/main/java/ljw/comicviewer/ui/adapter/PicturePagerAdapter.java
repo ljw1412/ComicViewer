@@ -105,7 +105,6 @@ public class PicturePagerAdapter extends PagerAdapter {
     public class PictureViewHolder {
         @BindView(R.id.iv_picture)
         public PhotoView ivPicture;
-// !!!       public PhotoDraweeView ivPicture;
         @BindView(R.id.progress_bar)
         public ProgressBarCircularIndeterminate progressBar;
         @BindView(R.id.btn_refresh)

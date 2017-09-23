@@ -2,9 +2,7 @@ package ljw.comicviewer.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,10 +11,12 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 
@@ -28,15 +28,13 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
-import ljw.comicviewer.ui.adapter.PictureGridAdapter;
-import ljw.comicviewer.bean.CallBackData;
 import ljw.comicviewer.bean.Comic;
-import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.http.ComicFetcher;
-
+import ljw.comicviewer.http.ComicService;
+import ljw.comicviewer.ui.DetailsActivity;
+import ljw.comicviewer.ui.adapter.PictureGridAdapter;
 
 
 /**
@@ -103,15 +101,18 @@ public class ComicGridFragment extends Fragment
                 loadedPage = 1;
                 comicList.clear();
                 imageState.clear();
+                pictureGridAdapter.notifyDataSetChanged();
                 // 获取对象，重新获取当前目录对象
                 getListItems(loadedPage);
             }
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
 //                Toast.makeText(context, "上拉", Toast.LENGTH_SHORT).show();
+                Glide.get(context).clearMemory();
                 isLoadingNext = true;
+//                Glide.clear();
                 getListItems(++loadedPage);
-                Log.d(TAG,"is last; currentLoadingPage = "+loadedPage);
+                Log.d(TAG,"load next page; currentLoadingPage = "+loadedPage);
             }
         });
     }
@@ -140,15 +141,46 @@ public class ComicGridFragment extends Fragment
     //TODO:滑动事件--------
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-
+        switch (scrollState){
+            case SCROLL_STATE_TOUCH_SCROLL:
+                //手指接触状态
+                break;
+            case SCROLL_STATE_FLING:
+                //屏幕处于滑动状态
+//                Glide.with(context).pauseRequests();//暂停请求
+                break;
+            case SCROLL_STATE_IDLE:
+                //停止滑动状态
+//                Glide.with(context).resumeRequests();//重启请求
+                clearAndLoadImage();
+                break;
+        }
     }
 
     @Override
     public void onScroll(AbsListView absListView, int firstItem, int visibleItem, int totalItem) {
         //firstItem 为第一个可见对象的下标, visibleItem可见对象的数量, totalItem 可见对象的总数
-
+//        Log.d(TAG, "onScroll: "+firstItem+","+visibleItem+","+totalItem);
     }
 
+
+
+    public void clearAndLoadImage(){
+        int firstVisiblePosition= gridView.getFirstVisiblePosition();
+        int lastVisiblePosition = gridView.getLastVisiblePosition();
+        for(int i = 0; i < gridView.getCount();i++){
+            View view = pictureGridAdapter.getViewMap().get(i);
+            if(i<firstVisiblePosition || i>lastVisiblePosition){
+                if (view!=null){
+                    ImageView image = (ImageView) view.findViewById(R.id.comic_img);
+                    image.setImageBitmap(null);
+                    image.setImageDrawable(null);
+                }
+            }
+        }
+        System.gc();
+        pictureGridAdapter.notifyDataSetChanged();
+    }
 
     //TODO:网络请求，更新UI
     @Override
@@ -164,14 +196,7 @@ public class ComicGridFragment extends Fragment
                 loading.setVisibility(View.GONE);
                 pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
                 isLoadingNext = false;
-                break;
-            case Global.REQUEST_COMICS_IMAGE:
-                CallBackData callBackData = (CallBackData) data;
-                int position = (int) callBackData.getArg1();
-                comicList.get(position).setCover((Bitmap) callBackData.getObj());
-                imageState.put(position,1);
-                pictureGridAdapter.notifyDataSetChanged();
-                Log.d(TAG,callBackData.getMsg());
+                clearAndLoadImage();
                 break;
         }
     }

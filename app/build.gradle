@@ -47,9 +47,6 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile files('libs/gson-2.8.1.jar')
-    //图片手势缩放
-    compile 'com.facebook.fresco:fresco:1.3.0'
-    compile 'me.relex:photodraweeview:1.1.3'
     //注解方式寻找view
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'

@@ -1,6 +1,7 @@
 package ljw.comicviewer.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +11,19 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.R;
+import ljw.comicviewer.bean.Comic;
+
+import static com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade;
 
 /**
  * Created by ljw on 2017-09-10 010.
@@ -73,50 +79,58 @@ public class PictureGridAdapter extends BaseAdapter {
         pictureGridViewHolder.score.setText(comics.get(position).getScore());
         pictureGridViewHolder.update.setText(comics.get(position).getUpdate());
         pictureGridViewHolder.updateStatus.setText(comics.get(position).getUpdateStatus());
-
-        //设置封面
-        RequestOptions options = new RequestOptions();
-        options.placeholder(R.drawable.img_load_before);
-        options.error(R.drawable.img_load_failed);
-        //禁用缓存
-//                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                    .skipMemoryCache(true);
-        Glide.with(context)
-                .asBitmap()
-                .load(comics.get(position).getImageUrl())
-                .apply(options)
-                .into(pictureGridViewHolder.image);
-//            if(comics.get(position).getCover()!=null){
-//                //加载图片的同时显示连载情况
-//                pictureGridViewHolder.image.setImageBitmap(comics.get(position).getCover());
-//                pictureGridViewHolder.isEnd.setImageResource(comics.get(position).isEnd()?R.drawable.state_finish:R.drawable.state_serialise);
-//            }else if (imageState.get(position)!=null && imageState.get(position)==1){
-//                //如果封面为null且为加载完成状态，认为加载失败
-//                pictureGridViewHolder.image.setImageResource(R.drawable.img_load_failed);
-//            }else{
-//                //图片加载中
-//                pictureGridViewHolder.image.setImageResource(R.drawable.img_load_before);
-//            }
+        //图片加载代码移动到ComicGridFragment
+        loadCover(position,pictureGridViewHolder.image);
         return convertView;
     }
-}
-class PictureGridViewHolder
-{
-    @BindView(R.id.comic_score)
-    TextView score;
-    @BindView(R.id.comic_updateDate)
-    TextView update;
-    @BindView(R.id.comic_updateStatus)
-    TextView updateStatus;
-    @BindView(R.id.comic_name)
-    TextView name;
-    @BindView(R.id.comic_img)
-    ImageView image;
-    @BindView(R.id.comic_status)
-    ImageView isEnd;
 
-    public PictureGridViewHolder(View view) {
-        ButterKnife.bind(this,view);
+    public void loadCover(final int position, ImageView image){
+        RequestOptions options = new RequestOptions();
+        options.placeholder(R.drawable.img_load_before)
+                .error(R.drawable.img_load_failed)
+                .centerCrop()
+                .skipMemoryCache(true);
+
+        final WeakReference<ImageView> imageViewWeakReference = new WeakReference<>(image);
+        final ImageView target = imageViewWeakReference.get();
+        if (target != null) {
+            Glide.with(context)
+                    .asBitmap()
+                    .load(comics.get(position).getImageUrl())
+                    .apply(options)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            target.setImageBitmap(resource);
+                        }
+                    });
+        }
+    }
+
+    public HashMap<Integer, View> getViewMap() {
+        return viewMap;
+    }
+
+
+    public class PictureGridViewHolder
+    {
+        @BindView(R.id.comic_score)
+        TextView score;
+        @BindView(R.id.comic_updateDate)
+        TextView update;
+        @BindView(R.id.comic_updateStatus)
+        TextView updateStatus;
+        @BindView(R.id.comic_name)
+        TextView name;
+        @BindView(R.id.comic_img)
+        ImageView image;
+        @BindView(R.id.comic_status)
+        ImageView isEnd;
+
+        public PictureGridViewHolder(View view) {
+            ButterKnife.bind(this,view);
+        }
     }
 }
+
 

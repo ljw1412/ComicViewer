@@ -210,7 +210,7 @@ public class ReadViewerActivity extends Activity {
             }
 
         });
-        viewPager.setOffscreenPageLimit(3);//TODO:之后改为可以设置的
+        viewPager.setOffscreenPageLimit(2);//TODO:之后改为可以设置的
         viewPager.setCurrentItem(0);//TODO:跳页
 
     }
@@ -224,46 +224,46 @@ public class ReadViewerActivity extends Activity {
 
         Log.d(TAG,url+"加载中");
         Glide.with(context)
-                .load(new GlideUrl(url
-                        ,new LazyHeaders.Builder().addHeader("Referer","http://www.manhuagui.com").build()
-                )).into(new DrawableImageViewTarget(pic){
-            @Override
-            public void onLoadStarted(@Nullable Drawable placeholder) {
-                super.onLoadStarted(placeholder);
-                PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
-                pictureViewHolder.progressBar.setVisibility(View.VISIBLE);
-                pictureViewHolder.btnRefresh.setVisibility(View.GONE);
-            }
+            .load(new GlideUrl(url
+                    ,new LazyHeaders.Builder().addHeader("Referer","http://www.manhuagui.com").build()
+            )).into(new DrawableImageViewTarget(pic){
+                @Override
+                public void onLoadStarted(@Nullable Drawable placeholder) {
+                    super.onLoadStarted(placeholder);
+                    PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
+                    pictureViewHolder.progressBar.setVisibility(View.VISIBLE);
+                    pictureViewHolder.btnRefresh.setVisibility(View.GONE);
+                }
 
-            @Override
-            public void onResourceReady(Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                super.onResourceReady(resource, transition);
-                PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
-                pictureViewHolder.progressBar.setVisibility(View.GONE);
-                pictureViewHolder.btnRefresh.setVisibility(View.GONE);
-                mAttacher.update();
+                @Override
+                public void onResourceReady(Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                    super.onResourceReady(resource, transition);
+                    PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
+                    pictureViewHolder.progressBar.setVisibility(View.GONE);
+                    pictureViewHolder.btnRefresh.setVisibility(View.GONE);
+                    mAttacher.update();
 
-                mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                    @Override
-                    public void onViewTap(View view, float x, float y) {
-                        if (mAttacher.getScale() <= 1 && !isScroll) {
-                            Log.d(TAG,"onViewTap :"+x+" "+y);
-                            areaClickHelper.onClick(x, y);
+                    mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                        @Override
+                        public void onViewTap(View view, float x, float y) {
+                            if (mAttacher.getScale() <= 1 && !isScroll) {
+                                Log.d(TAG,"onViewTap :"+x+" "+y);
+                                areaClickHelper.onClick(x, y);
+                            }
                         }
-                    }
-                });
+                    });
 
-                Log.d(TAG,"OK");
-            }
+                    Log.d(TAG,"OK");
+                }
 
-            @Override
-            public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                super.onLoadFailed(errorDrawable);
-                Log.e(TAG, "onLoadFailed: "+url+"加载失败！");
-                PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
-                pictureViewHolder.progressBar.setVisibility(View.GONE);
-                pictureViewHolder.btnRefresh.setVisibility(View.VISIBLE);
-            }
+                @Override
+                public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                    super.onLoadFailed(errorDrawable);
+                    Log.e(TAG, "onLoadFailed: "+url+"加载失败！");
+                    PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
+                    pictureViewHolder.progressBar.setVisibility(View.GONE);
+                    pictureViewHolder.btnRefresh.setVisibility(View.VISIBLE);
+                }
         });
     }
 

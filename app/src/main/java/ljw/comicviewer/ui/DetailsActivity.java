@@ -6,11 +6,10 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.os.Handler;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,6 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,18 +31,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
-import ljw.comicviewer.util.DialogUtil;
-import ljw.comicviewer.util.DisplayUtil;
-import ljw.comicviewer.bean.CallBackData;
 import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.bean.Comic;
-import ljw.comicviewer.ui.fragment.ChaptersFragment;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
+import ljw.comicviewer.ui.fragment.ChaptersFragment;
+import ljw.comicviewer.util.DialogUtil;
+import ljw.comicviewer.util.DisplayUtil;
 
 public class DetailsActivity extends AppCompatActivity
         implements SwipeRefreshLayout.OnRefreshListener, ComicService.RequestCallback {
     private String TAG = this.getClass().getSimpleName()+"----";
+    Bitmap cover;
     private Context context;
     private boolean isLoaded = false;
     private Comic comic = new Comic();
@@ -184,7 +186,10 @@ public class DetailsActivity extends AppCompatActivity
 
     //加载封面
     public void getCover(){
-        ComicService.get().getImage(this,comic.getImageUrl(),-1);
+        RequestOptions options = new RequestOptions();
+        options.placeholder(R.drawable.img_load_before)
+                .error(R.drawable.img_load_failed).centerCrop();
+        Glide.with(context).load(comic.getImageUrl()).apply(options).into(img_cover);
     }
 
 
@@ -226,12 +231,6 @@ public class DetailsActivity extends AppCompatActivity
         details_container.setRefreshing(true);
         // 获取对象，重新获取当前目录对象
         loadComicInformation();
-        //2秒刷新事件
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {details_container.setRefreshing(false);
-//            }
-//        }, 2000);
     }
 
     //TODO:网络请求，更新UI
@@ -259,16 +258,6 @@ public class DetailsActivity extends AppCompatActivity
                 details_container.setRefreshing(false);
                 Log.d(TAG, "onResponse: "+comic.toString());
                 break;
-            case Global.REQUEST_COMICS_IMAGE:
-                CallBackData callBackData = (CallBackData) data;
-                Bitmap cover = (Bitmap) callBackData.getObj();
-                if(cover==null){
-                    img_cover.setImageResource(R.drawable.img_load_failed);
-                }else{
-                    img_cover.setImageBitmap(cover);
-                }
-                Log.d(TAG,callBackData.getMsg());
-                break;
         }
     }
 
@@ -277,5 +266,11 @@ public class DetailsActivity extends AppCompatActivity
         Log.e(TAG, "Error: " + msg);
         details_container.setRefreshing(false);
         txtError.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        img_cover = null;
     }
 }

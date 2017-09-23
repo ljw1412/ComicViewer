@@ -21,7 +21,8 @@
             android:id="@+id/comic_img"
             android:adjustViewBounds="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter" />
 
         <LinearLayout
             android:orientation="horizontal"

@@ -25,6 +25,7 @@ public class ComicService {
     private String coverHost = Global.MANHUAGUI_COVER;
     private CallBackData callBackData;
 
+    private ComicService(){}
 
     public static ComicService get(){
         if(comicService==null){
@@ -49,19 +50,8 @@ public class ComicService {
         return getService(host).getHTML(path);
     }
 
-    private Call<String> getList(int page){
-        return getService(host).getList(page);
-    }
-
-    private Call<String> getDetails(String id){
-        return getService(host).getDetails(id);
-    }
-
-    private Call<ResponseBody> getCover(String url){
-        return getService(coverHost).getCover(url);//.replace(coverHost,""));
-    }
-
     //获得指定页数的漫画列表对象
+    private Call<String> getList(int page){return getService(host).getList(page);}
     public void getListItems(final RequestCallback requestCallback,int page){
         Call<String> call = ComicService.get().getList(page);
         final String what = Global.REQUEST_COMICS_LIST;
@@ -77,43 +67,14 @@ public class ComicService {
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                requestCallback.onError("网络请求失败",what);
+                requestCallback.onError("getList()网络请求失败",what);
             }
         });
     }
 
-    //获得漫画图片相关
-    public void getImage(final RequestCallback requestCallback,
-                         String url, final int number) {//url = comicList.get(i).getImageUrl()
-        Call<ResponseBody> call = ComicService.get().getCover(url);
-        final String what = Global.REQUEST_COMICS_IMAGE;
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String msg = (number==-1?"封面":"图片"+number)+"加载";
-                callBackData = new CallBackData();
-                callBackData.setArg1(number);
-                Log.d(TAG, (number==-1?"封面":"图片"+number)+"请求的onResponse: " + call.request().toString());
-                if (response.body() == null) {
-                    callBackData.setObj(null);
-                    msg+="失败";
-                } else {
-                    Bitmap bCover = BitmapFactory.decodeStream(response.body().byteStream());
-                    callBackData.setObj(bCover);
-                    msg += (bCover==null ?"失败" :"成功");
-                }
-                callBackData.setMsg(msg);
-                requestCallback.onFinish(callBackData,what);
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                requestCallback.onError(number + "加载失败,网络请求失败！",what);
-            }
-        });
-    }
 
     //加载漫画数据
+    private Call<String> getDetails(String id){return getService(host).getDetails(id);}
     public void getComicInfo(final RequestCallback requestCallback, String comic_id){
         Call<String> call = ComicService.get().getDetails(comic_id);
         final String what = Global.REQUEST_COMICS_INFO;
@@ -129,11 +90,32 @@ public class ComicService {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                requestCallback.onError("网络请求失败！",what);
+                requestCallback.onError("getDetails()网络请求失败！",what);
             }
         });
     }
 
+    private Call<String> getSearch(String keyword){return getService(host).getSearch(keyword);}
+    //搜索页面
+    public void getComicSearch(final RequestCallback requestCallback , String keyword){
+        Call<String> call = ComicService.get().getSearch(keyword);
+        final String what = Global.REQUEST_COMICS_SEARCH;
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if(response.body()!=null){
+                    requestCallback.onFinish(response.body().toString(),what);
+                }else {
+                    requestCallback.onError("获得response.body()为null，可能是代码失效！",what);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                requestCallback.onError("getComicSearch()网络请求失败！",what);
+            }
+        });
+    }
 
 
     //自定义回调接口

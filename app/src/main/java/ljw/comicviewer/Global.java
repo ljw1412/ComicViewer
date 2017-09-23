@@ -14,8 +14,8 @@ public class Global {
 
     //请求标识
     public static final String REQUEST_COMICS_LIST = "GET_COMICS_LIST";
-    public static final String REQUEST_COMICS_IMAGE = "REQUEST_COMICS_IMAGE";
     public static final String REQUEST_COMICS_INFO = "REQUEST_COMICS_INFO";
+    public static final String REQUEST_COMICS_SEARCH = "REQUEST_COMICS_SEARCH";
 
     public static final int LEFT = 0;
     public static final int RIGHT = 1;

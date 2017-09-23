@@ -11,7 +11,6 @@ import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.cache.DiskLruCacheFactory;
 import com.bumptech.glide.module.AppGlideModule;
 
-
 import java.io.File;
 
 /**
@@ -22,8 +21,9 @@ import java.io.File;
 public class GlideCache extends AppGlideModule {
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {
-        //设置图片的显示格式ARGB_8888(指图片大小为32bit)
+        //设置图片的显示格式ARGB_8888(指图片大小为32bit) 4.0+ 默认改为PREFER_ARGB_8888   4.0- 为PREFER_RGB_565
         builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);
+//        builder.setDecodeFormat(DecodeFormat.PREFER_RGB_565);
         File appCacheDir = context.getExternalCacheDir();
         File glideCacheDir = new File(appCacheDir,"GlideCache");
         if (!glideCacheDir.exists()) {

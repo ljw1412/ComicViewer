@@ -22,6 +22,9 @@ public class HttpInterface {
         @GET("comic/{id}/")
         Call<String> getDetails(@Path(value = "id",encoded = true) String id);
 
+        @GET("s/{keyword}.html")
+        Call<String> getSearch(@Path(value = "keyword",encoded = true) String keyword);
+
         @GET("{path}")
         Call<String> getHTML(@Path(value="path",encoded=true) String path);
 
