@@ -288,7 +288,7 @@ public class ReadViewerActivity extends Activity {
             if (!isShowTools){
                 Log.d(TAG, "showOrHideTools: 显示");
                 viewBottomStatus.setVisibility(View.GONE);
-                viewBottomStatus.setAnimation(AnimationUtil.fadeOut());
+                viewBottomStatus.setAnimation(AnimationUtil.fadeOut(300));
                 viewBottomTools.setVisibility(View.VISIBLE);
                 viewBottomTools.setAnimation(AnimationUtil.moveToViewBottomIn());
                 viewHead.setVisibility(View.VISIBLE);
@@ -296,7 +296,7 @@ public class ReadViewerActivity extends Activity {
             }else {
                 Log.d(TAG, "showOrHideTools: 隐藏");
                 viewBottomStatus.setVisibility(View.VISIBLE);
-                viewBottomStatus.setAnimation(AnimationUtil.fadeIn());
+                viewBottomStatus.setAnimation(AnimationUtil.fadeIn(300));
                 viewBottomTools.setVisibility(View.GONE);
                 viewBottomTools.setAnimation(AnimationUtil.moveToViewBottomOut());
                 viewHead.setVisibility(View.GONE);

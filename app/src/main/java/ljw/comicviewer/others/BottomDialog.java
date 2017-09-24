@@ -11,39 +11,43 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import ljw.comicviewer.R;
 /**
  * Created by ljw on 2017-09-04 004.
  */
 
-public class BottomDialog extends Dialog {
+public class BottomDialog extends Dialog{
     private Context context;
-    private View.OnClickListener onClickListener;
-    private TextView txt_title,txt_content;
-    private Button btn_ok,btn_cancel;
-    private LinearLayout btns;
+    private View.OnClickListener ClickOK;
+    @BindView(R.id.dialog_title)
+    TextView txt_title;
+    @BindView(R.id.dialog_content)
+    TextView txt_content;
+    @BindView(R.id.dialog_ok)
+    Button btn_ok;
+    @BindView(R.id.dialog_cancel)
+    Button btn_cancel;
+    @BindView(R.id.dialog_btns)
+    LinearLayout btns;
 
     public BottomDialog(Context context, int themeResId) {
         super(context, themeResId);
         this.context = context;
     }
 
-    public BottomDialog(Context context, int themeResId, View.OnClickListener onClickListener) {
+    public BottomDialog(Context context, int themeResId, View.OnClickListener ClickOK) {
         super(context, themeResId);
         this.context = context;
-        this.onClickListener = onClickListener;
+        this.ClickOK = ClickOK;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_common);
-
-        txt_title = (TextView) findViewById(R.id.dialog_title);
-        txt_content = (TextView) findViewById(R.id.dialog_content);
-        btns = (LinearLayout) findViewById(R.id.dialog_btns);
-        btn_ok = (Button) findViewById(R.id.dialog_ok);
-        btn_cancel = (Button) findViewById(R.id.dialog_cancel);
+        ButterKnife.bind(this);
 
         Window window = getWindow();
         window.setGravity(Gravity.BOTTOM);
@@ -54,6 +58,28 @@ public class BottomDialog extends Dialog {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.y=0;
         window.setAttributes(lp);
+
+
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        btn_ok.setOnClickListener(ClickOK);
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+    }
+
+    public View.OnClickListener getClickOK() {
+        return ClickOK;
+    }
+
+    public void setClickOK(View.OnClickListener clickOK) {
+        ClickOK = clickOK;
     }
 
     public void hiddenTitle(boolean hidden){
@@ -97,4 +123,6 @@ public class BottomDialog extends Dialog {
     public void setTextCancel(int titleId) {
         btn_cancel.setText(context.getResources().getString(titleId));
     }
+
+
 }

@@ -2,9 +2,11 @@ package ljw.comicviewer.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Comic;
+import ljw.comicviewer.util.AnimationUtil;
 
 import static com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade;
 
@@ -80,7 +83,7 @@ public class PictureGridAdapter extends BaseAdapter {
         pictureGridViewHolder.update.setText(comics.get(position).getUpdate());
         pictureGridViewHolder.updateStatus.setText(comics.get(position).getUpdateStatus());
         //图片加载代码移动到ComicGridFragment
-        loadCover(position,pictureGridViewHolder.image);
+//        loadCover(position,pictureGridViewHolder.image);
         return convertView;
     }
 

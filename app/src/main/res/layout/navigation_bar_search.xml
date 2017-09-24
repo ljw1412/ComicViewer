@@ -52,7 +52,7 @@
         <Button
             android:text="@string/txt_search"
             android:id="@+id/search_button"
-            android:background="@drawable/line_color_px"
+            android:background="@color/blue_A1E0F4"
             android:layout_gravity="center_vertical"
             android:layout_height="30dp"
             android:layout_width="60dp" />

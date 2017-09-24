@@ -7,12 +7,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.ValueCallback;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -35,9 +38,12 @@ import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
+import ljw.comicviewer.others.BottomDialog;
+import ljw.comicviewer.others.MyWebView;
 import ljw.comicviewer.ui.fragment.ChaptersFragment;
 import ljw.comicviewer.util.DialogUtil;
 import ljw.comicviewer.util.DisplayUtil;
+import ljw.comicviewer.util.WebViewUtil;
 
 public class DetailsActivity extends AppCompatActivity
         implements SwipeRefreshLayout.OnRefreshListener, ComicService.RequestCallback {
@@ -82,8 +88,8 @@ public class DetailsActivity extends AppCompatActivity
     TextView txtError;
     @BindView(R.id.details_main)
     ScrollView viewMain;
-//    @BindView(R.id.webview_details)
-//    WebView webview;
+    @BindView(R.id.webview_details)
+    WebView webview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,13 +176,6 @@ public class DetailsActivity extends AppCompatActivity
                     .replace(fragmentId[i], chaptersFragment_map.get(i)).commit();
         }
 
-
-//        Log.d(TAG, "onCreate: "+syncCookie(Global.MANHUAGUI_DOMAIN,"country=US"));
-//        webview = (WebView)findViewById(R.id.webview_details);
-//        webview.getSettings().setJavaScriptEnabled(true);
-//        webview.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
-//        webview.loadUrl(ComicService.get().getHost()+"/comic/"+8788+"/");
-//        webview.setWebViewClient(new MyWebView());
     }
 
     //加载数据
@@ -213,24 +212,45 @@ public class DetailsActivity extends AppCompatActivity
                 findViewById(typeTextId[i]).setVisibility(View.VISIBLE);
             }
         }
-
     }
 
+    private int tryTime = 0;
+    //获得信息
+    public void getChapters(){
+        details_container.setRefreshing(true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                webview.evaluateJavascript("document.getElementsByTagName('html')[0].outerHTML;", new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String s) {
+                        if (s.equals("null")){
+                            //TODO:加载失败
+                            if(tryTime>=5){
+                                details_container.setRefreshing(false);
+                                txtError.setVisibility(View.VISIBLE);
+                                Log.d(TAG,"debug:第"+tryTime+"重连");
+                            }else{
+                                tryTime++;
+                                getChapters();
+                            }
+                        }else{
+                            s=DisplayUtil.unicodeDecode(s).replace("\\\"","\"");
+                            Log.d(TAG, "onReceiveValue: "+s);
+                            details_container.setRefreshing(false);
+                            ComicFetcher.getComicChapters(s,comic);
+                            ChaptersDistribute(comic.getChapters());
+
+                            return;
+                        }
+                    }
+                });
+            }
+        }, 1500);
+    }
     //按标题栏返回按钮
     public void onBack(View view) {
         finish();
-    }
-
-    @Override
-    public void onRefresh() {
-        viewMain.setVisibility(View.GONE);
-        for(int i = 0 ; i<TYPE_MAX ;i++){
-            findViewById(typeTextId[i]).setVisibility(View.GONE);
-            chaptersFragment_map.get(i).clearChapters();
-        }
-        details_container.setRefreshing(true);
-        // 获取对象，重新获取当前目录对象
-        loadComicInformation();
     }
 
     //TODO:网络请求，更新UI
@@ -249,14 +269,30 @@ public class DetailsActivity extends AppCompatActivity
                 txt_info.setText(comic.getInfo());
                 txt_score.setText(comic.getScore());
                 ChaptersDistribute(comic.getChapters());
-                if (comic.isBan()){
-                    DialogUtil.showBottomDialog(context);
-                }
+                //默认焦点为顶部图片，防止滚轮不置顶
+                img_cover.setFocusableInTouchMode(true);
+                img_cover.requestFocus();
                 //显示详细界面
                 viewMain.setVisibility(View.VISIBLE);
                 txtError.setVisibility(View.GONE);
-                details_container.setRefreshing(false);
                 Log.d(TAG, "onResponse: "+comic.toString());
+                details_container.setRefreshing(false);
+                if (comic.isBan()){
+                    final BottomDialog bottomDialog = DialogUtil.showBottomDialog(context);
+                    bottomDialog.setClickOK(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.d(TAG, "onCreate: "+ WebViewUtil.syncCookie(context,Global.MANHUAGUI_DOMAIN,"country=US"));
+                            webview.getSettings().setJavaScriptEnabled(true);
+                            webview.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
+                            webview.loadUrl(Global.MANHUAGUI_HOST+"/comic/"+comic_id+"/");
+                            webview.setWebViewClient(new MyWebView());
+                            getChapters();
+                            bottomDialog.dismiss();
+                        }
+                    });
+                    bottomDialog.show();
+                }
                 break;
         }
     }
@@ -266,6 +302,18 @@ public class DetailsActivity extends AppCompatActivity
         Log.e(TAG, "Error: " + msg);
         details_container.setRefreshing(false);
         txtError.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onRefresh() {
+        viewMain.setVisibility(View.GONE);
+        for(int i = 0 ; i<TYPE_MAX ;i++){
+            findViewById(typeTextId[i]).setVisibility(View.GONE);
+            chaptersFragment_map.get(i).clearChapters();
+        }
+        details_container.setRefreshing(true);
+        // 获取对象，重新获取当前目录对象
+        loadComicInformation();
     }
 
     @Override

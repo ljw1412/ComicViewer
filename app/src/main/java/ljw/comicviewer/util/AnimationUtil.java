@@ -2,6 +2,7 @@ package ljw.comicviewer.util;
 
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 
 /**
@@ -63,9 +64,9 @@ public class AnimationUtil {
      * 渐入
      * @return
      */
-    public static AlphaAnimation fadeIn(){
+    public static AlphaAnimation fadeIn(int duration){
         AlphaAnimation anim = new AlphaAnimation(0.0f,1.0f);
-        anim.setDuration(300);
+        anim.setDuration(duration);
         return anim;
     }
 
@@ -73,9 +74,29 @@ public class AnimationUtil {
      * 渐出
      * @return
      */
-    public static AlphaAnimation fadeOut(){
+    public static AlphaAnimation fadeOut(int duration){
         AlphaAnimation anim = new AlphaAnimation(1.0f,0.0f);
-        anim.setDuration(300);
+        anim.setDuration(duration);
+        return anim;
+    }
+
+    /**
+     * 从小变大(中心)
+     * @return
+     */
+    public static ScaleAnimation smallToLarge(int duration){
+        ScaleAnimation anim = new ScaleAnimation(0,1.0f,0,1.0f,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        anim.setDuration(duration);
+        return anim;
+    }
+
+    /**
+     * 从小变大(中心)
+     * @return
+     */
+    public static ScaleAnimation largeToSmall(int duration){
+        ScaleAnimation anim = new ScaleAnimation(1.0f,0,1.0f,0, Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        anim.setDuration(duration);
         return anim;
     }
 }

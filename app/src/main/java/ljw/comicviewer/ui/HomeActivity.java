@@ -10,7 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AnimationSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,6 +25,7 @@ import ljw.comicviewer.R;
 import ljw.comicviewer.ui.fragment.CollectionFragment;
 import ljw.comicviewer.ui.fragment.ComicGridFragment;
 import ljw.comicviewer.ui.fragment.MineFragment;
+import ljw.comicviewer.util.AnimationUtil;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -50,6 +53,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     TextView nav_title;
     @BindView(R.id.nav_btn_search)
     ImageView btnSearch;
+    @BindView(R.id.nav_btn_search_bg)
+    ImageView btnSearchBG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +76,29 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         ButterKnife.bind(this);
         //默认漫画标签
         img_comic.setSelected(true);
+
+        btnSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        //按住
+                        btnSearchBG.setVisibility(View.VISIBLE);
+                        AnimationSet set = new AnimationSet(false);
+                        set.addAnimation(AnimationUtil.smallToLarge(500));
+                        set.addAnimation(AnimationUtil.fadeIn(500));
+                        btnSearchBG.startAnimation(set);
+//                        btnSearch.setBackgroundResource(R.drawable.shape_circular);
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP:
+//                        btnSearch.setBackgroundResource(0);
+                        btnSearchBG.setVisibility(View.GONE);
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
 

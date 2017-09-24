@@ -3,6 +3,7 @@ package ljw.comicviewer.ui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -91,8 +92,6 @@ public class ComicGridFragment extends Fragment
     }
 
     private void initPTRGridView(View view) {
-        // 得到下拉刷新的GridView
-        pullToRefreshGridView = (PullToRefreshGridView) view.findViewById(R.id.comic_info_pull_refresh_grid);
         // 设置监听器，这个监听器是可以监听双向滑动的，这样可以触发不同的事件
         pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
             @Override
@@ -129,7 +128,7 @@ public class ComicGridFragment extends Fragment
         gridView.setAdapter(pictureGridAdapter);
         gridView.setOnScrollListener(this);
         gridView.setOnItemClickListener(new ItemClickListener());
-
+        pictureGridAdapter.notifyDataSetChanged();
     }
 
     //获得漫画列表对象并存入comicList
@@ -163,18 +162,34 @@ public class ComicGridFragment extends Fragment
 //        Log.d(TAG, "onScroll: "+firstItem+","+visibleItem+","+totalItem);
     }
 
+    public void delayedFlushAdapter(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                pictureGridAdapter.notifyDataSetChanged();
+                clearAndLoadImage();
+            }
+        },200);
+    }
 
-
+    //清理不可见是item,加载可见的item。如果是第一次加载这加载整页
     public void clearAndLoadImage(){
         int firstVisiblePosition= gridView.getFirstVisiblePosition();
         int lastVisiblePosition = gridView.getLastVisiblePosition();
+        if (lastVisiblePosition==-1){
+            delayedFlushAdapter();
+            return;
+        }
         for(int i = 0; i < gridView.getCount();i++){
             View view = pictureGridAdapter.getViewMap().get(i);
-            if(i<firstVisiblePosition || i>lastVisiblePosition){
-                if (view!=null){
-                    ImageView image = (ImageView) view.findViewById(R.id.comic_img);
+            if (view!=null){
+                ImageView image = (ImageView) view.findViewById(R.id.comic_img);
+                if(i<firstVisiblePosition || i>lastVisiblePosition){
+                    Log.d(TAG, "clearAndLoadImage: "+i);
                     image.setImageBitmap(null);
                     image.setImageDrawable(null);
+                }else{
+                    pictureGridAdapter.loadCover(i,image);
                 }
             }
         }

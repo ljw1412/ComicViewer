@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ljw.comicviewer.bean.CallBackData;
 import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.bean.ManhuaguiComicInfo;
@@ -62,7 +63,6 @@ public class ComicFetcher {
             comic.setScore(element.select("span em").text());
             comic.setUpdate("更新于"+getPattern(REG_DATE,element.select("span.updateon").text(),0));
             comic.setUpdateStatus(element.select("a.bcover span.tt").text());
-            comic.setCover(null);
             comic.setEnd(element.select("a.bcover span").last().className().equals("fd") ? true : false);
             list.add(comic);
 //           list.add(element.attr("href")+"\n");
@@ -102,6 +102,38 @@ public class ComicFetcher {
             comic.setBan(true);
         }
         return comic;
+    }
+
+    //漫画搜索
+    public static CallBackData getSearchResults(String html){
+        List<Comic> list = new ArrayList<>();
+        Document doc = Jsoup.parse(html);
+        Elements comicItems = doc.select(".book-result li");
+        for (Element li : comicItems) {
+            Comic comic = new Comic();
+            comic.setId(getPattern(REG_COMIC_ID,li.select("a.bcover").attr("href"),1));
+            comic.setName(li.select("dt a").get(0).text());
+            comic.setImageUrl(getPattern(REG_COVER_URL_REG,li.select("a.bcover img").toString(),0));
+            comic.setUpdateStatus(li.select("a.bcover span.tt").text());
+            comic.setScore(li.select(".book-score .score-avg strong").text());
+            comic.setUpdate(li.select(".book-detail .status span span").get(1).text());
+            comic.setUpdateStatus("更新至"+li.select(".book-detail .status span a").get(0).text());
+            comic.setEnd(li.select(".book-detail .status span span").get(0).text().contains("完结") ? true : false);
+            comic.setAuthor(li.select(".tags").get(2).select("span a").text());
+            comic.setTag(li.select(".tags").get(1).select("span").get(2).select("a").text());
+            comic.setInfo(li.select(".intro").text().replaceAll("\\[详情\\]",""));
+            list.add(comic);
+            Log.d("----", "getSearchResults: "+comic.toString());
+        }
+        CallBackData backData = new CallBackData();
+        backData.setObj(list);
+        try {
+            int maxPage = (Integer.valueOf(doc.select(".result-count strong").last().text())+9)/10;
+            backData.setArg1(maxPage);
+        }catch (Exception e){
+
+        }
+        return backData;
     }
 
 

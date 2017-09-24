@@ -95,10 +95,10 @@ public class ComicService {
         });
     }
 
-    private Call<String> getSearch(String keyword){return getService(host).getSearch(keyword);}
+    private Call<String> getSearch(String keyword,String page){return getService(host).getSearch(keyword,page);}
     //搜索页面
-    public void getComicSearch(final RequestCallback requestCallback , String keyword){
-        Call<String> call = ComicService.get().getSearch(keyword);
+    public void getComicSearch(final RequestCallback requestCallback , String keyword , int page){
+        Call<String> call = ComicService.get().getSearch(keyword,page+"");
         final String what = Global.REQUEST_COMICS_SEARCH;
         call.enqueue(new Callback<String>() {
             @Override

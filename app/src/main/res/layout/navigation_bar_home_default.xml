@@ -27,13 +27,30 @@
         android:gravity="center_vertical"
         android:id="@+id/nav_btn_search"
         android:clickable="true"
-        android:layout_height="fill_parent"
         android:layout_centerVertical="true"
-        android:layout_width="48.0dp"
         android:elevation="1dp"
         app:srcCompat="@drawable/ico_search"
         android:layout_alignParentEnd="false"
         android:layout_alignParentRight="true"
-        android:padding="10dp" />
+        android:padding="5dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_margin="5dp" />
+
+    <ImageView
+        android:gravity="center_vertical"
+        android:id="@+id/nav_btn_search_bg"
+        android:clickable="true"
+        android:layout_centerVertical="true"
+        android:elevation="0dp"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="true"
+        android:padding="5dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/shape_circular"
+        android:visibility="gone"
+        android:alpha="0.5" />
 
 </RelativeLayout>

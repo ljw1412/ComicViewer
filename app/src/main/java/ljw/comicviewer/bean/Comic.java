@@ -12,7 +12,6 @@ public class Comic {
     private String id;
     private String name;//漫画名
     private String author;//作者
-    private Bitmap cover;//封面图片
     private String imageUrl;//封面图片地址
     private String update;//更新日期
     private String updateStatus;//更新情况 如：更新至第1话
@@ -43,13 +42,6 @@ public class Comic {
         isEnd = end;
     }
 
-    public Bitmap getCover() {
-        return cover;
-    }
-
-    public void setCover(Bitmap cover) {
-        this.cover = cover;
-    }
 
     public String getUpdateStatus() {
         return updateStatus;
@@ -145,7 +137,6 @@ public class Comic {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", author='" + author + '\'' +
-                ", cover=" + cover +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", update='" + update + '\'' +
                 ", updateStatus='" + updateStatus + '\'' +

@@ -1,30 +1,54 @@
 package ljw.comicviewer.ui;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
+import ljw.comicviewer.bean.CallBackData;
+import ljw.comicviewer.bean.Comic;
+import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
+import ljw.comicviewer.ui.adapter.SearchListAdapter;
 
-public class SearchActivity extends AppCompatActivity implements ComicService.RequestCallback{
+public class SearchActivity extends AppCompatActivity
+        implements ComicService.RequestCallback{
     private String TAG = this.getClass().getSimpleName()+"----";
-    Context context;
-    boolean Searching = false;
-
+    private Context context;
+    private List<Comic> comics = new ArrayList<>();
+    private String keyword;
+    private int curPage = 1;
+    private int maxPage = -1;
+    private boolean Searching = false;
+    private boolean loading = false;
+    private SearchListAdapter searchListAdapter;
+    private LinearLayoutManager linearLayoutManager;
     @BindView(R.id.search_button)
     Button btn_search;
     @BindView(R.id.search_edit)
     EditText edit_search;
+    @BindView(R.id.search_pull_refresh_list)
+    PullToRefreshListView pullToRefreshListView;
+    ListView listview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +56,42 @@ public class SearchActivity extends AppCompatActivity implements ComicService.Re
         setContentView(R.layout.activity_search);
         context = this;
         ButterKnife.bind(this);
+        initPTRGridView();
+        initGridView();
+
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
+
+        btn_search.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        //按住
+                        btn_search.setBackgroundResource(R.color.black_shadow);
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP:
+                        //抬起
+                        btn_search.setBackgroundResource(R.color.blue_A1E0F4);
+                        break;
+                }
+                return false;
+            }
+        });
 
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String keyword = edit_search.getText().toString();
+                keyword = edit_search.getText().toString();
                 if (!keyword.trim().equals("")){
                     Toast.makeText(context,keyword,Toast.LENGTH_LONG).show();
+                    comics.clear();
+                    searchListAdapter.notifyDataSetChanged();
+                    curPage = 1;
+                    pullToRefreshListView.setFocusableInTouchMode(true);
+                    pullToRefreshListView.requestFocus();
+                    HideKeyboard(view);
+                    search(keyword,curPage);
                 } else {
                     Toast.makeText(context,"关键字不能为空白！",Toast.LENGTH_LONG).show();
                 }
@@ -46,9 +99,55 @@ public class SearchActivity extends AppCompatActivity implements ComicService.Re
         });
     }
 
-    public void search(String keyword){
-        ComicService.get().getComicSearch(this,keyword);
+    private void initPTRGridView() {
+        // 设置监听器，这个监听器是可以监听双向滑动的，这样可以触发不同的事件
+        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+//                Toast.makeText(context, "下拉", Toast.LENGTH_SHORT).show();
+                curPage = 1;
+                comics.clear();
+                searchListAdapter.notifyDataSetChanged();
+                curPage = 1;
+                search(keyword,curPage);
+            }
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+//                Toast.makeText(context, "上拉", Toast.LENGTH_SHORT).show();
+                Glide.get(context).clearMemory();
+                loading = true;
+//                Glide.clear();
+                search(keyword,++curPage);
+                Log.d(TAG,"load next page; currentLoadingPage = "+curPage);
+            }
+        });
     }
+
+    private void initGridView() {
+        listview = pullToRefreshListView.getRefreshableView();
+
+        searchListAdapter = new SearchListAdapter(context,comics);
+        listview.setAdapter(searchListAdapter);
+//        listview.setOnScrollListener(this);
+//        listview.setOnItemClickListener(new ComicGridFragment.ItemClickListener());
+        searchListAdapter.notifyDataSetChanged();
+    }
+
+
+    public void search(String keyword,int page){
+        ComicService.get().getComicSearch(this,keyword,page);
+    }
+
+    //隐藏虚拟键盘
+    public static void HideKeyboard(View v)
+    {
+        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService( Context.INPUT_METHOD_SERVICE );
+        if ( imm.isActive() ) {
+            imm.hideSoftInputFromWindow( v.getApplicationWindowToken() , 0 );
+
+        }
+    }
+
 
     public void onBack(View view) {
         finish();
@@ -59,7 +158,13 @@ public class SearchActivity extends AppCompatActivity implements ComicService.Re
         switch (what){
             case Global.REQUEST_COMICS_SEARCH:
                 String html = (String) data;
-                Log.d(TAG,html);
+                CallBackData callbackdata = ComicFetcher.getSearchResults(html);
+                comics.addAll((List<Comic>) callbackdata.getObj());
+                maxPage = (int) callbackdata.getArg1();
+                pullToRefreshListView.onRefreshComplete();
+                pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+                searchListAdapter.notifyDataSetChanged();
+                loading = false;
                 break;
         }
     }

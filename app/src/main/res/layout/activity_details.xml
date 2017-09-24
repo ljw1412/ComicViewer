@@ -30,7 +30,8 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/details_main">
+            android:id="@+id/details_main"
+            android:scrollY="0dp">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -344,8 +345,7 @@
         android:id="@+id/webview_details"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
     </WebView>
 
 </RelativeLayout>

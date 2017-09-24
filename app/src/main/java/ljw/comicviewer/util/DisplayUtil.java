@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by ljw on 2017-08-29 029.
@@ -67,4 +69,45 @@ public class DisplayUtil {
         return array;
     }
 
+    //unicode解码
+
+
+    public static String unicodeDecode1(String s) {
+        Pattern reUnicode = Pattern.compile("\\\\u([0-9a-zA-Z]{4})");
+        Matcher m = reUnicode.matcher(s);
+        StringBuffer sb = new StringBuffer(s.length());
+        while (m.find()) {
+            m.appendReplacement(sb,
+                    Character.toString((char) Integer.parseInt(m.group(1), 16)));
+        }
+        m.appendTail(sb);
+        return sb.toString();
+    }
+
+    public static String unicodeDecode(String s) {
+        StringBuilder sb = new StringBuilder(s.length());
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            char c = chars[i];
+            if (c == '\\' && chars[i + 1] == 'u') {
+                char cc = 0;
+                for (int j = 0; j < 4; j++) {
+                    char ch = Character.toLowerCase(chars[i + 2 + j]);
+                    if ('0' <= ch && ch <= '9' || 'a' <= ch && ch <= 'f') {
+                        cc |= (Character.digit(ch, 16) << (3 - j) * 4);
+                    } else {
+                        cc = 0;
+                        break;
+                    }
+                }
+                if (cc > 0) {
+                    i += 5;
+                    sb.append(cc);
+                    continue;
+                }
+            }
+            sb.append(c);
+        }
+        return sb.toString();
+    }
 }
