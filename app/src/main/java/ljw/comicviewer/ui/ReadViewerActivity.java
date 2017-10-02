@@ -3,6 +3,7 @@ package ljw.comicviewer.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,9 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.MemoryCategory;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 
@@ -152,10 +155,25 @@ public class ReadViewerActivity extends Activity {
             //TIPS:PhotoViewAttacher加载时会拦截此监听
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (!isScroll){
-                    float DownX = motionEvent.getX();
-                    float DownY = motionEvent.getY();
-                    viewPager.getAreaClickHelper().onClick(DownX,DownY);
+                float DownX = 0,DownY = 0,MoveX = 0,MoveY;
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN://0
+                        DownX = motionEvent.getX();
+                        DownY = motionEvent.getY();
+//                        Log.d(TAG, "onTouch: "+motionEvent.getAction()+" "+DownX+","+DownY);
+                        break;
+                    case MotionEvent.ACTION_MOVE://2
+                        MoveX = DownX - motionEvent.getX();
+                        MoveY = DownY - motionEvent.getY();
+//                        Log.d(TAG, "onTouch: "+motionEvent.getAction()+" "+MoveX+","+MoveY);
+                        break;
+                    case MotionEvent.ACTION_UP://1
+                        DownX = motionEvent.getX();
+                        DownY = motionEvent.getY();
+                        if(Math.abs(MoveX)<20){
+                            viewPager.getAreaClickHelper().onClick(DownX,DownY);
+                        }
+                        break;
                 }
                 return false;
             }
@@ -215,55 +233,60 @@ public class ReadViewerActivity extends Activity {
 
     }
 
-    public void loadImage(final String url, final Object viewHolder){
+    public void loadImage(final String url, final Object viewHolder,int position){
         final PhotoView pic = ((PicturePagerAdapter.PictureViewHolder) viewHolder).ivPicture;
         final PhotoViewAttacher mAttacher = new PhotoViewAttacher(pic);
+        //记录下标与PhotoViewAttacher的关系用于回收资源
+        picturePagerAdapter.getPVAMap().put(position,mAttacher);
         final AreaClickHelper areaClickHelper = viewPager.getAreaClickHelper();
 
         RequestOptions options = new RequestOptions();
 
-        Log.d(TAG,url+"加载中");
         Glide.with(context)
+            .asBitmap()
             .load(new GlideUrl(url
                     ,new LazyHeaders.Builder().addHeader("Referer","http://www.manhuagui.com").build()
-            )).into(new DrawableImageViewTarget(pic){
-                @Override
-                public void onLoadStarted(@Nullable Drawable placeholder) {
-                    super.onLoadStarted(placeholder);
-                    PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
-                    pictureViewHolder.progressBar.setVisibility(View.VISIBLE);
-                    pictureViewHolder.btnRefresh.setVisibility(View.GONE);
-                }
+            )).into(new BitmapImageViewTarget(pic){
+            @Override
+            public void onLoadStarted(@Nullable Drawable placeholder) {
+                super.onLoadStarted(placeholder);
+                Log.d(TAG,url+" 开始加载");
+                PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
+                pictureViewHolder.progressBar.setVisibility(View.VISIBLE);
+                pictureViewHolder.btnRefresh.setVisibility(View.GONE);
+            }
 
-                @Override
-                public void onResourceReady(Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                    super.onResourceReady(resource, transition);
-                    PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
-                    pictureViewHolder.progressBar.setVisibility(View.GONE);
-                    pictureViewHolder.btnRefresh.setVisibility(View.GONE);
-                    mAttacher.update();
 
-                    mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                        @Override
-                        public void onViewTap(View view, float x, float y) {
-                            if (mAttacher.getScale() <= 1 && !isScroll) {
-                                Log.d(TAG,"onViewTap :"+x+" "+y);
-                                areaClickHelper.onClick(x, y);
-                            }
+            @Override
+            public void onResourceReady(Bitmap bitmap, @Nullable Transition<? super Bitmap> transition) {
+                super.onResourceReady(bitmap, transition);
+                PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
+                pictureViewHolder.progressBar.setVisibility(View.GONE);
+                pictureViewHolder.btnRefresh.setVisibility(View.GONE);
+//                pic.setImageBitmap();
+                mAttacher.update();
+
+                mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                    @Override
+                    public void onViewTap(View view, float x, float y) {
+                        if (mAttacher.getScale() <= 1 && !isScroll) {
+                            Log.d(TAG,"onViewTap :"+x+" "+y);
+                            areaClickHelper.onClick(x, y);
                         }
-                    });
+                    }
+                });
 
-                    Log.d(TAG,"OK");
-                }
+                Log.d(TAG,"OK");
+            }
 
-                @Override
-                public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                    super.onLoadFailed(errorDrawable);
-                    Log.e(TAG, "onLoadFailed: "+url+"加载失败！");
-                    PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
-                    pictureViewHolder.progressBar.setVisibility(View.GONE);
-                    pictureViewHolder.btnRefresh.setVisibility(View.VISIBLE);
-                }
+            @Override
+            public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                super.onLoadFailed(errorDrawable);
+                Log.e(TAG, "onLoadFailed: "+url+"加载失败！");
+                PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
+                pictureViewHolder.progressBar.setVisibility(View.GONE);
+                pictureViewHolder.btnRefresh.setVisibility(View.VISIBLE);
+            }
         });
     }
 

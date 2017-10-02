@@ -1,6 +1,7 @@
 package ljw.comicviewer.ui.adapter;
 
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,9 @@ import android.widget.ImageView;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,6 +21,7 @@ import ljw.comicviewer.ui.ReadViewerActivity;
 import ljw.comicviewer.ui.listeners.OnItemLongClickListener;
 import ljw.comicviewer.util.AreaClickHelper;
 import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by ljw on 2017-09-10 010.
@@ -67,23 +71,33 @@ public class PicturePagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         if (viewHolders.size() > position && viewHolders.get(position) != null) {
-            if (viewHolders.get(position).view != null)
+            if (viewHolders.get(position).view != null){
+                //回收资源
+                if (PVAMap.get(position)!=null){
+                    //回收PhotoViewAttacher产生的资源，防止溢出
+                    PVAMap.get(position).cleanup();
+                }
+                viewHolders.get(position).ivPicture.setImageBitmap(null);
+                viewHolders.get(position).ivPicture.setImageDrawable(null);
                 container.removeView(viewHolders.get(position).view);
+            }
             viewHolders.set(position, null);
         }
+        Log.d("----","close " + position);
+//        System.gc();
     }
 
-
+    private Map<Integer,PhotoViewAttacher> PVAMap = new HashMap<>();
     @Override
     public Object instantiateItem(final ViewGroup container, final int position) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_read_viewer, null);
         final PictureViewHolder viewHolder = new PictureViewHolder(view);
         if (imgUrls != null && position < imgUrls.size()) {
             final String url = imgUrls.get(position);
-            context.loadImage(url,viewHolder);
+            context.loadImage(url,viewHolder,position);
             viewHolder.btnRefresh.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {context.loadImage(url,viewHolder);
+                public void onClick(View view) {context.loadImage(url,viewHolder,position);
                 }
             });
             viewHolder.ivPicture.setOnLongClickListener(new View.OnLongClickListener() {
@@ -101,6 +115,9 @@ public class PicturePagerAdapter extends PagerAdapter {
         return viewHolder.view;
     }
 
+    public Map<Integer, PhotoViewAttacher> getPVAMap() {
+        return PVAMap;
+    }
 
     public class PictureViewHolder {
         @BindView(R.id.iv_picture)

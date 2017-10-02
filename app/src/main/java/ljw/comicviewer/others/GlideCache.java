@@ -9,6 +9,7 @@ import com.bumptech.glide.Registry;
 import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.cache.DiskLruCacheFactory;
+import com.bumptech.glide.load.engine.cache.LruResourceCache;
 import com.bumptech.glide.module.AppGlideModule;
 
 import java.io.File;
@@ -32,6 +33,7 @@ public class GlideCache extends AppGlideModule {
         Log.d("----","GlideCache缓存文件夹:"+glideCacheDir.getAbsolutePath());
         int cacheSize = 200 * 1024 * 1024;
         builder.setDiskCache(new DiskLruCacheFactory(glideCacheDir.getAbsolutePath(),cacheSize));
+        builder.setMemoryCache(new LruResourceCache(20 * 1024 * 1024));
     }
 
     @Override

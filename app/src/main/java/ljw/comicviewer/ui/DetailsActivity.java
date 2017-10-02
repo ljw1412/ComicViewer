@@ -319,6 +319,5 @@ public class DetailsActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        img_cover = null;
     }
 }

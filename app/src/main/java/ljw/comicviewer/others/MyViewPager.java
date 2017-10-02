@@ -15,6 +15,7 @@ public class MyViewPager extends ViewPager {
     private float DownX,moveX;
     public static final int MOVE_LEFT=0;
     public static final int MOVE_RIGHT=1;
+    public static final int Click = -1;
     private int moveStatus = -1;
 
     public MyViewPager(Context context) {
@@ -58,6 +59,8 @@ public class MyViewPager extends ViewPager {
                     //水平滑动距离大于20,认为是水平滑动。
 //                    Log.d("MyViewPager----", "dispatchTouchEvent: moveX="+moveX);
                     moveStatus = moveX > 0? MOVE_LEFT : MOVE_RIGHT;
+                }else{
+                    moveStatus = Click;
                 }
                 break;
         }
