@@ -100,36 +100,85 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_alignParentBottom="false"
+        android:layout_marginTop="-20dp"
+        android:layout_alignTop="@+id/read_viewer_tools"
+        android:layout_centerInParent="true"
+        android:elevation="22dp">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/read_viewer_seekbar_tips"
+            android:textColor="@color/white"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:id="@+id/read_viewer_tools"
-        android:layout_alignParentBottom="true"
         android:layout_height="72dp"
-        android:elevation="20dp"
-        android:background="@color/black_70">
+        android:layout_alignParentBottom="true"
+        android:elevation="12dp"
+        android:id="@+id/read_viewer_tools">
 
         <RelativeLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:id="@+id/read_viewer_can_not_click">
 
-            <TextView
-                android:text="page"
-                android:layout_width="56dp"
-                android:layout_height="match_parent"
-                android:id="@+id/read_viewer_tools_page"
-                android:textColor="@color/white"
-                android:gravity="center_vertical|center_horizontal" />
         </RelativeLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
+            android:id="@+id/read_viewer_all_tools"
+            android:layout_alignParentBottom="true"
             android:layout_height="match_parent"
-            android:layout_weight="1"></LinearLayout>
-    </LinearLayout>
+            android:elevation="20dp"
+            android:background="@color/black_70">
+
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:elevation="10dp">
+
+                <TextView
+                    android:text="page"
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/read_viewer_tools_page"
+                    android:textColor="@color/white"
+                    android:gravity="center_vertical|center_horizontal" />
+
+                <SeekBar
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/read_viewer_seekBar"
+                    android:maxHeight="5.0dp"
+                    android:minHeight="5.0dp"
+                    android:layout_toRightOf="@id/read_viewer_tools_page"
+                    android:progressDrawable="@drawable/seekbar_bg"
+                    android:thumb="@drawable/seekbar_thumb"
+                    android:layout_centerInParent="true"
+                    android:paddingRight="12dp"
+                    android:paddingLeft="8dp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:elevation="10dp"></LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"

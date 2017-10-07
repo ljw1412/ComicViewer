@@ -16,16 +16,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.MemoryCategory;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 
 import java.util.List;
@@ -69,7 +68,9 @@ public class ReadViewerActivity extends Activity {
     @BindView(R.id.read_viewer_head)
     RelativeLayout viewHead;
     @BindView(R.id.read_viewer_tools)
-    LinearLayout viewBottomTools;
+    RelativeLayout viewBottomTools;
+    @BindView(R.id.read_viewer_can_not_click)
+    RelativeLayout viewNotClick;
     @BindView(R.id.read_viewer_status)
     LinearLayout viewBottomStatus;
     @BindView(R.id.read_viewer_comic_name)
@@ -82,6 +83,10 @@ public class ReadViewerActivity extends Activity {
     TextView txtChapterName;
     @BindView(R.id.read_viewer_mask)
     RelativeLayout viewMask;
+    @BindView(R.id.read_viewer_seekBar)
+    SeekBar mySeekBar;
+    @BindView(R.id.read_viewer_seekbar_tips)
+    TextView txtSeekBarTips;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,10 +110,12 @@ public class ReadViewerActivity extends Activity {
         viewMask.setOnClickListener(null);
         onItemLongClickListener = new MyOnItemLongClickListener();
         initView();
+        initSeekBar();
         setTime();
     }
 
     private void initView() {
+        viewNotClick.setOnClickListener(null);
         txtComicName.setText(comic_name);
         txtComicChapterName.setText(chapter_name);
         txtChapterName.setText(chapter_name);
@@ -230,6 +237,36 @@ public class ReadViewerActivity extends Activity {
         });
         viewPager.setOffscreenPageLimit(2);//TODO:之后改为可以设置的
         viewPager.setCurrentItem(0);//TODO:跳页
+    }
+
+    public void initSeekBar(){
+        mySeekBar.setMax(imgUrls.size()-1);
+        mySeekBar.setProgress(currPos);
+        mySeekBar.setSecondaryProgress(currPos);
+        txtSeekBarTips.setText((currPos+1)+"/"+imgUrls.size());
+        mySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar sb, int i, boolean b) {
+//                txtSeekBarTips.setText(i);
+                try {
+
+                    txtSeekBarTips.setText((i+1)+"/"+imgUrls.size());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
     }
 
