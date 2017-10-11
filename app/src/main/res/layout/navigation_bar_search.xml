@@ -40,7 +40,8 @@
             android:layout_gravity="center_vertical"
             android:paddingLeft="2dp"
             android:layout_weight="1"
-            android:paddingRight="2dp" />
+            android:paddingRight="2dp"
+            android:imeOptions="actionDone" />
 
         <FrameLayout
             android:layout_width="1dp"

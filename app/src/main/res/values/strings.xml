@@ -32,4 +32,6 @@
     <string name="tips_is_first">前面没有了…</string>
     <string name="tips_is_last">后面没有了…</string>
     <string name="tips_search">请输入搜索的关键词</string>
+    <string name="opt_recommend">推荐</string>
+    <string name="opt_category">分类</string>
 </resources>

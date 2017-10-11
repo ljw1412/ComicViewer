@@ -99,4 +99,11 @@ public class AnimationUtil {
         anim.setDuration(duration);
         return anim;
     }
+
+    //水平移动
+    public static TranslateAnimation moveHorizontal(float px) {
+        TranslateAnimation anim = new TranslateAnimation(0,px,0,0);
+        anim.setDuration(300);
+        return anim;
+    }
 }

@@ -9,4 +9,7 @@
 
     <dimen name="dialog_title">20sp</dimen>
     <dimen name="dialog_content">16sp</dimen>
+
+    <dimen name="toolbar_font_size">20sp</dimen>
+    <dimen name="toolbar_height">48dp</dimen>
 </resources>

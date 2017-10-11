@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -58,8 +61,57 @@ public class SearchActivity extends AppCompatActivity
         ButterKnife.bind(this);
         initPTRGridView();
         initGridView();
+        initTitleBar();
 
+
+    }
+
+    private void initPTRGridView() {
+        // 设置监听器，这个监听器是可以监听双向滑动的，这样可以触发不同的事件
+        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+//                Toast.makeText(context, "下拉", Toast.LENGTH_SHORT).show();
+                curPage = 1;
+                comics.clear();
+                searchListAdapter.notifyDataSetChanged();
+                curPage = 1;
+                loadSearch(keyword,curPage);
+            }
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+//                Toast.makeText(context, "上拉", Toast.LENGTH_SHORT).show();
+                Glide.get(context).clearMemory();
+                loading = true;
+//                Glide.clear();
+                loadSearch(keyword,++curPage);
+                Log.d(TAG,"load next page; currentLoadingPage = "+curPage);
+            }
+        });
+        //未加载时，禁用上拉下拉界面
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
+    }
+
+    private void initGridView() {
+        listview = pullToRefreshListView.getRefreshableView();
+
+        searchListAdapter = new SearchListAdapter(context,comics);
+        listview.setAdapter(searchListAdapter);
+//        listview.setOnScrollListener(this);
+//        listview.setOnItemClickListener(new ComicGridFragment.ItemClickListener());
+        searchListAdapter.notifyDataSetChanged();
+    }
+
+    private void initTitleBar(){
+        edit_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                   searching(textView);
+                }
+                return true;
+            }
+        });
 
         btn_search.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -82,59 +134,29 @@ public class SearchActivity extends AppCompatActivity
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                keyword = edit_search.getText().toString();
-                if (!keyword.trim().equals("")){
-                    Toast.makeText(context,keyword,Toast.LENGTH_LONG).show();
-                    comics.clear();
-                    searchListAdapter.notifyDataSetChanged();
-                    curPage = 1;
-                    pullToRefreshListView.setFocusableInTouchMode(true);
-                    pullToRefreshListView.requestFocus();
-                    HideKeyboard(view);
-                    search(keyword,curPage);
-                } else {
-                    Toast.makeText(context,"关键字不能为空白！",Toast.LENGTH_LONG).show();
-                }
+                searching(view);
             }
         });
     }
 
-    private void initPTRGridView() {
-        // 设置监听器，这个监听器是可以监听双向滑动的，这样可以触发不同的事件
-        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-//                Toast.makeText(context, "下拉", Toast.LENGTH_SHORT).show();
-                curPage = 1;
-                comics.clear();
-                searchListAdapter.notifyDataSetChanged();
-                curPage = 1;
-                search(keyword,curPage);
-            }
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-//                Toast.makeText(context, "上拉", Toast.LENGTH_SHORT).show();
-                Glide.get(context).clearMemory();
-                loading = true;
-//                Glide.clear();
-                search(keyword,++curPage);
-                Log.d(TAG,"load next page; currentLoadingPage = "+curPage);
-            }
-        });
-    }
-
-    private void initGridView() {
-        listview = pullToRefreshListView.getRefreshableView();
-
-        searchListAdapter = new SearchListAdapter(context,comics);
-        listview.setAdapter(searchListAdapter);
-//        listview.setOnScrollListener(this);
-//        listview.setOnItemClickListener(new ComicGridFragment.ItemClickListener());
-        searchListAdapter.notifyDataSetChanged();
+    public void searching(View view){
+        keyword = edit_search.getText().toString();
+        if (!keyword.trim().equals("")){
+            Toast.makeText(context,keyword,Toast.LENGTH_LONG).show();
+            comics.clear();
+            searchListAdapter.notifyDataSetChanged();
+            curPage = 1;
+            pullToRefreshListView.setFocusableInTouchMode(true);
+            pullToRefreshListView.requestFocus();
+            HideKeyboard(view);
+            loadSearch(keyword,curPage);
+        } else {
+            Toast.makeText(context,"关键字不能为空白！",Toast.LENGTH_LONG).show();
+        }
     }
 
 
-    public void search(String keyword,int page){
+    public void loadSearch(String keyword, int page){
         ComicService.get().getComicSearch(this,keyword,page);
     }
 
@@ -165,6 +187,9 @@ public class SearchActivity extends AppCompatActivity
                 pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
                 searchListAdapter.notifyDataSetChanged();
                 loading = false;
+                if(curPage == maxPage){
+                    pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
+                }
                 break;
         }
     }

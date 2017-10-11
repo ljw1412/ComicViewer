@@ -2,17 +2,13 @@ package ljw.comicviewer.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AnimationSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,16 +19,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ljw.comicviewer.R;
 import ljw.comicviewer.ui.fragment.CollectionFragment;
-import ljw.comicviewer.ui.fragment.ComicGridFragment;
+import ljw.comicviewer.ui.fragment.HomeFragment;
 import ljw.comicviewer.ui.fragment.MineFragment;
-import ljw.comicviewer.util.AnimationUtil;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String TAG = HomeActivity.class.getSimpleName()+"----";
     private static Context context;
     private Fragment currentFragment;
-    private ComicGridFragment comicGridFragment;
+    private HomeFragment homeFragment;
     private MineFragment mineFragment;
     private FragmentManager fragmentManager;
     private CollectionFragment collectionFragment;
@@ -49,12 +44,18 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     ImageView img_collection;
     @BindView(R.id.img_mine)
     ImageView img_mine;
+
+    @BindView(R.id.nav_bar_default)
+    View nav_def;
     @BindView(R.id.title)
     TextView nav_title;
     @BindView(R.id.nav_btn_search)
     ImageView btnSearch;
-    @BindView(R.id.nav_btn_search_bg)
-    ImageView btnSearchBG;
+    @BindView(R.id.nav_bar_tabs)
+    LinearLayout nav_Tabs;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,38 +68,18 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         //fragment事务管理
         fragmentManager = getSupportFragmentManager();
 
-        if(comicGridFragment==null){
-            comicGridFragment = new ComicGridFragment();
+        if(homeFragment ==null){
+            homeFragment = new HomeFragment();
         }
-        setCurrentFragment(comicGridFragment);
+        setCurrentFragment(homeFragment);
 
         //view绑定代码生成
         ButterKnife.bind(this);
         //默认漫画标签
         img_comic.setSelected(true);
 
-        btnSearch.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        //按住
-                        btnSearchBG.setVisibility(View.VISIBLE);
-                        AnimationSet set = new AnimationSet(false);
-                        set.addAnimation(AnimationUtil.smallToLarge(500));
-                        set.addAnimation(AnimationUtil.fadeIn(500));
-                        btnSearchBG.startAnimation(set);
-//                        btnSearch.setBackgroundResource(R.drawable.shape_circular);
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP:
-//                        btnSearch.setBackgroundResource(0);
-                        btnSearchBG.setVisibility(View.GONE);
-                        break;
-                }
-                return false;
-            }
-        });
+        changeTitleBar();
+        changeToolBarOption(0);
     }
 
 
@@ -107,8 +88,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         if(mineFragment != null){
             ft.hide(mineFragment);
         }
-        if(comicGridFragment != null){
-            ft.hide(comicGridFragment);
+        if(homeFragment != null){
+            ft.hide(homeFragment);
         }
         if(collectionFragment != null){
             ft.hide(collectionFragment);
@@ -119,7 +100,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private void setCurrentFragment(Fragment fragment){
         FragmentTransaction ft=fragmentManager.beginTransaction();
         if(!fragment.isAdded()){
-            ft.add(R.id.content_home,fragment);//.commit();
+            ft.add(R.id.content_home,fragment);
         }
         hideAllFragment(ft);
         ft.show(fragment).commit();
@@ -141,6 +122,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void changeTitleBar(){
+        if(img_comic.isSelected()){
+            nav_Tabs.setVisibility(View.VISIBLE);
+            nav_title.setVisibility(View.GONE);
+        }else if(img_collection.isSelected() || img_mine.isSelected()){
+            nav_Tabs.setVisibility(View.GONE);
+            nav_title.setVisibility(View.VISIBLE);
+        }
+    }
+
     //点击事件
     @OnClick({R.id.goto_comic,R.id.goto_collection,R.id.goto_mine,R.id.nav_btn_search})
     @Override
@@ -148,9 +139,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.goto_comic:
                 setBtnSelected(img_comic);
-                setCurrentFragment(comicGridFragment);
+                setCurrentFragment(homeFragment);
                 setTitle(R.string.app_name);
                 btnSearch.setVisibility(View.VISIBLE);
+                changeTitleBar();
                 break;
             case R.id.goto_collection:
                 setBtnSelected(img_collection);
@@ -160,6 +152,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 setCurrentFragment(collectionFragment);
                 setTitle(R.string.txt_collection);
                 btnSearch.setVisibility(View.VISIBLE);
+                changeTitleBar();
                 break;
             case R.id.goto_mine:
                 setBtnSelected(img_mine);
@@ -169,6 +162,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 setCurrentFragment(mineFragment);
                 setTitle(R.string.txt_mine);
                 btnSearch.setVisibility(View.GONE);
+                changeTitleBar();
                 break;
             case R.id.nav_btn_search:
                 Intent intent = new Intent(context,SearchActivity.class);
@@ -176,6 +170,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+    private int[] tabIds = {R.id.option1,R.id.option2,R.id.option3,R.id.option4};
+    public void changeToolBarOption(int position){
+        for(int i = 0 ; i < tabIds.length ; i++){
+            TextView tabText = (TextView) findViewById(tabIds[i]);
+            tabText.setTextColor(Color.rgb(255,255,255));
+        }
+        ((TextView) findViewById(tabIds[position])).setTextColor(Color.rgb(108,226,108));
+    }
+
 
     @Override
     public void setTitle(CharSequence title) {
@@ -192,29 +196,4 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onBackPressed();
 
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent intent =new Intent(HomeActivity.this,SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 }

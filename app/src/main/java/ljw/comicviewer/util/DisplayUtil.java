@@ -26,6 +26,12 @@ public class DisplayUtil {
         return px/dm.density;
     }
 
+    public static float dpToPx(Context context,float dp){
+        Resources resources = context.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        return dp*dm.density;
+    }
+
     public static float getScreenWidth(Context context){
         Resources resources = context.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();

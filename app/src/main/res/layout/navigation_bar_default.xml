@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_navibar"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/toolbar_height"
+    android:background="@color/holo_red_light">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="48dp"
+        android:id="@+id/nav_bar_tabs">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="@string/opt_recommend"
+                android:layout_height="wrap_content"
+                android:id="@+id/option1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/toolbar_font_size"
+                android:layout_width="wrap_content"
+                android:layout_centerInParent="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="@string/opt_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/option2"
+                android:textColor="@color/white"
+                android:textSize="@dimen/toolbar_font_size"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="opt3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/option3"
+                android:textColor="@color/white"
+                android:textSize="@dimen/toolbar_font_size"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="opt4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/option4"
+                android:textColor="@color/white"
+                android:textSize="@dimen/toolbar_font_size"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/title"
+        android:ellipsize="marquee"
+        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:text="title"
+        android:textSize="18sp"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="false"
+        android:textStyle="normal|bold"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="48dp"
+        android:textColor="@color/white" />
+
+    <ImageView
+        android:gravity="center_vertical"
+        android:id="@+id/nav_btn_search"
+        android:clickable="true"
+        android:layout_centerVertical="true"
+        android:elevation="1dp"
+        app:srcCompat="@drawable/ico_search"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="true"
+        android:padding="5dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_margin="5dp"
+        android:background="?attr/actionBarItemBackground" />
+
+</RelativeLayout>

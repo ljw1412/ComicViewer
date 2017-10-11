@@ -194,6 +194,7 @@ public class ReadViewerActivity extends Activity {
             @Override
             public void onPageSelected(int position) {
                 currPos = position;
+                updateSeekBar(currPos);
                 setPageText((position+1)+"",picturePagerAdapter.getCount()+"");
                 viewMask.setVisibility(View.GONE);
             }
@@ -247,23 +248,18 @@ public class ReadViewerActivity extends Activity {
         mySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar sb, int i, boolean b) {
-//                txtSeekBarTips.setText(i);
-                try {
-
-                    txtSeekBarTips.setText((i+1)+"/"+imgUrls.size());
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+               txtSeekBarTips.setText((i+1)+"/"+imgUrls.size());
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                txtSeekBarTips.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                txtSeekBarTips.setVisibility(View.GONE);
+                gotoPage(seekBar.getProgress());
 
             }
         });
@@ -327,20 +323,36 @@ public class ReadViewerActivity extends Activity {
         });
     }
 
+    private void gotoPage(int page){
+        currPos = page - 1;
+        viewPager.setCurrentItem(page);
+    }
+
     private void prevPage(){
         int currItem = viewPager.getCurrentItem();
-        if (currItem > 0)
+        if (currItem > 0) {
+            currPos = currItem - 1;
             viewPager.setCurrentItem(currItem - 1);
+            updateSeekBar(currPos);
+        }
         else
             gotoLoading(false);
     }
 
     private void nextPage(){
         int currItem = viewPager.getCurrentItem();
-        if (currItem + 1 < viewPager.getAdapter().getCount())
+        if (currItem + 1 < viewPager.getAdapter().getCount()){
+            currPos = currItem;
             viewPager.setCurrentItem(currItem + 1);
+            updateSeekBar(currPos);
+        }
         else
             gotoLoading(true);
+    }
+
+    private void updateSeekBar(int progress){
+        mySeekBar.setProgress(progress);
+        Log.d(TAG, "updateSeekBar: "+progress);
     }
 
     private void showOrHideTools(){
@@ -353,6 +365,7 @@ public class ReadViewerActivity extends Activity {
                 viewBottomTools.setAnimation(AnimationUtil.moveToViewBottomIn());
                 viewHead.setVisibility(View.VISIBLE);
                 viewHead.setAnimation(AnimationUtil.moveToViewTopIn());
+                updateSeekBar(currPos);
             }else {
                 Log.d(TAG, "showOrHideTools: 隐藏");
                 viewBottomStatus.setVisibility(View.VISIBLE);

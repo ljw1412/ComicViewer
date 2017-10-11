@@ -14,9 +14,16 @@
         android:id="@+id/home_nav">
 
         <include
-            layout="@layout/navigation_bar_home_default"
+            android:id="@+id/nav_bar_default"
+            layout="@layout/navigation_bar_default"
             android:layout_width="match_parent"
             android:layout_height="48dp" />
+
+        <!--<include-->
+            <!--android:id="@+id/nav_bar_home"-->
+            <!--layout="@layout/navigation_bar_home"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="48dp" />-->
 
 
     </LinearLayout>

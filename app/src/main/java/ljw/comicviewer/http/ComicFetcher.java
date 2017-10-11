@@ -123,7 +123,7 @@ public class ComicFetcher {
             comic.setTag(li.select(".tags").get(1).select("span").get(2).select("a").text());
             comic.setInfo(li.select(".intro").text().replaceAll("\\[详情\\]",""));
             list.add(comic);
-            Log.d("----", "getSearchResults: "+comic.toString());
+//            Log.d("----", "getSearchResults: "+comic.toString());
         }
         CallBackData backData = new CallBackData();
         backData.setObj(list);
