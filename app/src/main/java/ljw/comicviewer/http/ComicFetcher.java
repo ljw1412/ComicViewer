@@ -29,8 +29,8 @@ import ljw.comicviewer.bean.ManhuaguiComicInfo;
  */
 
 public class ComicFetcher {
-    private static String REG_DATE = "[0-9]{2,4}-[0-9]{1,2}-[0-9]{1,2}";
-    private static String REG_COVER_URL_REG = "http[s]{0,1}:.+.(?:jpg|jpeg|png|gif|bmp)";
+    private static String REG_DATE = "\\w+-\\w+-\\w+";
+    private static String REG_COVER_URL_REG = "http[s]?:.+.(?:jpg|jpeg|png|gif|bmp)";
     private static String REG_COMIC_ID = "/(\\d+)/";
     private static String REG_CHAPTER_ID = "/(\\d+).html";
 
@@ -61,7 +61,7 @@ public class ComicFetcher {
             comic.setName(element.select("a.bcover").attr("title"));
             comic.setImageUrl(getPattern(REG_COVER_URL_REG,element.select("a.bcover img").toString(),0));
             comic.setScore(element.select("span em").text());
-            comic.setUpdate("更新于"+getPattern(REG_DATE,element.select("span.updateon").text(),0));
+            comic.setUpdate("更新于"+getPattern(REG_DATE,element.select("span.updateon").html(),0));
             comic.setUpdateStatus(element.select("a.bcover span.tt").text());
             comic.setEnd(element.select("a.bcover span").last().className().equals("fd") ? true : false);
             list.add(comic);
@@ -116,7 +116,7 @@ public class ComicFetcher {
             comic.setImageUrl(getPattern(REG_COVER_URL_REG,li.select("a.bcover img").toString(),0));
             comic.setUpdateStatus(li.select("a.bcover span.tt").text());
             comic.setScore(li.select(".book-score .score-avg strong").text());
-            comic.setUpdate(li.select(".book-detail .status span span").get(1).text());
+            comic.setUpdate("更新于"+getPattern(REG_DATE,li.select(".book-detail .status span span").get(1).text(),0));
             comic.setUpdateStatus("更新至"+li.select(".book-detail .status span a").get(0).text());
             comic.setEnd(li.select(".book-detail .status span span").get(0).text().contains("完结") ? true : false);
             comic.setAuthor(li.select(".tags").get(2).select("span a").text());

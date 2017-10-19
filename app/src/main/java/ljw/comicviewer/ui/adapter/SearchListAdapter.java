@@ -73,32 +73,35 @@ public class SearchListAdapter extends BaseAdapter{
             searchViewHolder = (SearchViewHolder) convertView.getTag();
         }
         searchViewHolder.name.setText(comics.get(position).getName());
+        searchViewHolder.author.setText(comics.get(position).getAuthor());
+        searchViewHolder.update.setText(comics.get(position).getUpdate());
+        searchViewHolder.type.setText(comics.get(position).getTag());
+        searchViewHolder.info.setText(comics.get(position).getInfo());
 
-        searchViewHolder.body.setOnClickListener(new View.OnClickListener() {
+        final LinearLayout thisBody = searchViewHolder.body;
+        thisBody.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 go(position);
             }
         });
-
-        final LinearLayout thisBody = searchViewHolder.body;
-        searchViewHolder.body.setOnTouchListener(new View.OnTouchListener() {
+        thisBody.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN:
                         //按住
-                        thisBody.setBackgroundResource(R.color.black_shadow);
+                        thisBody.setBackgroundResource(R.drawable.view_shadow_hover);
                         break;
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP:
-                        thisBody.setBackgroundResource(R.drawable.shape_border);
+                        thisBody.setBackgroundResource(R.drawable.view_shadow);
                         break;
                 }
                 return false;
             }
         });
-        //图片加载代码移动到ComicGridFragment
+        //TODO:图片加载代码移动到ComicGridFragment
         loadCover(position,searchViewHolder.image);
         return convertView;
     }
@@ -147,6 +150,14 @@ public class SearchListAdapter extends BaseAdapter{
         ImageView image;
         @BindView(R.id.search_comic_name)
         TextView name;
+        @BindView(R.id.search_comic_author)
+        TextView author;
+        @BindView(R.id.search_comic_update)
+        TextView update;
+        @BindView(R.id.search_comic_type)
+        TextView type;
+        @BindView(R.id.search_comic_info)
+        TextView info;
 
         public SearchViewHolder(View view){
             ButterKnife.bind(this,view);

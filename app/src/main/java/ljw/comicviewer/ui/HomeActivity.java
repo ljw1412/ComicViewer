@@ -79,6 +79,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         img_comic.setSelected(true);
 
         changeTitleBar();
+        setToolBarClick();
         changeToolBarOption(0);
     }
 
@@ -180,6 +181,19 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         ((TextView) findViewById(tabIds[position])).setTextColor(Color.rgb(108,226,108));
     }
 
+    public void setToolBarClick(){
+        for(int i = 0 ; i < tabIds.length ; i++){
+            TextView tabText = (TextView) findViewById(tabIds[i]);
+            final int finalI = i;
+            tabText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    changeToolBarOption(finalI);
+                    homeFragment.setPagePostion(finalI);
+                }
+            });
+        }
+    }
 
     @Override
     public void setTitle(CharSequence title) {

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_navibar"
+    android:layout_width="fill_parent"
+    android:layout_height="48dp"
+    android:background="@color/holo_red_light"
+    android:elevation="5dp">
+
+    <ImageView
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/img_back_white"
+        android:id="@+id/search_back"
+        android:layout_width="40dp"
+        android:padding="6dp"
+        android:onClick="onBack" />
+
+    <TextView
+        android:id="@+id/nav_child_title"
+        android:ellipsize="marquee"
+        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:text="title"
+        android:textSize="18sp"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="false"
+        android:textStyle="normal|bold"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="48dp"
+        android:textColor="@color/white" />
+</RelativeLayout>

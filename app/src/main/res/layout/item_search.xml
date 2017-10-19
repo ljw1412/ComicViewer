@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -10,18 +10,19 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="2.5dp"
         android:layout_marginTop="2.5dp"
-        android:background="@drawable/shape_border"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:id="@+id/search_body">
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/search_body"
+        android:background="@drawable/view_shadow"
+        android:paddingBottom="2.5dp">
 
         <ImageView
-            android:layout_width="126dp"
-            android:layout_height="169dp"
+            android:layout_width="84dp"
             app:srcCompat="@drawable/img_load_before"
             android:id="@+id/search_cover"
             android:adjustViewBounds="false"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:layout_height="112.7dp" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -34,25 +35,39 @@
                 android:text="search_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/search_comic_name" />
+                android:id="@+id/search_comic_name"
+                android:textSize="18sp"
+                android:maxLines="1"/>
+
+            <TextView
+                android:text="author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/search_comic_author"
+                android:textSize="16sp"
+                android:maxLines="1"/>
 
             <TextView
                 android:text="TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView6" />
+                android:id="@+id/search_comic_type"
+                android:maxLines="1"/>
 
             <TextView
                 android:text="TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView5" />
+                android:id="@+id/search_comic_update"
+                android:maxLines="1"/>
 
             <TextView
                 android:text="TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView4" />
+                android:id="@+id/search_comic_info"
+                android:ellipsize="end"
+                android:maxLines="1"/>
         </LinearLayout>
 
     </LinearLayout>

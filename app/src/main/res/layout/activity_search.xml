@@ -14,6 +14,7 @@
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/search_pull_refresh_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:divider="@null">
     </com.handmark.pulltorefresh.library.PullToRefreshListView>
 </LinearLayout>

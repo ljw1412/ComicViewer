@@ -7,7 +7,7 @@ package ljw.comicviewer;
 public class Global {
     //漫画柜（原看漫画）相关
     public static final String MANHUAGUI_DOMAIN = ".manhuagui.com";
-    public static final String MANHUAGUI_HOST = "http://www.manhuagui.com/";
+    public static final String MANHUAGUI_HOST = "http://www.manhuagui.com";
     public static final String MANHUAGUI_IMAGE_HOST = "http://i.hamreus.com:8080";
     public static final String MANHUAGUI_COVER = "http://www.manhuagui.com/";//http://i.3qfm.com/
 

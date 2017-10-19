@@ -65,4 +65,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    public void setPagePostion(int position){
+        viewPager.setCurrentItem(position);
+    }
 }

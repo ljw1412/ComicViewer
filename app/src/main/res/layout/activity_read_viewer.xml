@@ -16,7 +16,7 @@
         android:id="@+id/read_viewer_head"
         android:layout_alignParentTop="true"
         android:elevation="20dp"
-        android:background="@color/black_70">
+        android:background="@color/black_b2">
 
         <ImageView
             android:layout_width="48dp"
@@ -144,7 +144,7 @@
             android:layout_alignParentBottom="true"
             android:layout_height="match_parent"
             android:elevation="20dp"
-            android:background="@color/black_70">
+            android:background="@color/black_b2">
 
             <RelativeLayout
                 android:orientation="horizontal"

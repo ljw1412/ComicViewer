@@ -5,7 +5,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
@@ -44,11 +43,11 @@ import ljw.comicviewer.ui.fragment.ChaptersFragment;
 import ljw.comicviewer.util.DialogUtil;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.WebViewUtil;
+import retrofit2.Call;
 
 public class DetailsActivity extends AppCompatActivity
         implements SwipeRefreshLayout.OnRefreshListener, ComicService.RequestCallback {
     private String TAG = this.getClass().getSimpleName()+"----";
-    Bitmap cover;
     private Context context;
     private boolean isLoaded = false;
     private Comic comic = new Comic();
@@ -57,7 +56,7 @@ public class DetailsActivity extends AppCompatActivity
     private int[] fragmentId = {R.id.details_fragment0,R.id.details_fragment1,R.id.details_fragment2};
     private int[] typeTextId = {R.id.detail_type0,R.id.detail_type1,R.id.detail_type2};
     private int TYPE_MAX = 3;
-
+    Call call_loadComicInformation;
     @BindView(R.id.details_scroll_container)
     SwipeRefreshLayout details_container;
     @BindView(R.id.details_cover)
@@ -90,6 +89,7 @@ public class DetailsActivity extends AppCompatActivity
     ScrollView viewMain;
     @BindView(R.id.webview_details)
     WebView webview;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +180,7 @@ public class DetailsActivity extends AppCompatActivity
 
     //加载数据
     public void loadComicInformation(){
-        ComicService.get().getComicInfo(this,comic_id);//18X id:"8788");"16058"
+        call_loadComicInformation = ComicService.get().getComicInfo(this,comic_id);//18X id:"8788");"16058"
     }
 
     //加载封面
@@ -319,5 +319,10 @@ public class DetailsActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        webview.destroy();
+        if(!call_loadComicInformation.isCanceled()){
+            call_loadComicInformation.cancel();
+            Log.d(TAG, "onDestroy: "+"取消网络请求！");
+        }
     }
 }

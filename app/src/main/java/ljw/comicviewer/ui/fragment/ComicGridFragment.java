@@ -36,6 +36,7 @@ import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
+import retrofit2.Call;
 
 
 /**
@@ -53,20 +54,14 @@ public class ComicGridFragment extends Fragment
     private boolean isLoadingNext = false;
     // map设定：键为null未加载 0加载中 1加载完毕
     private Map<Integer,Integer> imageState = new HashMap<>();
-//    @BindView(R.id.swipe_refresh_list)
-//    SwipeRefreshLayout fileListSwipe;
     @BindView(R.id.comic_info_pull_refresh_grid)
     PullToRefreshGridView pullToRefreshGridView;
-//    @BindView(R.id.comic_info_view)
     GridView gridView;
     @BindView(R.id.grid_net_error)
     TextView txt_netError;
     @BindView(R.id.grid_loading)
     RelativeLayout loading;
-//    @BindView(R.id.grid_tips)
-//    TextView txt_tips;
-//    @BindView(R.id.grid_tips_view)
-//    RelativeLayout tips_view;
+
     public ComicGridFragment() {
     }
 

@@ -4,7 +4,8 @@
     android:id="@+id/layout_navibar"
     android:layout_width="fill_parent"
     android:layout_height="@dimen/toolbar_height"
-    android:background="@color/holo_red_light">
+    android:background="@color/holo_red_light"
+    android:elevation="5dp">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

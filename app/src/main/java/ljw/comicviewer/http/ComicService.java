@@ -47,7 +47,7 @@ public class ComicService {
 
     //获得指定页数的漫画列表对象
     private Call<String> getList(int page){return getService(host).getList(page);}
-    public void getListItems(final RequestCallback requestCallback,int page){
+    public Call getListItems(final RequestCallback requestCallback,int page){
         Call<String> call = ComicService.get().getList(page);
         final String what = Global.REQUEST_COMICS_LIST;
         //网络请求回馈
@@ -65,12 +65,13 @@ public class ComicService {
                 requestCallback.onError("getList()网络请求失败",what);
             }
         });
+        return call;
     }
 
 
     //加载漫画数据
     private Call<String> getDetails(String id){return getService(host).getDetails(id);}
-    public void getComicInfo(final RequestCallback requestCallback, String comic_id){
+    public Call getComicInfo(final RequestCallback requestCallback, String comic_id){
         Call<String> call = ComicService.get().getDetails(comic_id);
         final String what = Global.REQUEST_COMICS_INFO;
         call.enqueue(new Callback<String>() {
@@ -88,11 +89,12 @@ public class ComicService {
                 requestCallback.onError("getDetails()网络请求失败！",what);
             }
         });
+        return call;
     }
 
     private Call<String> getSearch(String keyword,String page){return getService(host).getSearch(keyword,page);}
     //搜索页面
-    public void getComicSearch(final RequestCallback requestCallback , String keyword , int page){
+    public Call getComicSearch(final RequestCallback requestCallback , String keyword , int page){
         Call<String> call = ComicService.get().getSearch(keyword,page+"");
         final String what = Global.REQUEST_COMICS_SEARCH;
         call.enqueue(new Callback<String>() {
@@ -110,6 +112,7 @@ public class ComicService {
                 requestCallback.onError("getComicSearch()网络请求失败！",what);
             }
         });
+        return call;
     }
 
 

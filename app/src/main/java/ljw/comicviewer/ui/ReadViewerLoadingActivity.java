@@ -71,10 +71,10 @@ public class ReadViewerLoadingActivity extends Activity {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                load_fail.setVisibility(View.GONE);
-                loading.setVisibility(View.VISIBLE);
-                tryTime = 0;
-                getInfo();
+            load_fail.setVisibility(View.GONE);
+            loading.setVisibility(View.VISIBLE);
+            tryTime = 0;
+            getInfo();
             }
         });
     }
@@ -84,29 +84,29 @@ public class ReadViewerLoadingActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                webView.evaluateJavascript("cInfo;", new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String s) {
-                        Log.d(TAG,"debug!!="+s);
-                        if (s.equals("null")){
-                            //TODO:加载失败
-                            if(tryTime>=3){
-                                load_fail.setVisibility(View.VISIBLE);
-                                loading.setVisibility(View.GONE);
-                            }else{
-                                tryTime++;
-                                getInfo();
-                            }
-                        }else{
-                            ManhuaguiComicInfo info = ComicFetcher.parseCurrentChapter(s);
-                            for(int i = 0 ; i < info.getFiles().size() ; i++){
-                                imgUrls.add(Global.MANHUAGUI_IMAGE_HOST+info.getPath()+info.getFiles().get(i));
-                            }
-                            gotoReadView();
-                            return;
-                        }
+            webView.evaluateJavascript("cInfo;", new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String s) {
+                Log.d(TAG,"debug!!="+s);
+                if (s.equals("null")){
+                    //TODO:加载失败
+                    if(tryTime>=3){
+                        load_fail.setVisibility(View.VISIBLE);
+                        loading.setVisibility(View.GONE);
+                    }else{
+                        tryTime++;
+                        getInfo();
                     }
-                });
+                }else{
+                    ManhuaguiComicInfo info = ComicFetcher.parseCurrentChapter(s);
+                    for(int i = 0 ; i < info.getFiles().size() ; i++){
+                        imgUrls.add(Global.MANHUAGUI_IMAGE_HOST+info.getPath()+info.getFiles().get(i));
+                    }
+                    gotoReadView();
+                    return;
+                }
+                }
+            });
             }
         }, 1500);
     }
@@ -141,6 +141,7 @@ public class ReadViewerLoadingActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        webView = null;
+        webView.destroy();
+
     }
 }

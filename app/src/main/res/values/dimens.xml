@@ -12,4 +12,5 @@
 
     <dimen name="toolbar_font_size">20sp</dimen>
     <dimen name="toolbar_height">48dp</dimen>
+    <dimen name="long_line_option_button_height">45dp</dimen>
 </resources>
