@@ -1,27 +1,28 @@
-package ljw.comicviewer;
+package ljw.comicviewer.rule;
 
-import android.text.TextUtils;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import ljw.comicviewer.store.RuleStore;
 
 /**
  * Created by ljw on 2017-10-18 018.
  */
 
 public class RuleParser {
+    private final String TAG = this.getClass().getSimpleName()+"----";
     private static RuleParser ruleParser = null;
     private String ruleStr;
     private JSONObject jsonObject;
+    private static RuleStore ruleStore;
 
     private RuleParser() {
     }
@@ -30,6 +31,7 @@ public class RuleParser {
         if(ruleParser == null){
             ruleParser = new RuleParser();
         }
+        ruleStore = RuleStore.get();
         return ruleParser;
     }
 
@@ -43,6 +45,25 @@ public class RuleParser {
         jsonObject = JSON.parseObject(ruleStr);
     }
 
+
+    public void parseListPage(){
+        if(ruleStr == null)
+            throw new NullPointerException("规则没有定义！");
+        ruleStore.setListRule(parsePage("list"));
+    }
+
+    public void parseLatestPage(){
+        if(ruleStr == null)
+            throw new NullPointerException("规则没有定义！");
+        ruleStore.setLatestRule(parsePage("latest-list-url"));
+    }
+
+    public void parseDetailsPage(){
+        if(ruleStr == null)
+            throw new NullPointerException("规则没有定义！");
+        ruleStore.setDetailsRule(parsePage("details_page"));
+    }
+
     public Map<String,String> parsePage(String key){
         Map<String,String> map = new HashMap<>();
         JSONObject list = jsonObject.getJSONObject(key);
@@ -54,19 +75,7 @@ public class RuleParser {
         return map;
     }
 
-    public Map<String,String> parseListPage(){
-        return  parsePage("list");
-    }
-
-    public Map<String,String> parseLatestPage(){
-        return  parsePage("latest-list-url");
-    }
-
-    public Map<String,String> parseDetailsPage(){
-        return  parsePage("details_page");
-    }
-
-    public Map<String, List<Map<String,String>>> parseType(){
+    public void parseType(){
         Map<String,List<Map<String,String>>> map = new HashMap<>();
         JSONObject type = jsonObject.getJSONObject("type");
         for(Object key: type.keySet()){
@@ -86,40 +95,20 @@ public class RuleParser {
             }
             map.put(key.toString(),list);
         }
-        return map;
+        for (Map.Entry<String,List<Map<String,String>>> entry:map.entrySet()){
+            Log.d(TAG, "onCreate: "+entry.getKey());
+            for (Map<String,String> m : map.get(entry.getKey())){
+                for (Map.Entry<String,String> kv: m.entrySet()){
+                    Log.d(TAG, "onCreate: "+kv.getKey()+" "+kv.getValue());
+                }
+                Log.d(TAG, "onCreate: ");
+            }
+        }
+        ruleStore.setTypeRule(map);
     }
 
 
-    public static Map<String, String> parseUrl2(String url) {
-        Map<String, String> map = new HashMap<>();
-        if (TextUtils.isEmpty(url))
-            return map;
-        Pattern pattern = Pattern.compile("\\{([^{}]*?):([^{}]*?)\\}", Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(url);
-        return map;
-    }
 
 
 
-    public static Map<String, String> parseUrl(String url) {
-        Map<String, String> map = new HashMap<>();
-        if (TextUtils.isEmpty(url))
-            return map;
-        Pattern pattern = Pattern.compile("\\{([^{}]*?):([^{}]*?)\\}", Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(url);
-        while (matcher.find()) {
-            map.put(matcher.group(1), matcher.group(2));
-        }
-        Pattern pattern2 = Pattern.compile("\\{([^{}]*?):([^{}]*?\\{[^{}]*?\\}[^{}]*?)\\}", Pattern.DOTALL);
-        Matcher matcher2 = pattern2.matcher(url);
-        while (matcher2.find()) {
-            map.put(matcher2.group(1), matcher2.group(2));
-        }
-        Pattern pattern3 = Pattern.compile("\\{(json):(.*)\\}", Pattern.DOTALL);
-        Matcher matcher3 = pattern3.matcher(url);
-        while (matcher3.find()) {
-            map.put(matcher3.group(1), matcher3.group(2));
-        }
-        return map;
-    }
 }

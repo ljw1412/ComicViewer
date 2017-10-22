@@ -237,7 +237,7 @@ public class ReadViewerActivity extends Activity {
 
         });
         viewPager.setOffscreenPageLimit(2);//TODO:之后改为可以设置的
-        viewPager.setCurrentItem(0);//TODO:跳页
+        viewPager.setCurrentItem(0);//跳页
     }
 
     public void initSeekBar(){

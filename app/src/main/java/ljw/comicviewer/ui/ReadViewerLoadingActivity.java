@@ -89,7 +89,7 @@ public class ReadViewerLoadingActivity extends Activity {
                 public void onReceiveValue(String s) {
                 Log.d(TAG,"debug!!="+s);
                 if (s.equals("null")){
-                    //TODO:加载失败
+                    //加载失败
                     if(tryTime>=3){
                         load_fail.setVisibility(View.VISIBLE);
                         loading.setVisibility(View.GONE);

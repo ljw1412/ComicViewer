@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,10 +15,15 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
-import ljw.comicviewer.RuleParser;
+import ljw.comicviewer.http.ComicService;
+import ljw.comicviewer.rule.RuleFetcher;
+import ljw.comicviewer.rule.RuleParser;
+import ljw.comicviewer.store.RuleStore;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity
+        implements ComicService.RequestCallback {
     private String TAG = SettingsActivity.class.getSimpleName()+"----";
     private static Context context;
     private String rule;
@@ -35,16 +41,10 @@ public class SettingsActivity extends AppCompatActivity {
         initView();
         rule = readJson();
         debug.setText(rule);
-        Map<String,List<Map<String,String>>> map = RuleParser.get().setRuleStr(rule).parseType();
-        for (Map.Entry<String,List<Map<String,String>>> entry:map.entrySet()){
-            Log.d(TAG, "onCreate: "+entry.getKey());
-            for (Map<String,String> m : map.get(entry.getKey())){
-                for (Map.Entry<String,String> kv: m.entrySet()){
-                    Log.d(TAG, "onCreate: "+kv.getKey()+" "+kv.getValue());
-                }
-                Log.d(TAG, "onCreate: ");
-            }
-        }
+        RuleParser.get().setRuleStr(rule);
+        getListItems(1);
+
+
 //        for(Map.Entry<String,String> entry : map.entrySet()){
 //            Log.d(TAG, "onCreate: "+entry.getKey()+" "+entry.getValue());
 //        }
@@ -67,8 +67,28 @@ public class SettingsActivity extends AppCompatActivity {
         return content;
     }
 
+    private void getListItems(int page){
+        ComicService.get().getListItems(this,page);
+    }
+
+
+
     //按标题栏返回按钮
     public void onBack(View view) {
         finish();
+    }
+
+    @Override
+    public void onFinish(Object data, String what) {
+        switch (what) {
+            case Global.REQUEST_COMICS_LIST:
+                RuleFetcher.get().getComicList(data.toString());
+                break;
+        }
+    }
+
+    @Override
+    public void onError(String msg, String what) {
+
     }
 }

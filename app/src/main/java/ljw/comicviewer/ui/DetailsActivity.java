@@ -225,7 +225,7 @@ public class DetailsActivity extends AppCompatActivity
                     @Override
                     public void onReceiveValue(String s) {
                         if (s.equals("null")){
-                            //TODO:加载失败
+                            //加载失败
                             if(tryTime>=5){
                                 details_container.setRefreshing(false);
                                 txtError.setVisibility(View.VISIBLE);
@@ -253,7 +253,7 @@ public class DetailsActivity extends AppCompatActivity
         finish();
     }
 
-    //TODO:网络请求，更新UI
+    //网络请求，更新UI
     @Override
     public void onFinish(Object data, String what) {
         switch (what){
