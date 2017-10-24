@@ -20,8 +20,8 @@ import ljw.comicviewer.store.RuleStore;
 public class RuleParser {
     private final String TAG = this.getClass().getSimpleName()+"----";
     private static RuleParser ruleParser = null;
-    private String ruleStr;
-    private JSONObject jsonObject;
+    private static String ruleStr;
+    private static JSONObject jsonObject;
     private static RuleStore ruleStore;
 
     private RuleParser() {
@@ -32,6 +32,12 @@ public class RuleParser {
             ruleParser = new RuleParser();
         }
         ruleStore = RuleStore.get();
+        ruleStr = ruleStore.getCurrentRule();
+        if(ruleStr!=null){
+            setJsonObject();
+        }else{
+            throw new NullPointerException("set rule fail.");
+        }
         return ruleParser;
     }
 
@@ -41,7 +47,7 @@ public class RuleParser {
         return ruleParser;
     }
 
-    public void setJsonObject() {
+    private static void setJsonObject() {
         jsonObject = JSON.parseObject(ruleStr);
     }
 
@@ -62,6 +68,12 @@ public class RuleParser {
         if(ruleStr == null)
             throw new NullPointerException("规则没有定义！");
         ruleStore.setDetailsRule(parsePage("details_page"));
+    }
+
+    public void parseSearchPage(){
+        if(ruleStr == null)
+            throw new NullPointerException("规则没有定义！");
+        ruleStore.setSearchRule(parsePage("search_page"));
     }
 
     public Map<String,String> parsePage(String key){

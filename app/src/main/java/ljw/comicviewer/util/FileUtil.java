@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import ljw.comicviewer.R;
 
@@ -36,4 +38,16 @@ public class FileUtil {
         }
     }
 
+    public static String readJson(Context context){
+        String content = "fail";
+        InputStream in = context.getResources().openRawResource(R.raw.manhuagui);
+        try {
+            byte buffer[]=new byte[in.available()];
+            in.read(buffer);
+            content = new String(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return content;
+    }
 }

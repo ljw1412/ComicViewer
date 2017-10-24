@@ -87,26 +87,31 @@ public class PictureGridAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void loadCover(final int position, ImageView image){
+    public void loadCover(final int position, View view){
         RequestOptions options = new RequestOptions();
         options.placeholder(R.drawable.img_load_before)
                 .error(R.drawable.img_load_failed)
                 .centerCrop()
                 .skipMemoryCache(true);
-
-        final WeakReference<ImageView> imageViewWeakReference = new WeakReference<>(image);
-        final ImageView target = imageViewWeakReference.get();
-        if (target != null) {
-            Glide.with(context)
-                    .asBitmap()
-                    .load(comics.get(position).getImageUrl())
-                    .apply(options)
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            target.setImageBitmap(resource);
-                        }
-                    });
+        final PictureGridViewHolder viewHolder = (PictureGridViewHolder) view.getTag();
+        if(viewHolder != null){
+            final WeakReference<ImageView> imageViewWeakReference = new WeakReference<>(viewHolder.image);
+            final ImageView target = imageViewWeakReference.get();
+            if (target != null) {
+                Glide.with(context)
+                        .asBitmap()
+                        .load(comics.get(position).getImageUrl())
+                        .apply(options)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                                target.setImageBitmap(resource);
+                                viewHolder.isEnd.setImageResource(
+                                        comics.get(position).isEnd() ?
+                                                R.drawable.state_finish : R.drawable.state_serialise);
+                            }
+                        });
+            }
         }
     }
 

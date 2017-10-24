@@ -17,10 +17,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
+import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.rule.RuleFetcher;
 import ljw.comicviewer.rule.RuleParser;
 import ljw.comicviewer.store.RuleStore;
+import ljw.comicviewer.util.FileUtil;
 
 public class SettingsActivity extends AppCompatActivity
         implements ComicService.RequestCallback {
@@ -39,40 +41,23 @@ public class SettingsActivity extends AppCompatActivity
         context = this;
         ButterKnife.bind(this);
         initView();
-        rule = readJson();
+        rule = FileUtil.readJson(context);
         debug.setText(rule);
         RuleParser.get().setRuleStr(rule);
-        getListItems(1);
-
-
-//        for(Map.Entry<String,String> entry : map.entrySet()){
-//            Log.d(TAG, "onCreate: "+entry.getKey()+" "+entry.getValue());
-//        }
+        loadSearch("a",1);
     }
 
     private void initView(){
         title.setText(R.string.mine_setting);
     }
 
-    private String readJson(){
-        String content = "fail";
-        InputStream in = getResources().openRawResource(R.raw.manhuagui);
-        try {
-            byte buffer[]=new byte[in.available()];
-            in.read(buffer);
-            content = new String(buffer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return content;
-    }
-
     private void getListItems(int page){
         ComicService.get().getListItems(this,page);
     }
 
-
-
+    public void loadSearch(String keyword, int page){
+        ComicService.get().getComicSearch(this,keyword,page);
+    }
     //按标题栏返回按钮
     public void onBack(View view) {
         finish();
@@ -82,7 +67,12 @@ public class SettingsActivity extends AppCompatActivity
     public void onFinish(Object data, String what) {
         switch (what) {
             case Global.REQUEST_COMICS_LIST:
-                RuleFetcher.get().getComicList(data.toString());
+            case Global.REQUEST_COMICS_SEARCH:
+                List<Comic> comics = (List<Comic>) RuleFetcher.get().getSearchResults(data.toString()).getObj();
+                debug.setText("");
+                for (Comic comic:comics){
+                    debug.append(comic.toString()+"\n");
+                }
                 break;
         }
     }

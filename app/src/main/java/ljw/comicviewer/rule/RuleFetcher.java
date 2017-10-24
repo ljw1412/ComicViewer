@@ -10,7 +10,10 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import ljw.comicviewer.bean.CallBackData;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.store.RuleStore;
 
@@ -20,6 +23,7 @@ import ljw.comicviewer.store.RuleStore;
 
 public class RuleFetcher {
     private final String TAG = this.getClass().getSimpleName()+"----";
+    private final boolean DEBUG_MODE = false;
     private static RuleFetcher ruleFetcher = null;
     private static RuleStore ruleStore;
     private static RuleParser ruleParser;
@@ -36,40 +40,37 @@ public class RuleFetcher {
         return ruleFetcher;
     }
 
-    private String text(Element element){
-        return element.text();
-    }
-
-    private String text(Elements elements){
-        return elements.text();
-    }
-
-    private String html(Element element){
-        return element.html();
-    }
-
-    private String html(Elements elements){
-        return elements.html();
-    }
-
-    //解析
-    private Object parser(String rule){
-        List<String> ruleList = splitJS(rule);
-        for (String ss : ruleList ) {
-            Log.d(TAG, "parser: "+ss);
+    /**
+     * 正则表达式获得内容
+     * @param reg 正则表达式
+     * @param str 需要匹配的文字
+     * @param i   结果下标
+     * @return
+     */
+    private String getPattern(String reg,String str,int i){
+        Pattern pattern = Pattern.compile(reg);
+        Matcher matcher = pattern.matcher(str);
+        if(matcher.find()){
+            return matcher.group(i);
         }
-
         return null;
+    }
+
+    private boolean isExits(String reg,String str){
+        Pattern pattern = Pattern.compile(reg);
+        Matcher matcher = pattern.matcher(str);
+        return matcher.matches();
     }
 
     //拆分js代码
     private List<String> splitJS(String js){
-        js = js.replaceAll("==",".==");
-        Log.d(TAG, "splitJS: "+js);
+        //优化js代码更好的管道化
+        js = js.replaceAll("==",".==").replaceAll("!=",".!=");
+        if(DEBUG_MODE) Log.d(TAG, "splitJS: "+js);
         List<String> ruleList = new ArrayList<>();
         char[] chars = js.toCharArray();
         String temp = "";
-        boolean inBrackets = false; //在单引号中
+        boolean inBrackets = false; //在括号中
         for(int i = 0 ; i < chars.length; i++){
             if(chars[i]=='(' || chars[i]==')'){
                 inBrackets = !inBrackets;
@@ -85,42 +86,188 @@ public class RuleFetcher {
         return ruleList;
     }
 
-
-    //获取列表页信息
-    public List<Comic> getComicList(String html){
-        ruleParser.parseListPage();
-        String firstKey = "list";
-        List<Comic> comics = new ArrayList<>();
-        Document doc = Jsoup.parse(html);
-        Map<String,String> map = ruleStore.getListRule();
-        if(map.size()>0){
-            parser(map.get("items"));
-            parser(map.get("comic-id"));
-            parser(map.get("comic-name"));
-            parser(map.get("comic-image-url"));
-            parser(map.get("comic-score"));
-            parser(map.get("comic-update"));
-            parser(map.get("comic-update-status"));
-            parser(map.get("comic-end"));
-
+    //解析
+    public Object parser(Object element,String rule){
+        if(!(element instanceof Document) && !(element instanceof Element) && !(element instanceof Elements)){
+            throw new RuntimeException("第一个参数的类型错误：只能是Document或Element或Elements");
         }
 
+        List<String> ruleList = splitJS(rule);
 
-//        Elements comicItems = doc.select("#contList li");
-//        for (Element element: comicItems) {
-//            Comic comic = new Comic();
-//            comic.setId(getPattern(REG_COMIC_ID,element.select("a.bcover").attr("href"),1));
-//            comic.setName(element.select("a.bcover").attr("title"));
-//            comic.setImageUrl(getPattern(REG_COVER_URL_REG,element.select("a.bcover img").toString(),0));
-//            comic.setScore(element.select("span em").text());
-//            comic.setUpdate("更新于"+getPattern(REG_DATE,element.select("span.updateon").html(),0));
-//            comic.setUpdateStatus(element.select("a.bcover span.tt").text());
-//            comic.setEnd(element.select("a.bcover span").last().className().equals("fd") ? true : false);
-//            list.add(comic);
-////           list.add(element.attr("href")+"\n");
-//        }
-        return comics;
+        String[] regexps = {
+                "\\$\\('(.+)'\\)" ,
+                "attr\\('(.+)'\\)" ,
+                "match\\('(.+)'\\)\\[(.+)\\]",
+                "text\\(\\)",
+                "html\\(\\)",
+                "val\\(\\)",
+                "last\\(\\)",
+                "first\\(\\)",
+                "get\\((.+)\\)",
+                "eq\\((.+)\\)",
+                "=='(.+)'",
+                "!='(.+)'",
+                "find\\('(.+)'\\)",
+                "children\\('(.+)'\\)",
+                "replace\\('(.+)','(.*)'\\)"
+        };
+
+        Object currentObj = element;
+        String cssQuery = "";
+        int index = -1;
+        for (String ss : ruleList ) {
+            //Log.d(TAG, "parser: "+ss);
+            for(int i = 0 ; i < regexps.length ; i++ ){
+                if(isExits(regexps[i] , ss)) {
+                    boolean error = true;
+                    switch (i){
+                        case 12://find()
+                        case 13://children()
+                        case 0://$()
+                            cssQuery = getPattern(regexps[i], ss, 1);
+                            if(currentObj instanceof Document){
+                                currentObj =  ((Document) currentObj).select(cssQuery);
+                                error = false;
+                            }else if (currentObj instanceof Element){
+                                currentObj =  ((Element) currentObj).select(cssQuery);
+                                error = false;
+                            }
+                            break;
+                        case 1://attr()
+                            cssQuery = getPattern(regexps[i], ss, 1);
+                            if (currentObj instanceof Element){
+                                currentObj = ((Element) currentObj).attr(cssQuery);
+                                error = false;
+                            }else if(currentObj instanceof Elements){
+                                currentObj = ((Elements) currentObj).attr(cssQuery);
+                                error = false;
+                            }
+                            break;
+                        case 2://match()
+                            cssQuery = getPattern(regexps[i], ss, 1);
+                            index = Integer.valueOf(getPattern(regexps[i], ss, 2));
+                            if (currentObj instanceof String){
+                                currentObj = getPattern(cssQuery, element.toString(),index);
+                                error = false;
+                            }
+                            break;
+                        case 3://text()
+                            if(currentObj instanceof Element){
+                                currentObj = ((Element) currentObj).text();
+                                error = false;
+                            }else if (currentObj instanceof Elements) {
+                                currentObj = ((Elements) currentObj).text();
+                                error = false;
+                            }
+                            break;
+                        case 4://html()
+                            if(currentObj instanceof Element){
+                                currentObj = ((Element) currentObj).html();
+                                error = false;
+                            }else if (currentObj instanceof Elements) {
+                                currentObj = ((Elements) currentObj).html();
+                                error = false;
+                            }
+                            break;
+                        case 5://val()
+                            if(currentObj instanceof Element){
+                                currentObj = ((Element) currentObj).val();
+                                error = false;
+                            }else if (currentObj instanceof Elements) {
+                                currentObj = ((Elements) currentObj).val();
+                                error = false;
+                            }
+                            break;
+                        case 6://last()
+                            if(currentObj instanceof Elements){
+                                currentObj = ((Elements) currentObj).last();
+                                error = false;
+                            }
+                            break;
+                        case 7://first()
+                            if(currentObj instanceof Elements){
+                                currentObj = ((Elements) currentObj).first();
+                                error = false;
+                            }
+                            break;
+                        case 8://get()
+                        case 9://eq()
+                            index = Integer.valueOf(getPattern(regexps[i], ss, 1));
+                            if(currentObj instanceof Elements){
+                                currentObj = ((Elements) currentObj).get(index);
+                                error = false;
+                            }
+                            break;
+                        case 10://==''
+                            cssQuery = getPattern(regexps[i], ss, 1);
+                            if(currentObj instanceof String) {
+                                currentObj = currentObj.equals(cssQuery);
+                                error = false;
+                            }
+                            break;
+                        case 11://!=''
+                            cssQuery = getPattern(regexps[i], ss, 1);
+                            if(currentObj instanceof String) {
+                                currentObj = !currentObj.equals(cssQuery);
+                                error = false;
+                            }
+                            break;
+                        case 14:
+                            cssQuery =getPattern(regexps[i], ss, 1);
+                            String query2 = getPattern(regexps[i], ss ,2);
+                            Log.e(TAG, "parser: "+cssQuery +" "+query2 );
+                            if (currentObj instanceof String){
+                                currentObj = ((String) currentObj).replaceAll(cssQuery,query2);
+                                error = false;
+                            }
+                            break;
+                    }
+                    if (error)
+                        Log.e(TAG, "case "+ i +" error: 当前规则\""+rule+"\"存在问题！可能是规则错误。");
+                    //if(DEBUG_MODE) Log.d(TAG, "parser: " + cssQuery);
+                }
+            }
+
+        }
+        return currentObj;
     }
 
 
+
+    //漫画搜索
+    public CallBackData getSearchResults(String html){
+        ruleParser.parseSearchPage();
+
+        List<Comic> comics = new ArrayList<>();
+        Document doc = Jsoup.parse(html);
+        Map<String,String> map = ruleStore.getSearchRule();
+        if(map!=null && map.size()>0){
+            Elements items = (Elements) parser(doc , map.get("items"));
+            for(Element element : items){
+                Comic comic = new Comic();
+                comic.setId((String) parser(element,map.get("comic-id")));
+                comic.setName((String) parser(element,map.get("comic-name")));
+                comic.setImageUrl((String) parser(element,map.get("comic-image-url")));
+                comic.setScore((String) parser(element,map.get("comic-score")));
+                comic.setUpdate((String) parser(element,map.get("comic-update")));
+                comic.setUpdateStatus((String) parser(element,map.get("comic-update-status")));
+                comic.setEnd((Boolean) parser(element,map.get("comic-end")));
+                comic.setAuthor((String) parser(element,map.get("comic-author")));
+                comic.setTag((String) parser(element,map.get("comic-tag")));
+                comic.setInfo((String) parser(element,map.get("comic-info")));
+                comics.add(comic);
+                if (DEBUG_MODE) Log.d(TAG, "getComicList: "+comic.toString());
+            }
+        }
+        CallBackData backData = new CallBackData();
+        backData.setObj(comics);
+        int maxPage = 99999;
+        try {
+            maxPage = (Integer.valueOf(doc.select(".result-count strong").last().text())+9)/10;
+        }catch (Exception e){
+
+        }
+        backData.setArg1(maxPage);
+        return backData;
+    }
 }

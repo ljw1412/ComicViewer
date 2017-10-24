@@ -18,11 +18,18 @@
         android:layout_below="@+id/nav_bar_child"
         android:id="@+id/setting_content">
 
-        <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/debug" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/debug"
+                android:scrollbars="vertical" />
+        </ScrollView>
+
     </RelativeLayout>
 
 </RelativeLayout>

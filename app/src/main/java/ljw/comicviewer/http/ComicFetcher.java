@@ -15,6 +15,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +23,9 @@ import ljw.comicviewer.bean.CallBackData;
 import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.bean.ManhuaguiComicInfo;
+import ljw.comicviewer.rule.RuleFetcher;
+import ljw.comicviewer.rule.RuleParser;
+import ljw.comicviewer.store.RuleStore;
 
 
 /**
@@ -50,24 +54,41 @@ public class ComicFetcher {
         return null;
     }
 
-    //获取列表页信息
+    private static RuleParser getRuleParser(){
+        return RuleParser.get();
+    }
+
+    private static RuleStore getRuleStore(){
+        return RuleStore.get();
+    }
+
+    private static RuleFetcher getRuleFetcher(){
+        return RuleFetcher.get();
+    }
+
+    //获取列表页信息(规则版)
     public static List<Comic> getComicList(String html){
-        List<Comic> list = new ArrayList<>();
+        getRuleParser().parseListPage();
+        RuleFetcher ruleFetcher = getRuleFetcher();
+
+        List<Comic> comics = new ArrayList<>();
         Document doc = Jsoup.parse(html);
-        Elements comicItems = doc.select("#contList li");
-        for (Element element: comicItems) {
-            Comic comic = new Comic();
-            comic.setId(getPattern(REG_COMIC_ID,element.select("a.bcover").attr("href"),1));
-            comic.setName(element.select("a.bcover").attr("title"));
-            comic.setImageUrl(getPattern(REG_COVER_URL_REG,element.select("a.bcover img").toString(),0));
-            comic.setScore(element.select("span em").text());
-            comic.setUpdate("更新于"+getPattern(REG_DATE,element.select("span.updateon").html(),0));
-            comic.setUpdateStatus(element.select("a.bcover span.tt").text());
-            comic.setEnd(element.select("a.bcover span").last().className().equals("fd") ? true : false);
-            list.add(comic);
-//           list.add(element.attr("href")+"\n");
+        Map<String,String> map = getRuleStore().getListRule();
+        if(map!=null && map.size()>0){
+            Elements items = (Elements) ruleFetcher.parser(doc , map.get("items"));
+            for(Element element : items){
+                Comic comic = new Comic();
+                comic.setId((String) ruleFetcher.parser(element,map.get("comic-id")));
+                comic.setName((String) ruleFetcher.parser(element,map.get("comic-name")));
+                comic.setImageUrl((String) ruleFetcher.parser(element,map.get("comic-image-url")));
+                comic.setScore((String) ruleFetcher.parser(element,map.get("comic-score")));
+                comic.setUpdate((String) ruleFetcher.parser(element,map.get("comic-update")));
+                comic.setUpdateStatus((String) ruleFetcher.parser(element,map.get("comic-update-status")));
+                comic.setEnd((Boolean) ruleFetcher.parser(element,map.get("comic-end")));
+                comics.add(comic);
+            }
         }
-        return list;
+        return comics;
     }
 
     //获取详细页信息
@@ -114,7 +135,6 @@ public class ComicFetcher {
             comic.setId(getPattern(REG_COMIC_ID,li.select("a.bcover").attr("href"),1));
             comic.setName(li.select("dt a").get(0).text());
             comic.setImageUrl(getPattern(REG_COVER_URL_REG,li.select("a.bcover img").toString(),0));
-            comic.setUpdateStatus(li.select("a.bcover span.tt").text());
             comic.setScore(li.select(".book-score .score-avg strong").text());
             comic.setUpdate("更新于"+getPattern(REG_DATE,li.select(".book-detail .status span span").get(1).text(),0));
             comic.setUpdateStatus("更新至"+li.select(".book-detail .status span a").get(0).text());

@@ -4,13 +4,13 @@
 		"url":"/list/",
 		"cssQuery":{
 			"items":"$('.book-list #contList li')",
-			"comic-id":"$('a.bcover').attr('href').match(/(\\d+)/)[1]",
+			"comic-id":"$('a.bcover').attr('href').match('/(\\d+)/')[1]",
 			"comic-name":"$('p.ell').text()",
-			"comic-image-url":"$('a.bcover img').attr('src').match(/http[s]?:.+.(?:jpg|jpeg|png|gif|bmp)/)[0]",
+			"comic-image-url":"$('a.bcover img').attr('src').match('http[s]?:.+.(?:jpg|jpeg|png|gif|bmp)')[0]",
 			"comic-score":"$('span.updateon em').text()",
-			"comic-update":"$('span.updateon').html().match(/\\w+-\\w+-\\w+/)[0]",
+			"comic-update":"$('span.updateon').html().match('\\w+-\\w+-\\w+')[0]",
 			"comic-update-status":"$('a.bcover span.tt').text()",
-			"comic-end":"$('a.bcover span').last().attr('class')=='sl'"
+			"comic-end":"$('a.bcover span').last().attr('class')!='sl'"
 		}
 	},
 	"latest-list-url":{
@@ -18,6 +18,37 @@
 		"cssQuery":{
 
 
+		}
+	},
+	"search_page":{
+		"url":"/s/",
+		"cssQuery":{
+			"items":"$('.book-result li')",
+			"comic-id":"$('a.bcover').attr('href').match('/(\\d+)/')[1]",
+			"comic-name":"$('dt a').first().text()",
+			"comic-image-url":"$('a.bcover img').attr('src').match('http[s]?:.+.(?:jpg|jpeg|png|gif|bmp)')[0]",
+			"comic-score":"$('.book-score .score-avg strong').text()",
+			"comic-update":"$('.book-detail .status span span').eq(1).text().match('\\w+-\\w+-\\w+')[0]",
+			"comic-update-status":"$('.book-detail .status span a').first().text()",
+			"comic-end":"$('.book-detail .status span span').first().text()=='完结'",
+			"comic-author":"$('.tags').eq(2).find('span a').text()",
+			"comic-tag":"$('.tags').eq(1).find('span').eq(2).find('a').text()",
+			"comic-info":"$('.intro').text().replace('\\[详情\\]','')"
+		}
+	},
+	"details_page":{
+		"url":"/comic/",
+		"cssQuery":{
+			"items":"$('.book-cont')[0]",
+			"comic-name":"$('.book-title h1').text()",
+			"comic-image-url":"$('.hcover img').attr('src').match('http[s]{0,1}:.+.(?:jpg|jpeg|png|gif|bmp)')[0]",
+			"comic-tag":"$('.detail-list li').eq(1).find('span').eq(0).find('a').text()",
+			"comic-author":"$('.detail-list li').eq(1).find('span').eq(1).find('a').text()",
+			"comic-update":"",
+			"comic-update-status":"",
+			"comic-end":"",
+			"comic-info":"",
+			"comic-is-ban":""
 		}
 	},
 	"type":{
@@ -129,20 +160,5 @@
 			{"name":"连载","url":"lianzai"},
 			{"name":"完结","url":"wanjie"}
 		]
-	},
-	"details_page":{
-		"url":"/comic/",
-		"cssQuery":{
-			"items":"$('.book-cont')[0]",
-			"comic-name":"$('.book-title h1').text()",
-			"comic-image-url":"$('.hcover img').attr('src').match(/http[s]{0,1}:.+.(?:jpg|jpeg|png|gif|bmp)/)[0]",
-			"comic-tag":"$('.detail-list li').eq(1).find('span').eq(0).find('a').text()",
-			"comic-author":"$('.detail-list li').eq(1).find('span').eq(1).find('a').text()",
-			"comic-update":"",
-			"comic-update-status":"",
-			"comic-end":"",
-			"comic-info":"",
-			"comic-is-ban":""
-		}
 	}
 }

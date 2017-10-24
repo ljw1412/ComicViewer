@@ -157,6 +157,7 @@ public class ComicGridFragment extends Fragment
 //        Log.d(TAG, "onScroll: "+firstItem+","+visibleItem+","+totalItem);
     }
 
+    //延迟刷新适配器，防止第一次加载不显示封面
     public void delayedFlushAdapter(){
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -184,7 +185,7 @@ public class ComicGridFragment extends Fragment
                     image.setImageBitmap(null);
                     image.setImageDrawable(null);
                 }else{
-                    pictureGridAdapter.loadCover(i,image);
+                    pictureGridAdapter.loadCover(i,view);
                 }
             }
         }
@@ -192,7 +193,7 @@ public class ComicGridFragment extends Fragment
         pictureGridAdapter.notifyDataSetChanged();
     }
 
-    //TODO:网络请求，更新UI
+    //网络请求，更新UI
     @Override
     public void onFinish(Object data, String what) {
         switch (what){
@@ -232,7 +233,7 @@ public class ComicGridFragment extends Fragment
 
     //-------------------
 
-    //TODO:网格对象点击事件
+    //网格对象点击事件
     class  ItemClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

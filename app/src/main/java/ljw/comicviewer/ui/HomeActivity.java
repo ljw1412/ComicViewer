@@ -18,9 +18,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ljw.comicviewer.R;
+import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.fragment.CollectionFragment;
 import ljw.comicviewer.ui.fragment.HomeFragment;
 import ljw.comicviewer.ui.fragment.MineFragment;
+import ljw.comicviewer.util.FileUtil;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -62,8 +64,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.activity_home);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
 
         //fragment事务管理
         fragmentManager = getSupportFragmentManager();
@@ -78,11 +78,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         //默认漫画标签
         img_comic.setSelected(true);
 
+        initRuleStore();
         changeTitleBar();
         setToolBarClick();
         changeToolBarOption(0);
     }
 
+    private void initRuleStore(){
+        String rule = FileUtil.readJson(context);
+        RuleStore.get().setCurrentRule(rule.equals("fail") ? null : rule);
+    }
 
     //隐藏所有的fragment
     private void hideAllFragment(FragmentTransaction ft){
