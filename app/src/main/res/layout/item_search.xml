@@ -54,12 +54,28 @@
                 android:id="@+id/search_comic_type"
                 android:maxLines="1"/>
 
-            <TextView
-                android:text="TextView"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/search_comic_update"
-                android:maxLines="1"/>
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/search_comic_update"
+                    android:maxLines="1"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/search_comic_update_status"
+                    android:layout_weight="1"
+                    android:maxLines="1" />
+
+            </LinearLayout>
 
             <TextView
                 android:text="TextView"

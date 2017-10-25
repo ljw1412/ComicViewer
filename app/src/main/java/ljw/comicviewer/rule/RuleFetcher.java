@@ -231,43 +231,4 @@ public class RuleFetcher {
         }
         return currentObj;
     }
-
-
-
-    //漫画搜索
-    public CallBackData getSearchResults(String html){
-        ruleParser.parseSearchPage();
-
-        List<Comic> comics = new ArrayList<>();
-        Document doc = Jsoup.parse(html);
-        Map<String,String> map = ruleStore.getSearchRule();
-        if(map!=null && map.size()>0){
-            Elements items = (Elements) parser(doc , map.get("items"));
-            for(Element element : items){
-                Comic comic = new Comic();
-                comic.setId((String) parser(element,map.get("comic-id")));
-                comic.setName((String) parser(element,map.get("comic-name")));
-                comic.setImageUrl((String) parser(element,map.get("comic-image-url")));
-                comic.setScore((String) parser(element,map.get("comic-score")));
-                comic.setUpdate((String) parser(element,map.get("comic-update")));
-                comic.setUpdateStatus((String) parser(element,map.get("comic-update-status")));
-                comic.setEnd((Boolean) parser(element,map.get("comic-end")));
-                comic.setAuthor((String) parser(element,map.get("comic-author")));
-                comic.setTag((String) parser(element,map.get("comic-tag")));
-                comic.setInfo((String) parser(element,map.get("comic-info")));
-                comics.add(comic);
-                if (DEBUG_MODE) Log.d(TAG, "getComicList: "+comic.toString());
-            }
-        }
-        CallBackData backData = new CallBackData();
-        backData.setObj(comics);
-        int maxPage = 99999;
-        try {
-            maxPage = (Integer.valueOf(doc.select(".result-count strong").last().text())+9)/10;
-        }catch (Exception e){
-
-        }
-        backData.setArg1(maxPage);
-        return backData;
-    }
 }

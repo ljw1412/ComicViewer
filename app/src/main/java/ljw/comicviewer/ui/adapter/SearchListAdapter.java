@@ -77,7 +77,7 @@ public class SearchListAdapter extends BaseAdapter{
         searchViewHolder.update.setText(comics.get(position).getUpdate());
         searchViewHolder.type.setText(comics.get(position).getTag());
         searchViewHolder.info.setText(comics.get(position).getInfo());
-
+        searchViewHolder.updateStatus.setText(comics.get(position).getUpdateStatus());
         final LinearLayout thisBody = searchViewHolder.body;
         thisBody.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,6 +154,8 @@ public class SearchListAdapter extends BaseAdapter{
         TextView author;
         @BindView(R.id.search_comic_update)
         TextView update;
+        @BindView(R.id.search_comic_update_status)
+        TextView updateStatus;
         @BindView(R.id.search_comic_type)
         TextView type;
         @BindView(R.id.search_comic_info)

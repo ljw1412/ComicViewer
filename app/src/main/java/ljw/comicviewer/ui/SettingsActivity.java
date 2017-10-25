@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Comic;
+import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.rule.RuleFetcher;
 import ljw.comicviewer.rule.RuleParser;
@@ -68,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity
         switch (what) {
             case Global.REQUEST_COMICS_LIST:
             case Global.REQUEST_COMICS_SEARCH:
-                List<Comic> comics = (List<Comic>) RuleFetcher.get().getSearchResults(data.toString()).getObj();
+                List<Comic> comics = (List<Comic>) ComicFetcher.getSearchResults(data.toString()).getObj();
                 debug.setText("");
                 for (Comic comic:comics){
                     debug.append(comic.toString()+"\n");

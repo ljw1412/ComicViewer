@@ -125,34 +125,39 @@ public class ComicFetcher {
         return comic;
     }
 
-    //漫画搜索
+    //漫画搜索(规则版)
     public static CallBackData getSearchResults(String html){
-        List<Comic> list = new ArrayList<>();
+        getRuleParser().parseSearchPage();
+
+        List<Comic> comics = new ArrayList<>();
         Document doc = Jsoup.parse(html);
-        Elements comicItems = doc.select(".book-result li");
-        for (Element li : comicItems) {
-            Comic comic = new Comic();
-            comic.setId(getPattern(REG_COMIC_ID,li.select("a.bcover").attr("href"),1));
-            comic.setName(li.select("dt a").get(0).text());
-            comic.setImageUrl(getPattern(REG_COVER_URL_REG,li.select("a.bcover img").toString(),0));
-            comic.setScore(li.select(".book-score .score-avg strong").text());
-            comic.setUpdate("更新于"+getPattern(REG_DATE,li.select(".book-detail .status span span").get(1).text(),0));
-            comic.setUpdateStatus("更新至"+li.select(".book-detail .status span a").get(0).text());
-            comic.setEnd(li.select(".book-detail .status span span").get(0).text().contains("完结") ? true : false);
-            comic.setAuthor(li.select(".tags").get(2).select("span a").text());
-            comic.setTag(li.select(".tags").get(1).select("span").get(2).select("a").text());
-            comic.setInfo(li.select(".intro").text().replaceAll("\\[详情\\]",""));
-            list.add(comic);
-//            Log.d("----", "getSearchResults: "+comic.toString());
+        Map<String,String> map = getRuleStore().getSearchRule();
+        if(map!=null && map.size()>0){
+            Elements items = (Elements) getRuleFetcher().parser(doc , map.get("items"));
+            for(Element element : items){
+                Comic comic = new Comic();
+                comic.setId((String) getRuleFetcher().parser(element,map.get("comic-id")));
+                comic.setName((String) getRuleFetcher().parser(element,map.get("comic-name")));
+                comic.setImageUrl((String) getRuleFetcher().parser(element,map.get("comic-image-url")));
+                comic.setScore((String) getRuleFetcher().parser(element,map.get("comic-score")));
+                comic.setUpdate("更新于"+(String) getRuleFetcher().parser(element,map.get("comic-update")));
+                comic.setUpdateStatus("更新至"+(String) getRuleFetcher().parser(element,map.get("comic-update-status")));
+                comic.setEnd((Boolean) getRuleFetcher().parser(element,map.get("comic-end")));
+                comic.setAuthor((String) getRuleFetcher().parser(element,map.get("comic-author")));
+                comic.setTag((String) getRuleFetcher().parser(element,map.get("comic-tag")));
+                comic.setInfo((String) getRuleFetcher().parser(element,map.get("comic-info")));
+                comics.add(comic);
+            }
         }
         CallBackData backData = new CallBackData();
-        backData.setObj(list);
+        backData.setObj(comics);
+        int maxPage = 99999;
         try {
-            int maxPage = (Integer.valueOf(doc.select(".result-count strong").last().text())+9)/10;
-            backData.setArg1(maxPage);
+            maxPage = (Integer.valueOf(doc.select(".result-count strong").last().text())+9)/10;
         }catch (Exception e){
 
         }
+        backData.setArg1(maxPage);
         return backData;
     }
 
