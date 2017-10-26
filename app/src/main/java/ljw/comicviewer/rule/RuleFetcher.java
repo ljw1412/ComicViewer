@@ -23,10 +23,8 @@ import ljw.comicviewer.store.RuleStore;
 
 public class RuleFetcher {
     private final String TAG = this.getClass().getSimpleName()+"----";
-    private final boolean DEBUG_MODE = false;
+    private final boolean DEBUG_MODE = true;
     private static RuleFetcher ruleFetcher = null;
-    private static RuleStore ruleStore;
-    private static RuleParser ruleParser;
 
     private RuleFetcher() {
     }
@@ -35,8 +33,6 @@ public class RuleFetcher {
         if(ruleFetcher == null){
             ruleFetcher = new RuleFetcher();
         }
-        ruleStore = RuleStore.get();
-        ruleParser = RuleParser.get();
         return ruleFetcher;
     }
 
@@ -66,7 +62,7 @@ public class RuleFetcher {
     private List<String> splitJS(String js){
         //优化js代码更好的管道化
         js = js.replaceAll("==",".==").replaceAll("!=",".!=");
-        if(DEBUG_MODE) Log.d(TAG, "splitJS: "+js);
+        if(DEBUG_MODE) Log.e(TAG, "splitJS: "+js);
         List<String> ruleList = new ArrayList<>();
         char[] chars = js.toCharArray();
         String temp = "";
@@ -115,9 +111,9 @@ public class RuleFetcher {
         Object currentObj = element;
         String cssQuery = "";
         int index = -1;
-        for (String ss : ruleList ) {
-            //Log.d(TAG, "parser: "+ss);
+        for (String ss : ruleList) {
             for(int i = 0 ; i < regexps.length ; i++ ){
+                cssQuery = "";
                 if(isExits(regexps[i] , ss)) {
                     boolean error = true;
                     switch (i){
@@ -147,7 +143,7 @@ public class RuleFetcher {
                             cssQuery = getPattern(regexps[i], ss, 1);
                             index = Integer.valueOf(getPattern(regexps[i], ss, 2));
                             if (currentObj instanceof String){
-                                currentObj = getPattern(cssQuery, element.toString(),index);
+                                currentObj = getPattern(cssQuery, (String) currentObj,index);
                                 error = false;
                             }
                             break;
@@ -212,10 +208,9 @@ public class RuleFetcher {
                                 error = false;
                             }
                             break;
-                        case 14:
+                        case 14://replace()
                             cssQuery =getPattern(regexps[i], ss, 1);
                             String query2 = getPattern(regexps[i], ss ,2);
-                            Log.e(TAG, "parser: "+cssQuery +" "+query2 );
                             if (currentObj instanceof String){
                                 currentObj = ((String) currentObj).replaceAll(cssQuery,query2);
                                 error = false;
@@ -224,7 +219,8 @@ public class RuleFetcher {
                     }
                     if (error)
                         Log.e(TAG, "case "+ i +" error: 当前规则\""+rule+"\"存在问题！可能是规则错误。");
-                    //if(DEBUG_MODE) Log.d(TAG, "parser: " + cssQuery);
+                    if(DEBUG_MODE)
+                        Log.d(TAG, "parser: " + ss + "\n" + currentObj);
                 }
             }
 

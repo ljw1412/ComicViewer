@@ -10,6 +10,7 @@ import java.util.Map;
 public class RuleStore {
     private final String TAG = this.getClass().getSimpleName()+"----";
     private static RuleStore ruleStore = null;
+    private String host;
     private String currentRule;
     private Map<String,List<Map<String,String>>> typeRule;
     private Map<String,String> listRule;
@@ -24,6 +25,14 @@ public class RuleStore {
             ruleStore = new RuleStore();
         }
         return ruleStore;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public String getCurrentRule() {

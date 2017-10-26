@@ -140,7 +140,7 @@ public class ComicFetcher {
                 comic.setName((String) getRuleFetcher().parser(element,map.get("comic-name")));
                 comic.setImageUrl((String) getRuleFetcher().parser(element,map.get("comic-image-url")));
                 comic.setScore((String) getRuleFetcher().parser(element,map.get("comic-score")));
-                comic.setUpdate("更新于"+(String) getRuleFetcher().parser(element,map.get("comic-update")));
+                comic.setUpdate((String) getRuleFetcher().parser(element,map.get("comic-update")));
                 comic.setUpdateStatus("更新至"+(String) getRuleFetcher().parser(element,map.get("comic-update-status")));
                 comic.setEnd((Boolean) getRuleFetcher().parser(element,map.get("comic-end")));
                 comic.setAuthor((String) getRuleFetcher().parser(element,map.get("comic-author")));
@@ -153,7 +153,7 @@ public class ComicFetcher {
         backData.setObj(comics);
         int maxPage = 99999;
         try {
-            maxPage = (Integer.valueOf(doc.select(".result-count strong").last().text())+9)/10;
+            maxPage = Integer.valueOf((String) getRuleFetcher().parser(doc,map.get("max-page")));
         }catch (Exception e){
 
         }

@@ -29,6 +29,7 @@
     <string name="reader_data_load_success">数据加载成功,\n等待图片加载。</string>
     <string name="error_network_connections">网络连接异常，请检查网络状态。</string>
     <string name="error_comic_chapter_load_fail">章节加载失败，下拉页面刷新！</string>
+    <string name="tips_search_not_found">没有找到你想要的漫画</string>
     <string name="tips_is_first">前面没有了…</string>
     <string name="tips_is_last">后面没有了…</string>
     <string name="tips_search">请输入搜索的关键词</string>

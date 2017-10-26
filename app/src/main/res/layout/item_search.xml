@@ -48,10 +48,18 @@
                 android:maxLines="1"/>
 
             <TextView
-                android:text="TextView"
+                android:text="update_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/search_comic_type"
+                android:id="@+id/search_comic_update_status"
+                android:maxLines="1" />
+
+            <TextView
+                android:text="info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/search_comic_info"
+                android:ellipsize="end"
                 android:maxLines="1"/>
 
             <LinearLayout
@@ -60,30 +68,24 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:text="TextView"
+                    android:text="tags"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/search_comic_update"
+                    android:id="@+id/search_comic_type"
                     android:maxLines="1"
                     android:layout_weight="1" />
 
                 <TextView
-                    android:text="TextView"
+                    android:text="update_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/search_comic_update_status"
+                    android:id="@+id/search_comic_update"
+                    android:maxLines="1"
                     android:layout_weight="1"
-                    android:maxLines="1" />
+                    android:gravity="right|center_vertical"
+                    android:layout_marginRight="5dp" />
 
             </LinearLayout>
-
-            <TextView
-                android:text="TextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/search_comic_info"
-                android:ellipsize="end"
-                android:maxLines="1"/>
         </LinearLayout>
 
     </LinearLayout>

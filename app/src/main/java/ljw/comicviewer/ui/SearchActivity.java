@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,8 @@ public class SearchActivity extends AppCompatActivity
     @BindView(R.id.search_pull_refresh_list)
     PullToRefreshListView pullToRefreshListView;
     ListView listview;
+    @BindView(R.id.search_not_found)
+    RelativeLayout tipsView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +146,7 @@ public class SearchActivity extends AppCompatActivity
         keyword = edit_search.getText().toString();
         if (!keyword.trim().equals("")){
             Toast.makeText(context,keyword,Toast.LENGTH_LONG).show();
+            tipsView.setVisibility(View.GONE);
             comics.clear();
             searchListAdapter.notifyDataSetChanged();
             curPage = 1;
@@ -182,6 +186,9 @@ public class SearchActivity extends AppCompatActivity
                 String html = (String) data;
                 CallBackData callbackdata = ComicFetcher.getSearchResults(html);
                 comics.addAll((List<Comic>) callbackdata.getObj());
+                if(comics.size()==0){
+                    tipsView.setVisibility(View.VISIBLE);
+                }
                 maxPage = (int) callbackdata.getArg1();
                 pullToRefreshListView.onRefreshComplete();
                 pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);

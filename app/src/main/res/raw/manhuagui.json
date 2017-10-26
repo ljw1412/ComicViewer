@@ -28,12 +28,13 @@
 			"comic-name":"$('dt a').first().text()",
 			"comic-image-url":"$('a.bcover img').attr('src').match('http[s]?:.+.(?:jpg|jpeg|png|gif|bmp)')[0]",
 			"comic-score":"$('.book-score .score-avg strong').text()",
-			"comic-update":"$('.book-detail .status span span').eq(1).text().match('\\w+-\\w+-\\w+')[0]",
+			"comic-update":"$('.book-detail .status span span').eq(1).text()",
 			"comic-update-status":"$('.book-detail .status span a').first().text()",
 			"comic-end":"$('.book-detail .status span span').first().text()=='完结'",
 			"comic-author":"$('.tags').eq(2).find('span a').text()",
 			"comic-tag":"$('.tags').eq(1).find('span').eq(2).find('a').text()",
-			"comic-info":"$('.intro').text().replace('\\[详情\\]','')"
+			"comic-info":"$('.intro').text().replace('\\[详情\\]','')",
+			"max-page":"$('.pager a').last().attr('href').match('/.*_p(\\w+).html')[1]"
 		}
 	},
 	"details_page":{

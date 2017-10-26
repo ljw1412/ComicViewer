@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_search"
     android:layout_width="match_parent"
@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <include
+        android:id="@+id/search_bar"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         layout="@layout/navigation_bar_search" />
@@ -15,6 +16,23 @@
         android:id="@+id/search_pull_refresh_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null">
+        android:divider="@null"
+        android:layout_below="@+id/search_bar">
     </com.handmark.pulltorefresh.library.PullToRefreshListView>
-</LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/search_bar"
+        android:id="@+id/search_not_found"
+        android:visibility="gone">
+
+        <TextView
+            android:text="@string/tips_search_not_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView4"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp" />
+    </RelativeLayout>
+</RelativeLayout>
