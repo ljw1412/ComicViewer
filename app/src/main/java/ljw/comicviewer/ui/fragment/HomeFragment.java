@@ -50,9 +50,10 @@ public class HomeFragment extends Fragment {
         viewPager.setOffscreenPageLimit(4);
 
         ComicGridFragment comicGridFragment = new ComicGridFragment();
-        myFragmentPagerAdapter.addFragment(comicGridFragment);
-
         CategoryFragment categoryFragment = new CategoryFragment();
+        UpdateFragment updateFragment = new UpdateFragment();
+        myFragmentPagerAdapter.addFragment(comicGridFragment);
+        myFragmentPagerAdapter.addFragment(updateFragment);
         myFragmentPagerAdapter.addFragment(categoryFragment);
 
         myFragmentPagerAdapter.notifyDataSetChanged();

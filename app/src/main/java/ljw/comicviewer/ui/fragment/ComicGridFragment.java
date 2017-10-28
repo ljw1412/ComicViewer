@@ -168,7 +168,7 @@ public class ComicGridFragment extends Fragment
         },200);
     }
 
-    //清理不可见是item,加载可见的item。如果是第一次加载这加载整页
+    //清理不可见是item,加载可见的item。如果是第一次就加载这加载整页
     public void clearAndLoadImage(){
         int firstVisiblePosition= gridView.getFirstVisiblePosition();
         int lastVisiblePosition = gridView.getLastVisiblePosition();
@@ -180,11 +180,14 @@ public class ComicGridFragment extends Fragment
             View view = pictureGridAdapter.getViewMap().get(i);
             if (view!=null){
                 ImageView image = (ImageView) view.findViewById(R.id.comic_img);
+                ImageView EndTag = (ImageView) view.findViewById(R.id.comic_status);
                 if(i<firstVisiblePosition || i>lastVisiblePosition){
-                    Log.d(TAG, "clearAndLoadImage: "+i);
+                    Log.d(TAG, "clearImage: "+i);
                     image.setImageBitmap(null);
                     image.setImageDrawable(null);
+                    EndTag.setImageResource(0);
                 }else{
+                    Log.d(TAG, "loadImage: "+i);
                     pictureGridAdapter.loadCover(i,view);
                 }
             }

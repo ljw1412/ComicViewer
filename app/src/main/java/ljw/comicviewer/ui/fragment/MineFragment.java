@@ -36,7 +36,7 @@ public class MineFragment extends Fragment {
         context = getActivity();
         ButterKnife.bind(this,view);
         initView();
-        initListening();
+        initListener();
         return view;
     }
 
@@ -44,7 +44,7 @@ public class MineFragment extends Fragment {
 
     }
 
-    private void initListening(){
+    private void initListener(){
         btn_setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -12,10 +12,11 @@
         android:layout_gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="48dp"
+            android:layout_width="40dp"
             android:id="@+id/comic_status"
             android:elevation="1dp"
-            android:layout_height="48dp" />
+            android:layout_height="20dp"
+            android:layout_gravity="right" />
 
         <ImageView
             android:id="@+id/comic_img"

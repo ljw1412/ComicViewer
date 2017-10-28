@@ -101,11 +101,14 @@ public class RuleFetcher {
                 "first\\(\\)",
                 "get\\((.+)\\)",
                 "eq\\((.+)\\)",
-                "=='(.+)'",
-                "!='(.+)'",
+                "==(.+)",
+                "!=(.+)",
                 "find\\('(.+)'\\)",
                 "children\\('(.+)'\\)",
-                "replace\\('(.+)','(.*)'\\)"
+                "replace\\('(.+)','(.*)'\\)",
+                "indexOf\\('(.*)'\\)",
+                "length",
+                "size\\(\\)"
         };
 
         Object currentObj = element;
@@ -135,6 +138,10 @@ public class RuleFetcher {
                                 currentObj = ((Element) currentObj).attr(cssQuery);
                                 error = false;
                             }else if(currentObj instanceof Elements){
+                                String temp  = ((Elements) currentObj).attr(cssQuery);
+                                if(temp.equals("") && cssQuery.equals("src")){
+                                    cssQuery = "data-src";
+                                }
                                 currentObj = ((Elements) currentObj).attr(cssQuery);
                                 error = false;
                             }
@@ -194,17 +201,25 @@ public class RuleFetcher {
                                 error = false;
                             }
                             break;
-                        case 10://==''
+                        case 10://==
                             cssQuery = getPattern(regexps[i], ss, 1);
                             if(currentObj instanceof String) {
+                                cssQuery = getPattern("'(.*)'",cssQuery,1);
                                 currentObj = currentObj.equals(cssQuery);
+                                error = false;
+                            }else if(currentObj instanceof Integer){
+                                currentObj = (currentObj == Integer.valueOf(cssQuery));
                                 error = false;
                             }
                             break;
-                        case 11://!=''
+                        case 11://!=
                             cssQuery = getPattern(regexps[i], ss, 1);
                             if(currentObj instanceof String) {
+                                cssQuery = getPattern("'(.*)'",cssQuery,1);
                                 currentObj = !currentObj.equals(cssQuery);
+                                error = false;
+                            }else if(currentObj instanceof Integer){
+                                currentObj = (currentObj != Integer.valueOf(cssQuery));
                                 error = false;
                             }
                             break;
@@ -216,9 +231,25 @@ public class RuleFetcher {
                                 error = false;
                             }
                             break;
+                        case 15://indexOf()
+                            cssQuery =getPattern(regexps[i], ss, 1);
+                            if (currentObj instanceof String){
+                                currentObj = ((String) currentObj).indexOf(cssQuery);
+                                error = false;
+                            }
+                            break;
+                        case 16://length
+                        case 17://size()
+                            if(currentObj instanceof Elements){
+                                currentObj = ((Elements) currentObj).size();
+                                error = false;
+                            }
+                            break;
                     }
-                    if (error)
-                        Log.e(TAG, "case "+ i +" error: 当前规则\""+rule+"\"存在问题！可能是规则错误。");
+                    if (error){
+                        Log.e(TAG, "case "+ i +" error: 当前规则\""+rule+"\"存在问题！可能是语法不支持。");
+                        throw new RuntimeException("当前规则\""+rule+"\"中的\""+ss+"\"解析失败。");
+                    }
                     if(DEBUG_MODE)
                         Log.d(TAG, "parser: " + ss + "\n" + currentObj);
                 }

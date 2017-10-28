@@ -33,6 +33,7 @@ import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.ui.adapter.SearchListAdapter;
+import retrofit2.Call;
 
 public class SearchActivity extends AppCompatActivity
         implements ComicService.RequestCallback{
@@ -46,6 +47,7 @@ public class SearchActivity extends AppCompatActivity
     private boolean loading = false;
     private SearchListAdapter searchListAdapter;
     private LinearLayoutManager linearLayoutManager;
+    private Call searchCall;
     @BindView(R.id.search_button)
     Button btn_search;
     @BindView(R.id.search_edit)
@@ -65,8 +67,6 @@ public class SearchActivity extends AppCompatActivity
         initPTRGridView();
         initGridView();
         initTitleBar();
-
-
     }
 
     private void initPTRGridView() {
@@ -145,11 +145,12 @@ public class SearchActivity extends AppCompatActivity
     public void searching(View view){
         keyword = edit_search.getText().toString();
         if (!keyword.trim().equals("")){
+            curPage = 1;
+            maxPage = -1;
             Toast.makeText(context,keyword,Toast.LENGTH_LONG).show();
             tipsView.setVisibility(View.GONE);
             comics.clear();
             searchListAdapter.notifyDataSetChanged();
-            curPage = 1;
             pullToRefreshListView.setFocusableInTouchMode(true);
             pullToRefreshListView.requestFocus();
             HideKeyboard(view);
@@ -161,7 +162,7 @@ public class SearchActivity extends AppCompatActivity
 
 
     public void loadSearch(String keyword, int page){
-        ComicService.get().getComicSearch(this,keyword,page);
+        searchCall = ComicService.get().getComicSearch(this,keyword,page);
     }
 
     //隐藏虚拟键盘
@@ -189,7 +190,9 @@ public class SearchActivity extends AppCompatActivity
                 if(comics.size()==0){
                     tipsView.setVisibility(View.VISIBLE);
                 }
-                maxPage = (int) callbackdata.getArg1();
+                if(maxPage == -1){
+                    maxPage = (int) callbackdata.getArg1();
+                }
                 pullToRefreshListView.onRefreshComplete();
                 pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
                 searchListAdapter.notifyDataSetChanged();
@@ -204,5 +207,14 @@ public class SearchActivity extends AppCompatActivity
     @Override
     public void onError(String msg, String what) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(searchCall!=null && !searchCall.isCanceled()){
+            searchCall.cancel();
+            Log.d(TAG, "onDestroy: "+"取消网络请求！");
+        }
     }
 }

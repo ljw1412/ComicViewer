@@ -104,6 +104,13 @@ public class DetailsActivity extends AppCompatActivity
         //view绑定代码生成
         ButterKnife.bind(this);
 
+        initViewAndData();
+        initChapterFragment();
+        initListener();
+
+    }
+
+    private void initViewAndData(){
         //隐藏加载前界面
         viewMain.setVisibility(View.GONE);
         details_container.setRefreshing(true);
@@ -117,6 +124,19 @@ public class DetailsActivity extends AppCompatActivity
         //设置标题栏的标题
         String title = (String) getIntent().getExtras().get("title");
         txt_title.setText(title);
+
+        //预先设置comic的id和评分
+        comic_id = (String) getIntent().getExtras().get("id");
+        String score = (String) getIntent().getExtras().get("score");
+        comic.setId(comic_id);
+        comic.setScore(score);
+        //加载数据
+        loadComicInformation();
+
+
+    }
+
+    private void initListener(){
         txt_title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,27 +164,21 @@ public class DetailsActivity extends AppCompatActivity
             }
         });
 
-        //预先设置comic的id和评分
-        comic_id = (String) getIntent().getExtras().get("id");
-        String score = (String) getIntent().getExtras().get("score");
-        comic.setId(comic_id);
-        comic.setScore(score);
-        //加载数据
-        loadComicInformation();
-
         instruction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            if (txt_info.getMaxLines()==2){
-                txt_info.setMaxLines(999);
-                img_arrow.setImageResource(R.drawable.arrowhead_up);
-            }else{
-                txt_info.setMaxLines(2);
-                img_arrow.setImageResource(R.drawable.arrowhead_down);
-            }
+                if (txt_info.getMaxLines()==2){
+                    txt_info.setMaxLines(999);
+                    img_arrow.setImageResource(R.drawable.arrowhead_up);
+                }else{
+                    txt_info.setMaxLines(2);
+                    img_arrow.setImageResource(R.drawable.arrowhead_down);
+                }
             }
         });
+    }
 
+    private void initChapterFragment(){
         for (int i = 0 ; i < TYPE_MAX ; i++){
             ChaptersFragment chaptersFragment = new ChaptersFragment();
             chaptersFragment_map.put(i,chaptersFragment);
@@ -175,7 +189,6 @@ public class DetailsActivity extends AppCompatActivity
             fragmentManager.beginTransaction()
                     .replace(fragmentId[i], chaptersFragment_map.get(i)).commit();
         }
-
     }
 
     //加载数据
@@ -320,7 +333,7 @@ public class DetailsActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         webview.destroy();
-        if(!call_loadComicInformation.isCanceled()){
+        if(call_loadComicInformation!=null && !call_loadComicInformation.isCanceled()){
             call_loadComicInformation.cancel();
             Log.d(TAG, "onDestroy: "+"取消网络请求！");
         }

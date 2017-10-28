@@ -177,7 +177,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private int[] tabIds = {R.id.option1,R.id.option2,R.id.option3,R.id.option4};
+    private int[] tabIds = {R.id.option1,R.id.option2,R.id.option3};
     public void changeToolBarOption(int position){
         for(int i = 0 ; i < tabIds.length ; i++){
             TextView tabText = (TextView) findViewById(tabIds[i]);

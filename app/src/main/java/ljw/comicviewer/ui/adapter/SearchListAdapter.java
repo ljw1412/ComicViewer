@@ -3,6 +3,7 @@ package ljw.comicviewer.ui.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -78,6 +79,9 @@ public class SearchListAdapter extends BaseAdapter{
         searchViewHolder.type.setText(comics.get(position).getTag());
         searchViewHolder.info.setText(comics.get(position).getInfo());
         searchViewHolder.updateStatus.setText(comics.get(position).getUpdateStatus());
+        searchViewHolder.end.setText(comics.get(position).isEnd()?"已完结":"连载中");
+        searchViewHolder.end.setTextColor(comics.get(position).isEnd()?Color.rgb(236,19,111):Color.rgb(68,221,0));
+
         final LinearLayout thisBody = searchViewHolder.body;
         thisBody.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,6 +164,8 @@ public class SearchListAdapter extends BaseAdapter{
         TextView type;
         @BindView(R.id.search_comic_info)
         TextView info;
+        @BindView(R.id.search_comic_is_end)
+        TextView end;
 
         public SearchViewHolder(View view){
             ButterKnife.bind(this,view);

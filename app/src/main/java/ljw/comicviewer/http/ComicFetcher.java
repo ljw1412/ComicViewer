@@ -69,11 +69,11 @@ public class ComicFetcher {
     //获取列表页信息(规则版)
     public static List<Comic> getComicList(String html){
         getRuleParser().parseListPage();
+        Map<String,String> map = getRuleStore().getListRule();
         RuleFetcher ruleFetcher = getRuleFetcher();
 
         List<Comic> comics = new ArrayList<>();
         Document doc = Jsoup.parse(html);
-        Map<String,String> map = getRuleStore().getListRule();
         if(map!=null && map.size()>0){
             Elements items = (Elements) ruleFetcher.parser(doc , map.get("items"));
             for(Element element : items){
@@ -91,37 +91,30 @@ public class ComicFetcher {
         return comics;
     }
 
-    //获取详细页信息
+    //获取详细页信息(规则版)
     public static Comic getComicDetails(String html,Comic comic){
-//        Comic comic = new Comic();
+        getRuleParser().parseDetailsPage();
+        Map<String,String> map = getRuleStore().getDetailsRule();
+
         Document doc = Jsoup.parse(html);
-
-
-        Element book_cont = doc.select(".book-cont").get(0);
-//        comic.setId(id);
-        comic.setName(book_cont.select(".book-title h1").text());
-        comic.setImageUrl(getPattern(REG_COVER_URL_REG,book_cont.select(".hcover img").toString(),0));
-        Elements detail_list = doc.select(".detail-list li");
-        comic.setTag(detail_list.get(1).select("span").get(0).select("a").text());
-        comic.setAuthor(detail_list.get(1).select("span").get(1).select("a").text());
-        if(doc.select(".detail-list li.status span span").size()>0) {
-            comic.setUpdateStatus("更新至"+doc.select(".detail-list li.status span a").get(0).text());
-            comic.setUpdate(doc.select(".detail-list li.status span span").get(1).text());
-            comic.setEnd(doc.select(".detail-list li.status span span").get(0).text().contains("完结") ? true : false);
-        }else{
-            comic.setUpdateStatus("暂未更新。敬请期待！！！");
-            comic.setUpdate("不详");
-            comic.setEnd(false);
-        }
-        comic.setInfo(doc.select(".book-detail #intro-all").text());
-
-
-        //检查是否被屏蔽
-        Element comicInfo = doc.select(".chapter").get(0);
-        Elements error = comicInfo.select(".result-none");
-        if (error.size()>0){
-            comic.setBan(true);
-        }
+        comic.setName((String) getRuleFetcher().parser(doc,map.get("comic-name")));
+        comic.setImageUrl((String) getRuleFetcher().parser(doc,map.get("comic-image-url")));
+        comic.setTag((String) getRuleFetcher().parser(doc,map.get("comic-tag")));
+        comic.setAuthor((String) getRuleFetcher().parser(doc,map.get("comic-author")));
+        comic.setUpdateStatus("更新至"+(String) getRuleFetcher().parser(doc,map.get("comic-update-status")));
+        comic.setUpdate((String) getRuleFetcher().parser(doc,map.get("comic-update")));
+        comic.setEnd((Boolean) getRuleFetcher().parser(doc,map.get("comic-end")));
+        comic.setInfo((String) getRuleFetcher().parser(doc,map.get("comic-info")));
+        comic.setBan((Boolean) getRuleFetcher().parser(doc,map.get("comic-is-ban")));
+//        if(doc.select(".detail-list li.status span span").size()>0) {
+//            comic.setUpdateStatus("更新至"+doc.select(".detail-list li.status span a").get(0).text());
+//            comic.setUpdate(doc.select(".detail-list li.status span span").get(1).text());
+//            comic.setEnd(doc.select(".detail-list li.status span span").get(0).text().contains("完结") ? true : false);
+//        }else{
+//            comic.setUpdateStatus("暂未更新。敬请期待！！！");
+//            comic.setUpdate("不详");
+//            comic.setEnd(false);
+//        }
         return comic;
     }
 

@@ -42,10 +42,8 @@ public class SettingsActivity extends AppCompatActivity
         context = this;
         ButterKnife.bind(this);
         initView();
-        rule = FileUtil.readJson(context);
-        debug.setText(rule);
-        RuleParser.get().setRuleStr(rule);
-        loadSearch("a",1);
+
+        loadComicInformation();
     }
 
     private void initView(){
@@ -59,6 +57,11 @@ public class SettingsActivity extends AppCompatActivity
     public void loadSearch(String keyword, int page){
         ComicService.get().getComicSearch(this,keyword,page);
     }
+
+    public void loadComicInformation(){
+         ComicService.get().getComicInfo(this,"8788");//18X id:"8788");"16058"
+    }
+
     //按标题栏返回按钮
     public void onBack(View view) {
         finish();
@@ -74,6 +77,13 @@ public class SettingsActivity extends AppCompatActivity
                 for (Comic comic:comics){
                     debug.append(comic.toString()+"\n");
                 }
+                break;
+            case Global.REQUEST_COMICS_INFO:
+                Comic comic = new Comic();
+                comic.setId("8788");
+                comic.setScore("10");
+                ComicFetcher.getComicDetails(data.toString(),comic);
+                debug.setText(comic.toString());
                 break;
         }
     }

@@ -34,6 +34,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile project(':PullToRefresh')
+    //配合support-v4:25.3.1
+    //Material Designer （进度条，界面控件）
+    //注解方式寻找view
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:design:25.3.1'
@@ -41,15 +44,12 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-scalars:2.3.0'
     compile 'com.android.support:support-vector-drawable:25.3.1'
-    //配合support-v4:25.3.1
     compile 'com.github.bumptech.glide:glide:4.0.0'
     compile 'com.github.bumptech.glide:annotations:4.0.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    //Material Designer （进度条，界面控件）
     compile 'com.github.vajro:MaterialDesignLibrary:1.6'
+    compile 'com.jakewharton:butterknife:8.8.1'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
-    //注解方式寻找view
-    compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
