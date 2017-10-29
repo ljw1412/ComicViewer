@@ -36,6 +36,7 @@ import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
+import ljw.comicviewer.util.DisplayUtil;
 import retrofit2.Call;
 
 
@@ -115,7 +116,6 @@ public class ComicGridFragment extends Fragment
         gridView = pullToRefreshGridView.getRefreshableView();
 
         //根据屏幕宽度设置列数
-        gridView.setColumnWidth(GridView.AUTO_FIT);
 //        int columns = DisplayUtil.getGridNumColumns(context,120);
 //        gridView.setNumColumns(columns);
 

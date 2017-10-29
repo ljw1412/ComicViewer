@@ -7,19 +7,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <include
+        android:id="@+id/nav_bar_default"
+        layout="@layout/navigation_bar_default"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:id="@+id/home_nav">
-
-        <include
-            android:id="@+id/nav_bar_default"
-            layout="@layout/navigation_bar_default"
-            android:layout_width="match_parent"
-            android:layout_height="48dp" />
-
-    </LinearLayout>
+        android:layout_height="48dp" />
 
 
     <LinearLayout
@@ -28,7 +20,7 @@
         android:layout_height="match_parent"
         android:id="@+id/content_home"
         android:layout_above="@+id/bottom_tab"
-        android:layout_below="@+id/home_nav"></LinearLayout>
+        android:layout_below="@+id/nav_bar_default"></LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"

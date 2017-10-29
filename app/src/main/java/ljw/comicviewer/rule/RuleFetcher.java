@@ -23,7 +23,7 @@ import ljw.comicviewer.store.RuleStore;
 
 public class RuleFetcher {
     private final String TAG = this.getClass().getSimpleName()+"----";
-    private final boolean DEBUG_MODE = true;
+    private final boolean DEBUG_MODE = false;
     private static RuleFetcher ruleFetcher = null;
 
     private RuleFetcher() {
