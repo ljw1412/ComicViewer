@@ -2,20 +2,14 @@ package ljw.comicviewer.rule;
 
 import android.util.Log;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import ljw.comicviewer.bean.CallBackData;
-import ljw.comicviewer.bean.Comic;
-import ljw.comicviewer.store.RuleStore;
+import ljw.comicviewer.util.StringUtil;
 
 /**
  * Created by ljw on 2017-10-22 022.
@@ -36,33 +30,11 @@ public class RuleFetcher {
         return ruleFetcher;
     }
 
-    /**
-     * 正则表达式获得内容
-     * @param reg 正则表达式
-     * @param str 需要匹配的文字
-     * @param i   结果下标
-     * @return
-     */
-    private String getPattern(String reg,String str,int i){
-        Pattern pattern = Pattern.compile(reg);
-        Matcher matcher = pattern.matcher(str);
-        if(matcher.find()){
-            return matcher.group(i);
-        }
-        return null;
-    }
-
-    private boolean isExits(String reg,String str){
-        Pattern pattern = Pattern.compile(reg);
-        Matcher matcher = pattern.matcher(str);
-        return matcher.matches();
-    }
-
     //拆分js代码
     private List<String> splitJS(String js){
         //优化js代码更好的管道化
-        js = js.replaceAll("==",".==").replaceAll("!=",".!=");
         if(DEBUG_MODE) Log.e(TAG, "splitJS: "+js);
+        js = js.replaceAll("==",".==").replaceAll("!=",".!=");
         List<String> ruleList = new ArrayList<>();
         char[] chars = js.toCharArray();
         String temp = "";
@@ -117,13 +89,13 @@ public class RuleFetcher {
         for (String ss : ruleList) {
             for(int i = 0 ; i < regexps.length ; i++ ){
                 cssQuery = "";
-                if(isExits(regexps[i] , ss)) {
+                if(StringUtil.isExits(regexps[i] , ss)) {
                     boolean error = true;
                     switch (i){
                         case 12://find()
                         case 13://children()
                         case 0://$()
-                            cssQuery = getPattern(regexps[i], ss, 1);
+                            cssQuery = StringUtil.getPattern(regexps[i], ss, 1);
                             if(currentObj instanceof Document){
                                 currentObj =  ((Document) currentObj).select(cssQuery);
                                 error = false;
@@ -133,7 +105,7 @@ public class RuleFetcher {
                             }
                             break;
                         case 1://attr()
-                            cssQuery = getPattern(regexps[i], ss, 1);
+                            cssQuery = StringUtil.getPattern(regexps[i], ss, 1);
                             if (currentObj instanceof Element){
                                 currentObj = ((Element) currentObj).attr(cssQuery);
                                 error = false;
@@ -147,10 +119,10 @@ public class RuleFetcher {
                             }
                             break;
                         case 2://match()
-                            cssQuery = getPattern(regexps[i], ss, 1);
-                            index = Integer.valueOf(getPattern(regexps[i], ss, 2));
+                            cssQuery = StringUtil.getPattern(regexps[i], ss, 1);
+                            index = Integer.valueOf(StringUtil.getPattern(regexps[i], ss, 2));
                             if (currentObj instanceof String){
-                                currentObj = getPattern(cssQuery, (String) currentObj,index);
+                                currentObj = StringUtil.getPattern(cssQuery, (String) currentObj,index);
                                 error = false;
                             }
                             break;
@@ -195,16 +167,16 @@ public class RuleFetcher {
                             break;
                         case 8://get()
                         case 9://eq()
-                            index = Integer.valueOf(getPattern(regexps[i], ss, 1));
+                            index = Integer.valueOf(StringUtil.getPattern(regexps[i], ss, 1));
                             if(currentObj instanceof Elements){
                                 currentObj = ((Elements) currentObj).get(index);
                                 error = false;
                             }
                             break;
                         case 10://==
-                            cssQuery = getPattern(regexps[i], ss, 1);
+                            cssQuery = StringUtil.getPattern(regexps[i], ss, 1);
                             if(currentObj instanceof String) {
-                                cssQuery = getPattern("'(.*)'",cssQuery,1);
+                                cssQuery = StringUtil.getPattern("'(.*)'",cssQuery,1);
                                 currentObj = currentObj.equals(cssQuery);
                                 error = false;
                             }else if(currentObj instanceof Integer){
@@ -213,9 +185,9 @@ public class RuleFetcher {
                             }
                             break;
                         case 11://!=
-                            cssQuery = getPattern(regexps[i], ss, 1);
+                            cssQuery = StringUtil.getPattern(regexps[i], ss, 1);
                             if(currentObj instanceof String) {
-                                cssQuery = getPattern("'(.*)'",cssQuery,1);
+                                cssQuery = StringUtil.getPattern("'(.*)'",cssQuery,1);
                                 currentObj = !currentObj.equals(cssQuery);
                                 error = false;
                             }else if(currentObj instanceof Integer){
@@ -224,15 +196,15 @@ public class RuleFetcher {
                             }
                             break;
                         case 14://replace()
-                            cssQuery =getPattern(regexps[i], ss, 1);
-                            String query2 = getPattern(regexps[i], ss ,2);
+                            cssQuery = StringUtil.getPattern(regexps[i], ss, 1);
+                            String query2 = StringUtil.getPattern(regexps[i], ss ,2);
                             if (currentObj instanceof String){
                                 currentObj = ((String) currentObj).replaceAll(cssQuery,query2);
                                 error = false;
                             }
                             break;
                         case 15://indexOf()
-                            cssQuery =getPattern(regexps[i], ss, 1);
+                            cssQuery = StringUtil.getPattern(regexps[i], ss, 1);
                             if (currentObj instanceof String){
                                 currentObj = ((String) currentObj).indexOf(cssQuery);
                                 error = false;

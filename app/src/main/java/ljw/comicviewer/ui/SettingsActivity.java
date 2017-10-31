@@ -59,7 +59,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void loadComicInformation(){
-         ComicService.get().getComicInfo(this,"8788");//18X id:"8788");"16058"
+         ComicService.get().getComicInfo(this,"16058");//18X id:"8788");"16058"
     }
 
     //按标题栏返回按钮
@@ -80,9 +80,16 @@ public class SettingsActivity extends AppCompatActivity
                 break;
             case Global.REQUEST_COMICS_INFO:
                 Comic comic = new Comic();
-                comic.setId("8788");
+                comic.setId("16058");
                 comic.setScore("10");
                 ComicFetcher.getComicDetails(data.toString(),comic);
+
+                try {
+                    ComicFetcher.getComicChapters(data.toString(),comic);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 debug.setText(comic.toString());
                 break;
         }

@@ -70,21 +70,20 @@ public class ComicFetcher {
     public static List<Comic> getComicList(String html){
         getRuleParser().parseListPage();
         Map<String,String> map = getRuleStore().getListRule();
-        RuleFetcher ruleFetcher = getRuleFetcher();
 
         List<Comic> comics = new ArrayList<>();
         Document doc = Jsoup.parse(html);
         if(map!=null && map.size()>0){
-            Elements items = (Elements) ruleFetcher.parser(doc , map.get("items"));
+            Elements items = (Elements) getRuleFetcher().parser(doc , map.get("items"));
             for(Element element : items){
                 Comic comic = new Comic();
-                comic.setId((String) ruleFetcher.parser(element,map.get("comic-id")));
-                comic.setName((String) ruleFetcher.parser(element,map.get("comic-name")));
-                comic.setImageUrl((String) ruleFetcher.parser(element,map.get("comic-image-url")));
-                comic.setScore((String) ruleFetcher.parser(element,map.get("comic-score")));
-                comic.setUpdate((String) ruleFetcher.parser(element,map.get("comic-update")));
-                comic.setUpdateStatus((String) ruleFetcher.parser(element,map.get("comic-update-status")));
-                comic.setEnd((Boolean) ruleFetcher.parser(element,map.get("comic-end")));
+                comic.setId((String) getRuleFetcher().parser(element,map.get("comic-id")));
+                comic.setName((String) getRuleFetcher().parser(element,map.get("comic-name")));
+                comic.setImageUrl((String) getRuleFetcher().parser(element,map.get("comic-image-url")));
+                comic.setScore((String) getRuleFetcher().parser(element,map.get("comic-score")));
+                comic.setUpdate((String) getRuleFetcher().parser(element,map.get("comic-update")));
+                comic.setUpdateStatus((String) getRuleFetcher().parser(element,map.get("comic-update-status")));
+                comic.setEnd((Boolean) getRuleFetcher().parser(element,map.get("comic-end")));
                 comics.add(comic);
             }
         }
@@ -121,10 +120,10 @@ public class ComicFetcher {
     //漫画搜索(规则版)
     public static CallBackData getSearchResults(String html){
         getRuleParser().parseSearchPage();
+        Map<String,String> map = getRuleStore().getSearchRule();
 
         List<Comic> comics = new ArrayList<>();
         Document doc = Jsoup.parse(html);
-        Map<String,String> map = getRuleStore().getSearchRule();
         if(map!=null && map.size()>0){
             Elements items = (Elements) getRuleFetcher().parser(doc , map.get("items"));
             for(Element element : items){
@@ -154,51 +153,43 @@ public class ComicFetcher {
         return backData;
     }
 
-
     //获得漫画章节
     public static Comic getComicChapters(String html,Comic comic) {
+        getRuleParser().parseDetailsChapter();
+        Map<String,String> map = getRuleStore().getDetailsChapterRule();
+
         List<Chapter> chapters = new ArrayList<>();
         Document doc = Jsoup.parse(html);
-        Elements chapter_list = doc.select(".chapter-list");
-        for (Element c:chapter_list) {
-            //类型检测，默认类型为其他
+        Elements chapterType = (Elements) getRuleFetcher().parser(doc,map.get("chapter-type"));
+        Elements chapterList = (Elements) getRuleFetcher().parser(doc,map.get("chapter-list"));
+        for(int i = 0 ; i < chapterList.size() ; i++){
             int type = 2;
-            Element preElement = c.previousElementSibling();
-            if (preElement.className().contains("chapter-page")){
-                //如果前一个元素为分页元素
-                preElement = preElement.previousElementSibling();
+            if (chapterType.get(i).text().contains("单行本")){
+                type = 0;
+            }else if (chapterType.get(i).text().contains("单话")){
+                type = 1;
             }
-            if(preElement.tagName()=="h4"){
-                String typeString = preElement.text();
-                if (typeString.contains("单行本")){
-                    type = 0;
-                }else if (typeString.contains("单话")){
-                    type = 1;
-                }
+            Elements chapterItems = (Elements) getRuleFetcher().parser(chapterList.get(i),map.get("chapter-items"));
+            for(int j = chapterItems.size()-1 ; j >= 0 ; j--){
+                Chapter chapter = new Chapter();
+                chapter.setComic_id(comic.getId());
+                chapter.setChapter_id((String) getRuleFetcher().parser(chapterItems.get(j),map.get("chapter-id")));
+                chapter.setChapter_name((String) getRuleFetcher().parser(chapterItems.get(j),map.get("chapter-name")));
+                chapter.setType(type);
+                chapters.add(chapter);
             }
-            //具体章节处理
-            Elements chapter_ul = c.select("ul");
-            for(Element ul : chapter_ul) {
-                Elements innerChapters = ul.select("a.status0");
-                for (int i = innerChapters.size() - 1; i >= 0; i--) {//由于获取是依次所以的到的元素组是倒序的，因此要正过来
-                    Element e = innerChapters.get(i);
-                    Chapter chapter = new Chapter();
-                    chapter.setComic_id(comic.getId());
-                    chapter.setChapter_id(getPattern(REG_CHAPTER_ID, e.attr("href"), 1));
-                    chapter.setChapter_name(e.attr("title"));
-                    chapter.setType(type);
-                    chapters.add(chapter);
-                }
-            }
-            for (Chapter chapter : chapters) {
-                Log.d("====", "getComicChapters: "+chapter.toString());
-            }
+        }
+        for (Chapter chapter : chapters) {
+            Log.d("----====", "getComicChapters: "+chapter.toString());
         }
         comic.setChapters(chapters);
         return comic;
     }
 
-    //获得解析当前章节
+
+
+
+    //获得解析当前章节(漫画柜用)
     public static ManhuaguiComicInfo parseCurrentChapter(String s){
         Gson gson = new Gson();
         ManhuaguiComicInfo info = gson.fromJson(s,ManhuaguiComicInfo.class);

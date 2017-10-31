@@ -17,6 +17,7 @@ public class RuleStore {
     private Map<String,String> latestRule;
     private Map<String,String> detailsRule;
     private Map<String,String> searchRule;
+    private Map<String,String> detailsChapterRule;
 
     private RuleStore(){}
 
@@ -81,5 +82,13 @@ public class RuleStore {
 
     public void setSearchRule(Map<String, String> searchRule) {
         this.searchRule = searchRule;
+    }
+
+    public Map<String, String> getDetailsChapterRule() {
+        return detailsChapterRule;
+    }
+
+    public void setDetailsChapterRule(Map<String, String> detailsChapterRule) {
+        this.detailsChapterRule = detailsChapterRule;
     }
 }

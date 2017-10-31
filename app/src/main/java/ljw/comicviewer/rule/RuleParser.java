@@ -70,6 +70,12 @@ public class RuleParser {
         ruleStore.setDetailsRule(parsePage("details_page"));
     }
 
+    public void parseDetailsChapter(){
+        if(ruleStr == null)
+            throw new NullPointerException("规则没有定义！");
+        ruleStore.setDetailsChapterRule(parsePage("details_page_chapter"));
+    }
+
     public void parseSearchPage(){
         if(ruleStr == null)
             throw new NullPointerException("规则没有定义！");
@@ -79,7 +85,8 @@ public class RuleParser {
     public Map<String,String> parsePage(String key){
         Map<String,String> map = new HashMap<>();
         JSONObject list = jsonObject.getJSONObject(key);
-        map.put("url",list.get("url").toString());
+        if(list.get("url")!=null)
+            map.put("url",list.get("url").toString());
         JSONObject cssQuery = list.getJSONObject("cssQuery");
         for(Object k: cssQuery.keySet()){
             map.put(k.toString(),cssQuery.get(k).toString());
