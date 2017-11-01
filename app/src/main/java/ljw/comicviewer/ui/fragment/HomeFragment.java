@@ -26,6 +26,7 @@ public class HomeFragment extends Fragment {
 
     @BindView(R.id.home_fragment_viewPager)
     ViewPager viewPager;
+    Fragment currentFragment;
     MyFragmentPagerAdapter myFragmentPagerAdapter;
 
     public HomeFragment() {
@@ -47,7 +48,7 @@ public class HomeFragment extends Fragment {
         FragmentManager fm = getChildFragmentManager();
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(fm);
         viewPager.setAdapter(myFragmentPagerAdapter);
-        viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(3);
 
         ComicGridFragment comicGridFragment = new ComicGridFragment();
         CategoryFragment categoryFragment = new CategoryFragment();
@@ -62,6 +63,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 context.changeToolBarOption(position);
+                currentFragment = myFragmentPagerAdapter.getItem(position);
             }
         });
     }

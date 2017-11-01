@@ -186,7 +186,29 @@ public class ComicFetcher {
         return comic;
     }
 
+    public static List<Comic> getLatestList(String html){
+        getRuleParser().parseLatestPage();
+        Map<String,String> map = getRuleStore().getLatestRule();
 
+        List<Comic> comics = new ArrayList<>();
+        Document doc = Jsoup.parse(html);
+        Elements latestList = (Elements) getRuleFetcher().parser(doc,map.get("latest-list"));
+        for(Element ele : latestList){
+            Elements latestItems = (Elements) getRuleFetcher().parser(ele,map.get("latest-items"));
+            for(Element item : latestItems){
+                Comic comic = new Comic();
+                comic.setId((String) getRuleFetcher().parser(item,map.get("comic-id")));
+                comic.setName((String) getRuleFetcher().parser(item,map.get("comic-name")));
+                comic.setImageUrl((String) getRuleFetcher().parser(item,map.get("comic-image-url")));
+//                comic.setScore((String) getRuleFetcher().parser(item,map.get("comic-score")));
+                comic.setUpdate((String) getRuleFetcher().parser(item,map.get("comic-update")));
+                comic.setUpdateStatus((String) getRuleFetcher().parser(item,map.get("comic-update-status")));
+                comic.setEnd((Boolean) getRuleFetcher().parser(item,map.get("comic-end")));
+                comics.add(comic);
+            }
+        }
+        return comics;
+    }
 
 
     //获得解析当前章节(漫画柜用)

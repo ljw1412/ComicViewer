@@ -16,8 +16,14 @@
 	"latest-list-url":{
 		"url":"/update/",
 		"cssQuery":{
-
-
+			"latest-list":"$('.latest-list')",
+			"latest-items":"$('ul li')",
+			"comic-id":"$('a.cover').attr('href').match('/(\\d+)/')[1]",
+			"comic-name":"$('p.ell a').text()",
+			"comic-image-url":"$('a.cover img').attr('src').match('http[s]?:.+.(?:jpg|jpeg|png|gif|bmp)')[0]",
+			"comic-update":"$('span.dt').html().match('\\w+-\\w+-\\w+')[0]",
+			"comic-update-status":"$('a.cover span.tt').text()",
+			"comic-end":"$('a.cover span').last().attr('class')!='sl'"
 		}
 	},
 	"search_page":{

@@ -13,9 +13,10 @@ public class Global {
 
 
     //请求标识
-    public static final String REQUEST_COMICS_LIST = "GET_COMICS_LIST";
-    public static final String REQUEST_COMICS_INFO = "REQUEST_COMICS_INFO";
-    public static final String REQUEST_COMICS_SEARCH = "REQUEST_COMICS_SEARCH";
+    public static final String REQUEST_COMICS_LIST = "GET_COMICS_LIST";//获得漫画列表
+    public static final String REQUEST_COMICS_INFO = "REQUEST_COMICS_INFO";//获得漫画信息
+    public static final String REQUEST_COMICS_SEARCH = "REQUEST_COMICS_SEARCH";//获得搜索漫画
+    public static final String REQUEST_COMICS_LATEST = "REQUEST_COMICS_LATEST";//获得最新漫画
 
     public static final int LEFT = 0;
     public static final int RIGHT = 1;

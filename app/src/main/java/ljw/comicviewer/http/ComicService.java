@@ -115,6 +115,28 @@ public class ComicService {
         return call;
     }
 
+    //更新漫画页面
+    public Call getUpdateList(final RequestCallback requestCallback , int days){
+        String path = "update/d"+days+".html";
+        Call<String> call = ComicService.get().getHTML(path);
+        final String what = Global.REQUEST_COMICS_LATEST;
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if(response.body()!=null){
+                    requestCallback.onFinish(response.body().toString(),what);
+                }else {
+                    requestCallback.onError("获得response.body()为null，可能是代码失效！",what);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                requestCallback.onError("getComicSearch()网络请求失败！",what);
+            }
+        });
+        return call;
+    }
 
     //自定义回调接口
     public interface RequestCallback<T>{

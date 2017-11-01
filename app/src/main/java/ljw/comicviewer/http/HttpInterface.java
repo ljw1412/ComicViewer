@@ -27,6 +27,7 @@ public class HttpInterface {
         @GET("s/{keyword}_p{page}.html")
         Call<String> getSearch(@Path(value = "keyword",encoded = true) String keyword,@Path(value = "page",encoded = true) String page);
 
+        @Headers("Cookie: country=HK")
         @GET("{path}")
         Call<String> getHTML(@Path(value="path",encoded=true) String path);
 

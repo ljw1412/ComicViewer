@@ -48,8 +48,8 @@ public class ComicGridFragment extends Fragment
         implements AbsListView.OnScrollListener, ComicService.RequestCallback  {
     private String TAG = ComicGridFragment.class.getSimpleName()+"----";
     private Context context;
-    private PictureGridAdapter pictureGridAdapter;
-    private List<Comic> comicList = new ArrayList<>();
+    PictureGridAdapter pictureGridAdapter;
+    List<Comic> comicList = new ArrayList<>();
     private File myCache;
     private int loadedPage = 1;
     private boolean isLoadingNext = false;
@@ -83,11 +83,11 @@ public class ComicGridFragment extends Fragment
 
         pullToRefreshGridView.setMode(PullToRefreshBase.Mode.DISABLED);
 
-        getListItems(1);
+        initLoad();
         return rootView;
     }
 
-    private void initPTRGridView(View view) {
+    public void initPTRGridView(View view) {
         // 设置监听器，这个监听器是可以监听双向滑动的，这样可以触发不同的事件
         pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
             @Override
@@ -112,7 +112,7 @@ public class ComicGridFragment extends Fragment
         });
     }
 
-    private void initGridView() {
+    public void initGridView() {
         gridView = pullToRefreshGridView.getRefreshableView();
 
         //根据屏幕宽度设置列数
@@ -126,8 +126,16 @@ public class ComicGridFragment extends Fragment
         pictureGridAdapter.notifyDataSetChanged();
     }
 
+    public PictureGridAdapter getPictureGridAdapter() {
+        return pictureGridAdapter;
+    }
+
+    public void initLoad(){
+        getListItems(1);
+    }
+
     //获得漫画列表对象并存入comicList
-    private void getListItems(int page){
+    public void getListItems(int page){
         ComicService.get().getListItems(this,page);
     }
 
@@ -182,12 +190,12 @@ public class ComicGridFragment extends Fragment
                 ImageView image = (ImageView) view.findViewById(R.id.comic_img);
                 ImageView EndTag = (ImageView) view.findViewById(R.id.comic_status);
                 if(i<firstVisiblePosition || i>lastVisiblePosition){
-                    Log.d(TAG, "clearImage: "+i);
+                    //Log.d(TAG, "clearImage: "+i);
                     image.setImageBitmap(null);
                     image.setImageDrawable(null);
                     EndTag.setImageResource(0);
                 }else{
-                    Log.d(TAG, "loadImage: "+i);
+                    //Log.d(TAG, "loadImage: "+i);
                     pictureGridAdapter.loadCover(i,view);
                 }
             }
