@@ -34,6 +34,7 @@ public class UpdateFragment extends ComicGridFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = getActivity();
+        Log.d(TAG, "onCreateView: create UpdateFragment");
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

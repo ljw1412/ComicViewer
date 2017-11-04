@@ -26,6 +26,9 @@ public class HomeFragment extends Fragment {
 
     @BindView(R.id.home_fragment_viewPager)
     ViewPager viewPager;
+    ComicGridFragment comicGridFragment;
+    UpdateFragment updateFragment;
+    CategoryFragment categoryFragment;
     Fragment currentFragment;
     MyFragmentPagerAdapter myFragmentPagerAdapter;
 
@@ -50,11 +53,11 @@ public class HomeFragment extends Fragment {
         viewPager.setAdapter(myFragmentPagerAdapter);
         viewPager.setOffscreenPageLimit(3);
 
-        ComicGridFragment comicGridFragment = new ComicGridFragment();
-        CategoryFragment categoryFragment = new CategoryFragment();
-        UpdateFragment updateFragment = new UpdateFragment();
+        comicGridFragment = new ComicGridFragment();
+
+        categoryFragment = new CategoryFragment();
         myFragmentPagerAdapter.addFragment(comicGridFragment);
-        myFragmentPagerAdapter.addFragment(updateFragment);
+        myFragmentPagerAdapter.addFragment(new Fragment());
         myFragmentPagerAdapter.addFragment(categoryFragment);
 
         myFragmentPagerAdapter.notifyDataSetChanged();
@@ -64,6 +67,13 @@ public class HomeFragment extends Fragment {
             public void onPageSelected(int position) {
                 context.changeToolBarOption(position);
                 currentFragment = myFragmentPagerAdapter.getItem(position);
+                Log.d(TAG, "onPageSelected: "+position);
+                if (position == 1 && !(currentFragment instanceof UpdateFragment)){
+                    Log.d(TAG, "onPageSelected: replace fragment");
+                    updateFragment = new UpdateFragment();
+                    myFragmentPagerAdapter.replaceFragment(position,updateFragment);
+                }
+                myFragmentPagerAdapter.notifyDataSetChanged();
             }
         });
     }
