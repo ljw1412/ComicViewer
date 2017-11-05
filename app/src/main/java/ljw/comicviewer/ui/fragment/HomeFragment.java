@@ -20,7 +20,7 @@ import ljw.comicviewer.ui.adapter.MyFragmentPagerAdapter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseFragment{
     private String TAG = getClass().getSimpleName()+"----";
     HomeActivity context;
 
@@ -29,7 +29,7 @@ public class HomeFragment extends Fragment {
     ComicGridFragment comicGridFragment;
     UpdateFragment updateFragment;
     CategoryFragment categoryFragment;
-    Fragment currentFragment;
+    BaseFragment currentFragment;
     MyFragmentPagerAdapter myFragmentPagerAdapter;
 
     public HomeFragment() {
@@ -42,11 +42,22 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         context = (HomeActivity) getActivity();
         ButterKnife.bind(this,view);
-        initViewPager();
+        initView();
 
         return view;
     }
 
+    @Override
+    public void initLoad() {
+        //用于更新检查和公告发布
+    }
+
+    @Override
+    public void initView() {
+        initViewPager();
+    }
+
+    //采用了当界面处于当前页时加载并缓存页面
     public void initViewPager(){
         FragmentManager fm = getChildFragmentManager();
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(fm);
@@ -54,11 +65,15 @@ public class HomeFragment extends Fragment {
         viewPager.setOffscreenPageLimit(3);
 
         comicGridFragment = new ComicGridFragment();
-
+        updateFragment = new UpdateFragment();
         categoryFragment = new CategoryFragment();
+
         myFragmentPagerAdapter.addFragment(comicGridFragment);
-        myFragmentPagerAdapter.addFragment(new Fragment());
+        myFragmentPagerAdapter.addFragment(updateFragment);
         myFragmentPagerAdapter.addFragment(categoryFragment);
+
+        currentFragment = myFragmentPagerAdapter.getItem(0);
+        loadFragment(0);
 
         myFragmentPagerAdapter.notifyDataSetChanged();
 
@@ -67,18 +82,19 @@ public class HomeFragment extends Fragment {
             public void onPageSelected(int position) {
                 context.changeToolBarOption(position);
                 currentFragment = myFragmentPagerAdapter.getItem(position);
-                Log.d(TAG, "onPageSelected: "+position);
-                if (position == 1 && !(currentFragment instanceof UpdateFragment)){
-                    Log.d(TAG, "onPageSelected: replace fragment");
-                    updateFragment = new UpdateFragment();
-                    myFragmentPagerAdapter.replaceFragment(position,updateFragment);
-                }
-                myFragmentPagerAdapter.notifyDataSetChanged();
+                loadFragment(position);
             }
         });
     }
 
-    public void setPagePostion(int position){
+    private void loadFragment(int position){
+        if (!myFragmentPagerAdapter.isLoaded(position)){
+            myFragmentPagerAdapter.loadFragment(position,currentFragment);
+        }
+    }
+
+    public void setPagePosition(int position){
         viewPager.setCurrentItem(position);
     }
+
 }

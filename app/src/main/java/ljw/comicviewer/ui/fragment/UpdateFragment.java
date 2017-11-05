@@ -4,11 +4,11 @@ package ljw.comicviewer.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
@@ -20,7 +20,6 @@ import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
-import ljw.comicviewer.ui.adapter.PictureGridAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,12 +33,16 @@ public class UpdateFragment extends ComicGridFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = getActivity();
-        Log.d(TAG, "onCreateView: create UpdateFragment");
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
-    public void initPTRGridView(View view) {
+    public void initView() {
+        super.initView();
+    }
+
+    @Override
+    public void initPTRGridView() {
         pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
@@ -81,19 +84,43 @@ public class UpdateFragment extends ComicGridFragment{
     }
 
     @Override
+    public Object myDoInBackground(String TAG, Object data) {
+        switch (TAG) {
+            case Global.REQUEST_COMICS_LATEST:
+                allList.addAll(ComicFetcher.getLatestList(data.toString()));
+                return allList.size();
+        }
+        return null;
+    }
+
+    @Override
+    public void myOnPostExecute(String TAG,Object resultObj) {
+        switch (TAG) {
+            case Global.REQUEST_COMICS_LATEST:
+                if (resultObj!=null && (Integer)resultObj > 0) {
+                    maxPage = allList.size() % 30 > 0 ? (allList.size() / 30 + 1) : allList.size() / 30;
+                    pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
+                    add30(1);
+                    pictureGridAdapter.notifyDataSetChanged();
+                    //得到数据立刻取消刷新状态
+                    pullToRefreshGridView.onRefreshComplete();
+                    txt_netError.setVisibility(View.GONE);
+                    loading.setVisibility(View.GONE);
+                    clearAndLoadImage();
+                }else{
+                    Toast.makeText(context,getString(R.string.data_load_fail),Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+    }
+
+
+    @Override
     public void onFinish(Object data, String what) {
         switch (what){
             case Global.REQUEST_COMICS_LATEST:
-                allList.addAll(ComicFetcher.getLatestList(data.toString()));
-                maxPage = allList.size()%30 > 0 ? (allList.size()/30 + 1) : allList.size()/30;
-                pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
-                add30(1);
-                pictureGridAdapter.notifyDataSetChanged();
-                //得到数据立刻取消刷新状态
-                pullToRefreshGridView.onRefreshComplete();
-                txt_netError.setVisibility(View.GONE);
-                loading.setVisibility(View.GONE);
-                clearAndLoadImage();
+                UIUpdateTask UIUpdateTask = new UIUpdateTask(what,data);
+                UIUpdateTask.execute();
                 break;
         }
     }

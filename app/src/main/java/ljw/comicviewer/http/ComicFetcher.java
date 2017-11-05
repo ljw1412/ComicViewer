@@ -2,6 +2,7 @@ package ljw.comicviewer.http;
 
 
 
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -186,6 +187,7 @@ public class ComicFetcher {
         return comic;
     }
 
+    //获取最新（规则版）
     public static List<Comic> getLatestList(String html){
         getRuleParser().parseLatestPage();
         Map<String,String> map = getRuleStore().getLatestRule();

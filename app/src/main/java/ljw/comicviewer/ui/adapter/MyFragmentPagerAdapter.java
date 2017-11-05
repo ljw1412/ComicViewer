@@ -12,23 +12,26 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import ljw.comicviewer.ui.fragment.BaseFragment;
+
 /**
  * Created by ljw on 2017-10-10 010.
  */
 
-public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
+public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
     private FragmentManager mFragmentManager;
-    private List<Fragment> fragments;
-
+    private List<BaseFragment> fragments;
+    private List<Boolean> loaded;
 
     public MyFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
         mFragmentManager = fm;
         fragments = new ArrayList<>();
+        loaded = new ArrayList<>();
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public BaseFragment getItem(int position) {
         return fragments.get(position);
     }
 
@@ -37,18 +40,17 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
         return fragments.size();
     }
 
-    @Override
-    public int getItemPosition(Object object) {
-        return PagerAdapter.POSITION_NONE;
-    }
-
-    public void addFragment(Fragment fragment){
+    public void addFragment(BaseFragment fragment){
         fragments.add(fragment);
+        loaded.add(false);
     }
 
-    public void replaceFragment(int position,Fragment fragment){
-        fragments.set(position,fragment);
+    public void loadFragment(int position,BaseFragment fragment){
+        fragment.initLoad();
+        loaded.set(position,true);
     }
 
-
+    public boolean isLoaded(int position){
+        return loaded.get(position);
+    }
 }

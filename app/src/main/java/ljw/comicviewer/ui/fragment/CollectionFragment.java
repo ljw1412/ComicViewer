@@ -12,7 +12,7 @@ import ljw.comicviewer.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CollectionFragment extends Fragment {
+public class CollectionFragment extends BaseFragment{
 
 
     public CollectionFragment() {
@@ -27,4 +27,13 @@ public class CollectionFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_collection, container, false);
     }
 
+    @Override
+    public void initLoad() {
+        //数据库处理
+    }
+
+    @Override
+    public void initView() {
+
+    }
 }

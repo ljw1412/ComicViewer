@@ -194,7 +194,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onClick(View view) {
                     changeToolBarOption(finalI);
-                    homeFragment.setPagePostion(finalI);
+                    homeFragment.setPagePosition(finalI);
                 }
             });
         }

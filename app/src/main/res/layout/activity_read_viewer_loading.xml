@@ -23,7 +23,7 @@
             android:layout_marginBottom="15dp"
             android:layout_marginTop="15dp"/>
         <TextView
-            android:text="@string/reader_data_load_fail"
+            android:text="@string/data_load_fail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center_horizontal"
@@ -47,7 +47,7 @@
         </com.gc.materialdesign.views.ProgressBarCircularIndeterminate>
 
         <TextView
-            android:text="@string/reader_data_loading"
+            android:text="@string/data_loading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/reader_loading_text"

@@ -22,8 +22,8 @@
     <string name="chapter_type0">—单行本—</string>
     <string name="chapter_type1">—单　话—</string>
     <string name="chapter_type2">—番外篇—</string>
-    <string name="reader_data_loading">数据加载中…</string>
-    <string name="reader_data_load_fail">数据加载失败…</string>
+    <string name="data_loading">数据加载中…</string>
+    <string name="data_load_fail">数据加载失败…</string>
     <string name="gird_tips_loading_next_page">正在加载下一页</string>
     <string name="gird_tips_loading_next_page_fail">加载失败</string>
     <string name="reader_data_load_success">数据加载成功,\n等待图片加载。</string>

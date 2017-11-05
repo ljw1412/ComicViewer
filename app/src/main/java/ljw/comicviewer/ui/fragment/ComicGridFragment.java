@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,16 +35,14 @@ import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
-import ljw.comicviewer.util.DisplayUtil;
-import retrofit2.Call;
 
 
 /**
  * Created by ljw on 2017-08-23 023.
  */
 
-public class ComicGridFragment extends Fragment
-        implements AbsListView.OnScrollListener, ComicService.RequestCallback  {
+public class ComicGridFragment extends BaseFragment
+        implements AbsListView.OnScrollListener, ComicService.RequestCallback {
     private String TAG = ComicGridFragment.class.getSimpleName()+"----";
     private Context context;
     PictureGridAdapter pictureGridAdapter;
@@ -76,18 +73,20 @@ public class ComicGridFragment extends Fragment
         context = this.getActivity();
         View rootView = inflater.inflate(R.layout.fragment_comic_grid,null);
         ButterKnife.bind(this,rootView);
+        initView();
+        return rootView;
+    }
 
-        initPTRGridView(rootView);
+    @Override
+    public void initView() {
+        initPTRGridView();
         initGridView();
         myCache = context.getExternalCacheDir();
 
         pullToRefreshGridView.setMode(PullToRefreshBase.Mode.DISABLED);
-
-        initLoad();
-        return rootView;
     }
 
-    public void initPTRGridView(View view) {
+    public void initPTRGridView() {
         // 设置监听器，这个监听器是可以监听双向滑动的，这样可以触发不同的事件
         pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
             @Override
@@ -130,9 +129,11 @@ public class ComicGridFragment extends Fragment
         return pictureGridAdapter;
     }
 
+    @Override
     public void initLoad(){
         getListItems(1);
     }
+
 
     //获得漫画列表对象并存入comicList
     public void getListItems(int page){
@@ -204,21 +205,54 @@ public class ComicGridFragment extends Fragment
         pictureGridAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public Object myDoInBackground(String TAG,Object data) {
+        switch (TAG) {
+            case Global.REQUEST_COMICS_LIST:
+                comicList.addAll(ComicFetcher.getComicList(data.toString()));
+                return comicList.size();
+        }
+        return null;
+    }
+
+    @Override
+    public void myOnPostExecute(String TAG,Object resultObj) {
+        switch (TAG){
+            case Global.REQUEST_COMICS_LIST:
+                if (resultObj!=null && (Integer)resultObj > 0){
+                    pictureGridAdapter.notifyDataSetChanged();
+                    //得到数据立刻取消刷新状态
+                    pullToRefreshGridView.onRefreshComplete();
+                    txt_netError.setVisibility(View.GONE);
+                    loading.setVisibility(View.GONE);
+                    pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
+                    isLoadingNext = false;
+                    clearAndLoadImage();
+                }else{
+                    Toast.makeText(context,getString(R.string.data_load_fail),Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+    }
+
     //网络请求，更新UI
     @Override
     public void onFinish(Object data, String what) {
         switch (what){
             case Global.REQUEST_COMICS_LIST:
-                comicList.addAll(ComicFetcher.getComicList(data.toString()));
-//                Toast.makeText(context,"获得数据"+comicList.size(),Toast.LENGTH_LONG).show();
-                pictureGridAdapter.notifyDataSetChanged();
-                //得到数据立刻取消刷新状态
-                pullToRefreshGridView.onRefreshComplete();
-                txt_netError.setVisibility(View.GONE);
-                loading.setVisibility(View.GONE);
-                pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
-                isLoadingNext = false;
-                clearAndLoadImage();
+                UIUpdateTask UIUpdateTask = new UIUpdateTask(what,data);
+                UIUpdateTask.execute();
+
+//                comicList.addAll(ComicFetcher.getComicList(data.toString()));
+////                Toast.makeText(context,"获得数据"+comicList.size(),Toast.LENGTH_LONG).show();
+//                pictureGridAdapter.notifyDataSetChanged();
+//                //得到数据立刻取消刷新状态
+//                pullToRefreshGridView.onRefreshComplete();
+//                txt_netError.setVisibility(View.GONE);
+//                loading.setVisibility(View.GONE);
+//                pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
+//                isLoadingNext = false;
+//                clearAndLoadImage();
                 break;
         }
     }
