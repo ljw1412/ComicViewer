@@ -1,10 +1,10 @@
 package ljw.comicviewer.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.webkit.ValueCallback;
@@ -25,7 +25,7 @@ import ljw.comicviewer.others.MyWebView;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.WebViewUtil;
 
-public class ReadViewerLoadingActivity extends Activity {
+public class ReadViewerLoadingActivity extends AppCompatActivity {
     private String TAG = getClass().getSimpleName()+"----";
     private String comic_id,comic_name,chapter_id,chapter_name;
     private List<String> imgUrls = new ArrayList<>();

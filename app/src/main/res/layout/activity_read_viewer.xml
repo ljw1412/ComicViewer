@@ -58,48 +58,6 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:id="@+id/read_viewer_status"
-        android:layout_height="16dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:elevation="10dp"
-        android:background="@drawable/shape_corner_up_left"
-        android:paddingLeft="1dp"
-        android:paddingRight="1dp">
-
-        <TextView
-            android:text="chapterName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/read_viewer_chapter_name"
-            android:layout_weight="1"
-            android:maxWidth="200dp"
-            android:ellipsize="end"
-            style="@style/read_viewer_text"/>
-
-        <TextView
-            android:text="page"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/read_viewer_page"
-            android:layout_weight="1"
-            android:textColor="@color/white"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp" />
-
-        <TextView
-            android:text="time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/read_viewer_time"
-            android:layout_weight="1"
-            android:textColor="@color/white" />
-
-    </LinearLayout>
-
     <RelativeLayout
         android:layout_width="80dp"
         android:layout_height="30dp"
@@ -120,7 +78,33 @@
             android:background="@drawable/shape_circular"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:visibility="gone"
             android:gravity="center_vertical|center_horizontal" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:fitsSystemWindows="false"
+        android:id="@+id/read_viewer_container">
+
+        <ljw.comicviewer.others.MyViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:visibility="visible"
+            android:fitsSystemWindows="false" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_picture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:visibility="gone"
+            app:layoutManager="LinearLayoutManager"
+            tools:listitem="@layout/item_read_viewer"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -180,69 +164,52 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:elevation="24dp">
+                android:elevation="24dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/img_score"
-                    android:id="@+id/imageView3"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/img_score"
-                    android:id="@+id/imageView4"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/img_score"
-                    android:id="@+id/imageView2"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/img_score"
-                    android:id="@+id/imageView5"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     app:srcCompat="@drawable/img_score"
                     android:id="@+id/imageView"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/img_score"
+                    android:id="@+id/imageView2"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/img_score"
+                    android:id="@+id/imageView3"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/img_score"
+                    android:id="@+id/imageView4"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/img_read_options"
+                    android:id="@+id/imageView5"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true" />
+
             </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:fitsSystemWindows="false"
-        android:id="@+id/read_viewer_container">
-
-        <ljw.comicviewer.others.MyViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:visibility="visible"
-            android:fitsSystemWindows="false" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_picture"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            tools:visibility="gone"
-            app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/item_read_viewer"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -253,5 +220,47 @@
         android:visibility="gone">
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:id="@+id/read_viewer_status"
+        android:layout_height="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:elevation="10dp"
+        android:background="@drawable/shape_corner_up_left"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp">
+
+        <TextView
+            android:text="chapterName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/read_viewer_chapter_name"
+            android:layout_weight="1"
+            android:maxWidth="200dp"
+            android:ellipsize="end"
+            style="@style/read_viewer_text"/>
+
+        <TextView
+            android:text="page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/read_viewer_page"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
+
+        <TextView
+            android:text="time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/read_viewer_time"
+            android:layout_weight="1"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
 
 </RelativeLayout>

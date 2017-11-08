@@ -45,7 +45,7 @@ public class ComicGridFragment extends BaseFragment
         implements AbsListView.OnScrollListener, ComicService.RequestCallback {
     private String TAG = ComicGridFragment.class.getSimpleName()+"----";
     private Context context;
-    PictureGridAdapter pictureGridAdapter;
+    protected PictureGridAdapter pictureGridAdapter;
     List<Comic> comicList = new ArrayList<>();
     private File myCache;
     private int loadedPage = 1;
@@ -290,7 +290,5 @@ public class ComicGridFragment extends BaseFragment
             startActivity(intent);
         }
     }
-
-
 
 }

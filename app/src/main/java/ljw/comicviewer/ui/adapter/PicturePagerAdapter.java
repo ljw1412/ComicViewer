@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 
@@ -110,6 +111,7 @@ public class PicturePagerAdapter extends PagerAdapter {
                 }
             });
         }
+        viewHolder.txtPageNum.setText((position+1)+"");
         viewHolders.set(position, viewHolder);
         container.addView(viewHolder.view, 0);
         return viewHolder.view;
@@ -126,6 +128,8 @@ public class PicturePagerAdapter extends PagerAdapter {
         public ProgressBarCircularIndeterminate progressBar;
         @BindView(R.id.btn_refresh)
         public ImageView btnRefresh;
+        @BindView(R.id.page_num)
+        public TextView txtPageNum;
         View view;
 
         public PictureViewHolder(View view) {

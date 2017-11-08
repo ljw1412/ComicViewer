@@ -55,9 +55,9 @@ public class ComicFetcher {
         return null;
     }
 
-    private static RuleParser getRuleParser(){
-        return RuleParser.get();
-    }
+//    private static RuleParser getRuleParser(){
+//        return RuleParser.get();
+//    }
 
     private static RuleStore getRuleStore(){
         return RuleStore.get();
@@ -69,7 +69,7 @@ public class ComicFetcher {
 
     //获取列表页信息(规则版)
     public static List<Comic> getComicList(String html){
-        getRuleParser().parseListPage();
+//        getRuleParser().parseListPage();
         Map<String,String> map = getRuleStore().getListRule();
 
         List<Comic> comics = new ArrayList<>();
@@ -93,7 +93,7 @@ public class ComicFetcher {
 
     //获取详细页信息(规则版)
     public static Comic getComicDetails(String html,Comic comic){
-        getRuleParser().parseDetailsPage();
+//        getRuleParser().parseDetailsPage();
         Map<String,String> map = getRuleStore().getDetailsRule();
 
         Document doc = Jsoup.parse(html);
@@ -120,7 +120,7 @@ public class ComicFetcher {
 
     //漫画搜索(规则版)
     public static CallBackData getSearchResults(String html){
-        getRuleParser().parseSearchPage();
+//        getRuleParser().parseSearchPage();
         Map<String,String> map = getRuleStore().getSearchRule();
 
         List<Comic> comics = new ArrayList<>();
@@ -156,7 +156,7 @@ public class ComicFetcher {
 
     //获得漫画章节
     public static Comic getComicChapters(String html,Comic comic) {
-        getRuleParser().parseDetailsChapter();
+//        getRuleParser().parseDetailsChapter();
         Map<String,String> map = getRuleStore().getDetailsChapterRule();
 
         List<Chapter> chapters = new ArrayList<>();
@@ -189,7 +189,7 @@ public class ComicFetcher {
 
     //获取最新（规则版）
     public static List<Comic> getLatestList(String html){
-        getRuleParser().parseLatestPage();
+//        getRuleParser().parseLatestPage();
         Map<String,String> map = getRuleStore().getLatestRule();
 
         List<Comic> comics = new ArrayList<>();

@@ -2,6 +2,7 @@ package ljw.comicviewer.http;
 
 import ljw.comicviewer.Global;
 import ljw.comicviewer.bean.CallBackData;
+import ljw.comicviewer.store.RuleStore;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -16,9 +17,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class ComicService {
     private static final String TAG ="ComicService----";
     private static ComicService comicService;
-    private String host = Global.MANHUAGUI_HOST;
-    private String coverHost = Global.MANHUAGUI_COVER;
-    private CallBackData callBackData;
+    private static String host ;//= Global.MANHUAGUI_HOST;
 
     private ComicService(){}
 
@@ -26,9 +25,9 @@ public class ComicService {
         if(comicService==null){
             comicService = new ComicService();
         }
+        host = RuleStore.get().getHost();
         return comicService;
     }
-
 
     private Retrofit getRetrofit(String host){
         return new Retrofit.Builder()
@@ -117,7 +116,7 @@ public class ComicService {
 
     //更新漫画页面
     public Call getUpdateList(final RequestCallback requestCallback , int days){
-        String path = "update/d"+days+".html";
+        String path = RuleStore.get().getLatestRule().get("url")+"/d"+days+".html";
         Call<String> call = ComicService.get().getHTML(path);
         final String what = Global.REQUEST_COMICS_LATEST;
         call.enqueue(new Callback<String>() {

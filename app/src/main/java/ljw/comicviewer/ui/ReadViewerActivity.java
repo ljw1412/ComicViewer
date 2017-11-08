@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -45,14 +46,14 @@ import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 
-public class ReadViewerActivity extends Activity {
+public class ReadViewerActivity extends AppCompatActivity {
     private String TAG = getClass().getSimpleName()+"----";
     private Context context;
     private PicturePagerAdapter picturePagerAdapter;
     private String comic_id,comic_name,chapter_id,chapter_name;
     private List<String> imgUrls;
     private MyOnItemLongClickListener onItemLongClickListener;
-    private boolean isShowTools = false;
+    private boolean isShowTools = true;
     private boolean isScroll = false;
     private int currPos = 0;
     @BindView(R.id.container)
@@ -296,6 +297,7 @@ public class ReadViewerActivity extends Activity {
                 PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
                 pictureViewHolder.progressBar.setVisibility(View.GONE);
                 pictureViewHolder.btnRefresh.setVisibility(View.GONE);
+                pictureViewHolder.txtPageNum.setVisibility(View.GONE);
 //                pic.setImageBitmap();
                 mAttacher.update();
 

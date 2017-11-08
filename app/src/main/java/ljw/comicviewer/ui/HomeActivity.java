@@ -18,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ljw.comicviewer.R;
+import ljw.comicviewer.rule.RuleParser;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.fragment.CollectionFragment;
 import ljw.comicviewer.ui.fragment.HomeFragment;
@@ -87,6 +88,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private void initRuleStore(){
         String rule = FileUtil.readJson(context);
         RuleStore.get().setCurrentRule(rule.equals("fail") ? null : rule);
+        if(RuleStore.get().getCurrentRule()!=null){
+            RuleParser.get().parseAll();
+        }else{
+            throw new RuntimeException("初始化失败");
+        }
     }
 
     //隐藏所有的fragment

@@ -12,18 +12,41 @@
         android:layout_height="match_parent"
         android:scaleType="fitCenter" />
 
-    <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
-        android:id="@+id/progress_bar"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_centerInParent="true"
-        android:background="@color/white"/>
-    <ImageView
-        android:id="@+id/btn_refresh"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:visibility="gone"
-        android:layout_centerInParent="true"
-        android:src="@drawable/ico_refresh"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:text="pageNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/page_num"
+            android:textColor="@color/white"
+            android:textSize="60sp"
+            android:layout_marginBottom="10dp"
+            android:layout_centerInParent="false"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_centerVertical="false"
+            android:layout_centerHorizontal="true" />
+
+        <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+            android:id="@+id/progress_bar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@color/white"
+            android:layout_alignParentLeft="false"
+            android:layout_below="@+id/page_num"
+            android:layout_centerInParent="true" />
+
+        <ImageView
+            android:id="@+id/btn_refresh"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:visibility="gone"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ico_refresh"
+            android:layout_below="@+id/page_num" />
+    </RelativeLayout>
 
 </RelativeLayout>

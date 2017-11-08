@@ -20,6 +20,7 @@ import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
+import ljw.comicviewer.ui.adapter.PictureGridAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +60,17 @@ public class UpdateFragment extends ComicGridFragment{
                 pullToRefreshGridView.onRefreshComplete();
             }
         });
+    }
+
+    @Override
+    public void initGridView() {
+        gridView = pullToRefreshGridView.getRefreshableView();
+
+        pictureGridAdapter = new PictureGridAdapter(context,comicList);
+        gridView.setAdapter(pictureGridAdapter);
+        gridView.setOnScrollListener(this);
+        gridView.setOnItemClickListener(new ItemClickListener());
+        pictureGridAdapter.notifyDataSetChanged();
     }
 
     @Override

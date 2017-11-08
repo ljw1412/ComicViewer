@@ -31,6 +31,11 @@ public class RuleParser {
         if(ruleParser == null){
             ruleParser = new RuleParser();
         }
+        setRuleStr();
+        return ruleParser;
+    }
+
+    public static void setRuleStr(){
         ruleStore = RuleStore.get();
         ruleStr = ruleStore.getCurrentRule();
         if(ruleStr!=null){
@@ -38,51 +43,57 @@ public class RuleParser {
         }else{
             throw new NullPointerException("set rule fail.");
         }
-        return ruleParser;
-    }
-
-    public RuleParser setRuleStr(String str){
-        ruleStr = str;
-        setJsonObject();
-        return ruleParser;
     }
 
     private static void setJsonObject() {
         jsonObject = JSON.parseObject(ruleStr);
     }
 
+    public void parseAll(){
+        parseHost();
+        parseListPage();
+        parseLatestPage();
+        parseDetailsPage();
+        parseDetailsChapter();
+        parseSearchPage();
+    }
 
-    public void parseListPage(){
+    private void parseHost(){
+        String host = jsonObject.get("host").toString();
+        ruleStore.setHost(host);
+    }
+
+    private void parseListPage(){
         if(ruleStr == null)
             throw new NullPointerException("规则没有定义！");
         ruleStore.setListRule(parsePage("list"));
     }
 
-    public void parseLatestPage(){
+    private void parseLatestPage(){
         if(ruleStr == null)
             throw new NullPointerException("规则没有定义！");
         ruleStore.setLatestRule(parsePage("latest-list-url"));
     }
 
-    public void parseDetailsPage(){
+    private void parseDetailsPage(){
         if(ruleStr == null)
             throw new NullPointerException("规则没有定义！");
         ruleStore.setDetailsRule(parsePage("details_page"));
     }
 
-    public void parseDetailsChapter(){
+    private void parseDetailsChapter(){
         if(ruleStr == null)
             throw new NullPointerException("规则没有定义！");
         ruleStore.setDetailsChapterRule(parsePage("details_page_chapter"));
     }
 
-    public void parseSearchPage(){
+    private void parseSearchPage(){
         if(ruleStr == null)
             throw new NullPointerException("规则没有定义！");
         ruleStore.setSearchRule(parsePage("search_page"));
     }
 
-    public Map<String,String> parsePage(String key){
+    private Map<String,String> parsePage(String key){
         Map<String,String> map = new HashMap<>();
         JSONObject list = jsonObject.getJSONObject(key);
         if(list.get("url")!=null)
@@ -94,7 +105,7 @@ public class RuleParser {
         return map;
     }
 
-    public void parseType(){
+    private void parseType(){
         Map<String,List<Map<String,String>>> map = new HashMap<>();
         JSONObject type = jsonObject.getJSONObject("type");
         for(Object key: type.keySet()){
