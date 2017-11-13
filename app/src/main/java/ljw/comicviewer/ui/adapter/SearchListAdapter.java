@@ -140,7 +140,7 @@ public class SearchListAdapter extends BaseAdapter{
     public void go(int position){
         Comic comic = comics.get(position);
         Intent intent = new Intent(context, DetailsActivity.class);
-        intent.putExtra("id",comic.getId());
+        intent.putExtra("id",comic.getComicId());
         intent.putExtra("score",comic.getScore());
         intent.putExtra("title",comic.getName());
         context.startActivity(intent);

@@ -2,12 +2,10 @@ package ljw.comicviewer.http;
 
 
 
-import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.google.gson.Gson;
 
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,7 +23,6 @@ import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.bean.ManhuaguiComicInfo;
 import ljw.comicviewer.rule.RuleFetcher;
-import ljw.comicviewer.rule.RuleParser;
 import ljw.comicviewer.store.RuleStore;
 
 
@@ -78,7 +75,7 @@ public class ComicFetcher {
             Elements items = (Elements) getRuleFetcher().parser(doc , map.get("items"));
             for(Element element : items){
                 Comic comic = new Comic();
-                comic.setId((String) getRuleFetcher().parser(element,map.get("comic-id")));
+                comic.setComicId((String) getRuleFetcher().parser(element,map.get("comic-id")));
                 comic.setName((String) getRuleFetcher().parser(element,map.get("comic-name")));
                 comic.setImageUrl((String) getRuleFetcher().parser(element,map.get("comic-image-url")));
                 comic.setScore((String) getRuleFetcher().parser(element,map.get("comic-score")));
@@ -129,7 +126,7 @@ public class ComicFetcher {
             Elements items = (Elements) getRuleFetcher().parser(doc , map.get("items"));
             for(Element element : items){
                 Comic comic = new Comic();
-                comic.setId((String) getRuleFetcher().parser(element,map.get("comic-id")));
+                comic.setComicId((String) getRuleFetcher().parser(element,map.get("comic-id")));
                 comic.setName((String) getRuleFetcher().parser(element,map.get("comic-name")));
                 comic.setImageUrl((String) getRuleFetcher().parser(element,map.get("comic-image-url")));
                 comic.setScore((String) getRuleFetcher().parser(element,map.get("comic-score")));
@@ -173,7 +170,7 @@ public class ComicFetcher {
             Elements chapterItems = (Elements) getRuleFetcher().parser(chapterList.get(i),map.get("chapter-items"));
             for(int j = chapterItems.size()-1 ; j >= 0 ; j--){
                 Chapter chapter = new Chapter();
-                chapter.setComic_id(comic.getId());
+                chapter.setComic_id(comic.getComicId());
                 chapter.setChapter_id((String) getRuleFetcher().parser(chapterItems.get(j),map.get("chapter-id")));
                 chapter.setChapter_name((String) getRuleFetcher().parser(chapterItems.get(j),map.get("chapter-name")));
                 chapter.setType(type);
@@ -199,7 +196,7 @@ public class ComicFetcher {
             Elements latestItems = (Elements) getRuleFetcher().parser(ele,map.get("latest-items"));
             for(Element item : latestItems){
                 Comic comic = new Comic();
-                comic.setId((String) getRuleFetcher().parser(item,map.get("comic-id")));
+                comic.setComicId((String) getRuleFetcher().parser(item,map.get("comic-id")));
                 comic.setName((String) getRuleFetcher().parser(item,map.get("comic-name")));
                 comic.setImageUrl((String) getRuleFetcher().parser(item,map.get("comic-image-url")));
 //                comic.setScore((String) getRuleFetcher().parser(item,map.get("comic-score")));

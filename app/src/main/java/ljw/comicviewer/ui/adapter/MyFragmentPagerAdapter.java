@@ -50,6 +50,10 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
         loaded.set(position,true);
     }
 
+    public void setLoaded(int position){
+        loaded.set(position,true);
+    }
+
     public boolean isLoaded(int position){
         return loaded.get(position);
     }

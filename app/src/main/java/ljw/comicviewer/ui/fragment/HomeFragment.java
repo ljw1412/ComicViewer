@@ -73,7 +73,7 @@ public class HomeFragment extends BaseFragment{
         myFragmentPagerAdapter.addFragment(categoryFragment);
 
         currentFragment = myFragmentPagerAdapter.getItem(0);
-        loadFragment(0);
+        myFragmentPagerAdapter.setLoaded(0);
 
         myFragmentPagerAdapter.notifyDataSetChanged();
 

@@ -3,15 +3,10 @@ package ljw.comicviewer.ui;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,10 +15,6 @@ import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
-import ljw.comicviewer.rule.RuleFetcher;
-import ljw.comicviewer.rule.RuleParser;
-import ljw.comicviewer.store.RuleStore;
-import ljw.comicviewer.util.FileUtil;
 
 public class SettingsActivity extends AppCompatActivity
         implements ComicService.RequestCallback {
@@ -80,7 +71,7 @@ public class SettingsActivity extends AppCompatActivity
                 break;
             case Global.REQUEST_COMICS_INFO:
                 Comic comic = new Comic();
-                comic.setId("16058");
+                comic.setComicId("16058");
                 comic.setScore("10");
                 ComicFetcher.getComicDetails(data.toString(),comic);
 

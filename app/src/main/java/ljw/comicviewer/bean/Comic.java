@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 public class Comic {
-    private String id;
+    private String comicId;
     private String name;//漫画名
     private String author;//作者
     private String imageUrl;//封面图片地址
@@ -21,17 +21,17 @@ public class Comic {
     private boolean ban;//屏蔽情况
     private String tag;
     private List<Chapter> Chapters;
-    private int comeFrom;
+    private String comeFrom;
 
     public Comic() {
     }
 
-    public String getId() {
-        return id;
+    public String getComicId() {
+        return comicId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setComicId(String comicId) {
+        this.comicId = comicId;
     }
 
     public boolean isEnd() {
@@ -123,18 +123,18 @@ public class Comic {
         Chapters = chapters;
     }
 
-    public int getComeFrom() {
+    public String getComeFrom() {
         return comeFrom;
     }
 
-    public void setComeFrom(int comeFrom) {
+    public void setComeFrom(String comeFrom) {
         this.comeFrom = comeFrom;
     }
 
     @Override
     public String toString() {
         return "Comic{" +
-                "id=" + id +
+                "id=" + comicId +
                 ", name='" + name + '\'' +
                 ", author='" + author + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +

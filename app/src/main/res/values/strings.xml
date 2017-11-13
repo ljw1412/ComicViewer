@@ -13,9 +13,9 @@
     <string name="details_txt_chapters">漫画章节</string>
     <string name="dialog_title_warming">警告</string>
     <string name="dialog_content_warming">该漫画中有部份章节可能含有暴力、血腥、色情或不当的语言等内容，根据中国法律法规，我们将对其进行屏蔽。</string>
-    <string name="dialog_text_ok">我已满18周岁了</string>
+    <string name="dialog_text_ok">我就是要看啊</string>
     <string name="dialog_title">标题</string>
-    <string name="dialog_text_cancel">算了</string>
+    <string name="dialog_text_cancel">我还是不看了</string>
     <string name="dialog_btn_copy">复制</string>
     <string name="dialog_btn_ok">确定</string>
     <string name="dialog_btn_cancel">取消</string>
@@ -27,8 +27,8 @@
     <string name="gird_tips_loading_next_page">正在加载下一页</string>
     <string name="gird_tips_loading_next_page_fail">加载失败</string>
     <string name="reader_data_load_success">数据加载成功,\n等待图片加载。</string>
-    <string name="error_network_connections">网络连接异常，请检查网络状态。</string>
-    <string name="error_comic_chapter_load_fail">章节加载失败，下拉页面刷新！</string>
+    <string name="error_network_connections">网络连接失败，请检查网络状态。</string>
+    <string name="error_comic_chapter_load_fail">章节加载失败了\n请检查网络状态\n或尝试下拉刷新！</string>
     <string name="tips_search_not_found">没有找到你想要的漫画</string>
     <string name="tips_is_first">前面没有了…</string>
     <string name="tips_is_last">后面没有了…</string>

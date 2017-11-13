@@ -128,7 +128,7 @@ public class DetailsActivity extends AppCompatActivity
         //预先设置comic的id和评分
         comic_id = (String) getIntent().getExtras().get("id");
         String score = (String) getIntent().getExtras().get("score");
-        comic.setId(comic_id);
+        comic.setComicId(comic_id);
         comic.setScore(score);
         //加载数据
         loadComicInformation();

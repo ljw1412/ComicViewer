@@ -131,7 +131,7 @@ public class ComicService {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                requestCallback.onError("getComicSearch()网络请求失败！",what);
+                requestCallback.onError("getUpdateList()网络请求失败！",what);
             }
         });
         return call;

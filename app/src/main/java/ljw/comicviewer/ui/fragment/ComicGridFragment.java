@@ -79,11 +79,13 @@ public class ComicGridFragment extends BaseFragment
 
     @Override
     public void initView() {
+        //禁用上拉下拉
+        pullToRefreshGridView.setMode(PullToRefreshBase.Mode.DISABLED);
         initPTRGridView();
         initGridView();
         myCache = context.getExternalCacheDir();
 
-        pullToRefreshGridView.setMode(PullToRefreshBase.Mode.DISABLED);
+        initLoad();
     }
 
     public void initPTRGridView() {
@@ -123,10 +125,6 @@ public class ComicGridFragment extends BaseFragment
         gridView.setOnScrollListener(this);
         gridView.setOnItemClickListener(new ItemClickListener());
         pictureGridAdapter.notifyDataSetChanged();
-    }
-
-    public PictureGridAdapter getPictureGridAdapter() {
-        return pictureGridAdapter;
     }
 
     @Override
@@ -242,17 +240,6 @@ public class ComicGridFragment extends BaseFragment
             case Global.REQUEST_COMICS_LIST:
                 UIUpdateTask UIUpdateTask = new UIUpdateTask(what,data);
                 UIUpdateTask.execute();
-
-//                comicList.addAll(ComicFetcher.getComicList(data.toString()));
-////                Toast.makeText(context,"获得数据"+comicList.size(),Toast.LENGTH_LONG).show();
-//                pictureGridAdapter.notifyDataSetChanged();
-//                //得到数据立刻取消刷新状态
-//                pullToRefreshGridView.onRefreshComplete();
-//                txt_netError.setVisibility(View.GONE);
-//                loading.setVisibility(View.GONE);
-//                pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
-//                isLoadingNext = false;
-//                clearAndLoadImage();
                 break;
         }
     }
@@ -260,6 +247,7 @@ public class ComicGridFragment extends BaseFragment
     @Override
     public void onError(String msg ,String what) {
         switch (what){
+            case Global.REQUEST_COMICS_LATEST:
             case Global.REQUEST_COMICS_LIST:
                 pullToRefreshGridView.onRefreshComplete();
                 if(isLoadingNext) {
@@ -284,7 +272,7 @@ public class ComicGridFragment extends BaseFragment
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Comic comic = comicList.get(position);
             Intent intent = new Intent(context, DetailsActivity.class);
-            intent.putExtra("id",comic.getId());
+            intent.putExtra("id",comic.getComicId());
             intent.putExtra("score",comic.getScore());
             intent.putExtra("title",comic.getName());
             startActivity(intent);
