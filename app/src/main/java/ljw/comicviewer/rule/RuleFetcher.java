@@ -220,7 +220,7 @@ public class RuleFetcher {
                     }
                     if (error){
                         Log.e(TAG, "case "+ i +" error: 当前规则\""+rule+"\"存在问题！可能是语法不支持。");
-                        throw new RuntimeException("当前规则\""+rule+"\"中的\""+ss+"\"解析失败。");
+                        return null;
                     }
                     if(DEBUG_MODE)
                         Log.d(TAG, "parser: " + ss + "\n" + currentObj);

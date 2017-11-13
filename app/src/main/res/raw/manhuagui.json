@@ -60,8 +60,9 @@
 	"details_page_chapter":{
 		"cssQuery":{
 			"chapter-type":"$('.chapter h4')",
-			"chapter-list":"$('.chapter .chapter-list')",
-			"chapter-items":"$('ul li')",
+			"chapter-lists":"$('.chapter .chapter-list')",
+			"chapter-list":"$('ul')",
+			"chapter-items":"$('li')",
 			"chapter-id":"$('a.status0').attr('href').match('/(\\d+).html')[1]",
 			"chapter-name":"$('a.status0').attr('title')"
 		}

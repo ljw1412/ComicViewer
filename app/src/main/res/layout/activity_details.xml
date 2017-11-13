@@ -69,7 +69,8 @@
 
                             <ImageView
                                 app:srcCompat="@drawable/img_author"
-                                style="@style/details_icon" />
+                                style="@style/details_icon"
+                                android:id="@+id/icon_author" />
 
                             <TextView
                                 android:text="author"
@@ -87,7 +88,8 @@
 
                             <ImageView
                                 app:srcCompat="@drawable/img_tag"
-                                style="@style/details_icon" />
+                                style="@style/details_icon"
+                                android:id="@+id/icon_tag" />
 
                             <TextView
                                 android:text="tag"
@@ -106,11 +108,13 @@
                             <LinearLayout
                                 android:orientation="horizontal"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                android:id="@+id/status">
 
                                 <ImageView
                                     app:srcCompat="@drawable/img_status"
-                                    style="@style/details_icon" />
+                                    style="@style/details_icon"
+                                    android:id="@+id/icon_status" />
 
                                 <TextView
                                     android:text="status"
@@ -123,11 +127,13 @@
                                 android:orientation="horizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp">
+                                android:layout_marginLeft="10dp"
+                                android:id="@+id/score">
 
                                 <ImageView
                                     app:srcCompat="@drawable/img_score"
-                                    style="@style/details_icon" />
+                                    style="@style/details_icon"
+                                    android:id="@+id/icon_score" />
 
                                 <TextView
                                     android:text="score"
@@ -142,11 +148,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
-                            android:id="@+id/updateInfo">
+                            android:id="@+id/updateStatus">
 
                             <ImageView
                                 app:srcCompat="@drawable/img_update"
-                                style="@style/details_icon" />
+                                style="@style/details_icon"
+                                android:id="@+id/icon_update" />
 
                             <TextView
                                 android:text="updateStatus"
@@ -163,7 +170,8 @@
 
                             <ImageView
                                 app:srcCompat="@drawable/img_update"
-                                style="@style/details_icon" />
+                                style="@style/details_icon"
+                                android:id="@+id/icon_update_date" />
 
                             <TextView
                                 android:id="@+id/details_updateDate"

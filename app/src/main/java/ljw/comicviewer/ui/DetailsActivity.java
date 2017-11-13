@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
@@ -89,6 +90,18 @@ public class DetailsActivity extends AppCompatActivity
     ScrollView viewMain;
     @BindView(R.id.webview_details)
     WebView webview;
+    @BindView(R.id.author)
+    LinearLayout view_author;
+    @BindView(R.id.tag)
+    LinearLayout view_tag;
+    @BindView(R.id.status)
+    LinearLayout view_status;
+    @BindView(R.id.score)
+    LinearLayout view_score;
+    @BindView(R.id.updateStatus)
+    LinearLayout view_updateStatus;
+    @BindView(R.id.updateDate)
+    LinearLayout view_updateDate;
 
 
     @Override
@@ -130,6 +143,7 @@ public class DetailsActivity extends AppCompatActivity
         String score = (String) getIntent().getExtras().get("score");
         comic.setComicId(comic_id);
         comic.setScore(score);
+
         //加载数据
         loadComicInformation();
 
@@ -204,29 +218,6 @@ public class DetailsActivity extends AppCompatActivity
         Glide.with(context).load(comic.getImageUrl()).apply(options).into(img_cover);
     }
 
-
-
-    //根据类型分发章节
-    private void ChaptersDistribute(List<Chapter> list){
-        Map<Integer,List<Chapter>> map = new HashMap<>();
-        for(int i=0 ; i< TYPE_MAX ; i++){
-            List<Chapter> cList = new ArrayList<>();
-            map.put(i,cList);
-        }
-        for (Chapter chapter:list) {
-            int type = chapter.getType();
-            map.get(type).add(chapter);
-        }
-        for(int i = 0 ; i<TYPE_MAX ;i++){
-            chaptersFragment_map.get(i).addChapters(map.get(i));
-            chaptersFragment_map.get(i).setComicName(comic.getName());
-            if(map.get(i).size()>0){
-                //显示章节类型文字
-                findViewById(typeTextId[i]).setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
     private int tryTime = 0;
     //获得信息
     public void getChapters(){
@@ -252,8 +243,7 @@ public class DetailsActivity extends AppCompatActivity
                             Log.d(TAG, "onReceiveValue: "+s);
                             details_container.setRefreshing(false);
                             ComicFetcher.getComicChapters(s,comic);
-                            ChaptersDistribute(comic.getChapters());
-
+                            new ChaptersDistributeTask(comic.getChapters()).execute();
                             return;
                         }
                     }
@@ -266,6 +256,15 @@ public class DetailsActivity extends AppCompatActivity
         finish();
     }
 
+    public void setInfoText(LinearLayout parent,TextView textView,String str){
+        if (str != null && !str.equals("")){
+            textView.setText(str);
+        }else{
+            parent.setVisibility(View.GONE);
+        }
+    }
+
+
     //网络请求，更新UI
     @Override
     public void onFinish(Object data, String what) {
@@ -274,14 +273,15 @@ public class DetailsActivity extends AppCompatActivity
                 ComicFetcher.getComicDetails(data.toString(),comic);
                 ComicFetcher.getComicChapters(data.toString(),comic);
                 getCover();
-                txt_author.setText(comic.getAuthor());
-                txt_tag.setText(comic.getTag());
-                txt_updateDate.setText("更新于"+comic.getUpdate());
-                txt_updateStatus.setText(comic.getUpdateStatus());
-                txt_status.setText(comic.isEnd()?"已完结":"连载中");
-                txt_info.setText(comic.getInfo());
-                txt_score.setText(comic.getScore());
-                ChaptersDistribute(comic.getChapters());
+                setInfoText(view_score,txt_score,comic.getScore());
+                setInfoText(view_author,txt_author,comic.getAuthor());
+                setInfoText(view_tag,txt_tag,comic.getTag());
+                setInfoText(view_updateDate,txt_updateDate,"更新于"+comic.getUpdate());
+                setInfoText(view_updateStatus,txt_updateStatus,comic.getUpdateStatus());
+                setInfoText(view_status,txt_status,comic.isEnd()?"已完结":"连载中");
+                setInfoText(instruction,txt_info,comic.getInfo());
+//                chaptersDistribute(comic.getChapters());
+                new ChaptersDistributeTask(comic.getChapters()).execute();
                 //默认焦点为顶部图片，防止滚轮不置顶
                 img_cover.setFocusableInTouchMode(true);
                 img_cover.requestFocus();
@@ -320,6 +320,7 @@ public class DetailsActivity extends AppCompatActivity
     @Override
     public void onRefresh() {
         viewMain.setVisibility(View.GONE);
+        txtError.setVisibility(View.GONE);
         for(int i = 0 ; i<TYPE_MAX ;i++){
             findViewById(typeTextId[i]).setVisibility(View.GONE);
             chaptersFragment_map.get(i).clearChapters();
@@ -338,4 +339,46 @@ public class DetailsActivity extends AppCompatActivity
             Log.d(TAG, "onDestroy: "+"取消网络请求！");
         }
     }
+
+    //根据类型分发章节
+    class ChaptersDistributeTask extends AsyncTask<Void,Void,Map<Integer,List<Chapter>>>{
+        private List<Chapter> list;
+
+        public ChaptersDistributeTask(List<Chapter> list) {
+            this.list = list;
+        }
+
+        @Override
+        protected Map<Integer,List<Chapter>> doInBackground(Void... voids) {
+            Map<Integer,List<Chapter>> map = new HashMap<>();
+            for(int i=0 ; i< TYPE_MAX ; i++){
+                List<Chapter> cList = new ArrayList<>();
+                map.put(i,cList);
+            }
+            for (Chapter chapter:list) {
+                int type = chapter.getType();
+                map.get(type).add(chapter);
+            }
+            return map;
+        }
+
+        @Override
+        protected void onPostExecute(Map<Integer,List<Chapter>> map) {
+            super.onPostExecute(map);
+            if (list.size()==0 && !comic.isBan()){
+                txtError.setVisibility(View.VISIBLE);
+                txtError.setText(R.string.error_comic_chapter_load_fail);
+            }else{
+                for(int i = 0 ; i<TYPE_MAX ;i++){
+                    chaptersFragment_map.get(i).addChapters(map.get(i));
+                    chaptersFragment_map.get(i).setComicName(comic.getName());
+                    if(map.get(i).size()>0){
+                        //显示章节类型文字
+                        findViewById(typeTextId[i]).setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }
+    }
+
 }
