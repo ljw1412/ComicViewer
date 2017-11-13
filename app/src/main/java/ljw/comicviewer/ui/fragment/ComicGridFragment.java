@@ -50,8 +50,6 @@ public class ComicGridFragment extends BaseFragment
     private File myCache;
     private int loadedPage = 1;
     private boolean isLoadingNext = false;
-    // map设定：键为null未加载 0加载中 1加载完毕
-    private Map<Integer,Integer> imageState = new HashMap<>();
     @BindView(R.id.comic_info_pull_refresh_grid)
     PullToRefreshGridView pullToRefreshGridView;
     GridView gridView;
@@ -96,7 +94,6 @@ public class ComicGridFragment extends BaseFragment
 //                Toast.makeText(context, "下拉", Toast.LENGTH_SHORT).show();
                 loadedPage = 1;
                 comicList.clear();
-                imageState.clear();
                 pictureGridAdapter.notifyDataSetChanged();
                 // 获取对象，重新获取当前目录对象
                 getListItems(loadedPage);
