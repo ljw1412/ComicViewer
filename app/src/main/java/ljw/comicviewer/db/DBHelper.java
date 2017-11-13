@@ -30,7 +30,7 @@ public class DBHelper {
         if (mSQLiteHelper == null) {
             return -1;
         }
-        return mSQLiteHelper.getWritableDatabase().insert(table, null, values);
+        return mSQLiteHelper.getWritableDatabase().insertOrThrow(table, null, values);
     }
 
     public synchronized int update(String table, ContentValues values,
@@ -90,6 +90,7 @@ public class DBHelper {
     }
 
 
+
     public synchronized void close() {
         if (mSQLiteHelper != null) {
             mSQLiteHelper.close();
@@ -106,7 +107,8 @@ public class DBHelper {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE `collection`(`id` integer primary key autoincrement,`comicId`,`name`,`imageUrl`,`score`,`update`,`updateStatus`,`isEnd` Boolean,`comeFrom`)");
+            //字段名不能为update，否则会导致插入失败的
+            db.execSQL("CREATE TABLE `collection`(`id` integer primary key autoincrement,`comicId`,`name`,`imageUrl`,`score`,`updateDate`,`updateStatus`,`isEnd`,`tag`,`comeFrom`)");
         }
 
         @Override

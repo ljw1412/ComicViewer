@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,6 +37,7 @@ import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.bean.Comic;
+import ljw.comicviewer.db.CollectionHolder;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.others.BottomDialog;
@@ -57,6 +59,7 @@ public class DetailsActivity extends AppCompatActivity
     private int[] fragmentId = {R.id.details_fragment0,R.id.details_fragment1,R.id.details_fragment2};
     private int[] typeTextId = {R.id.detail_type0,R.id.detail_type1,R.id.detail_type2};
     private int TYPE_MAX = 3;
+    private boolean like = false;
     Call call_loadComicInformation;
     @BindView(R.id.details_scroll_container)
     SwipeRefreshLayout details_container;
@@ -102,7 +105,8 @@ public class DetailsActivity extends AppCompatActivity
     LinearLayout view_updateStatus;
     @BindView(R.id.updateDate)
     LinearLayout view_updateDate;
-
+    @BindView(R.id.btn_add_collection)
+    TextView txtBtn_like;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,8 +150,34 @@ public class DetailsActivity extends AppCompatActivity
 
         //加载数据
         loadComicInformation();
+        updateLikeStatus();
 
 
+    }
+
+    private boolean isLike(){
+        CollectionHolder collectionHolder = new CollectionHolder(this);
+        return collectionHolder.hasComic(comic.getComicId());
+    }
+
+    private void updateLikeStatus(){
+        if(isLike()){
+            like = true;
+            Drawable drawable= getDrawable(R.drawable.icon_collection_on);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            txtBtn_like.setCompoundDrawables(drawable,null,null,null);
+            txtBtn_like.setTextColor(0xFFFF9A23);
+            txtBtn_like.setBackgroundResource(R.drawable.shape_border_rounded_rectangle_star_color);
+            txtBtn_like.setText(R.string.details_del_collection);
+        }else{
+            like = false;
+            Drawable drawable= getDrawable(R.drawable.icon_collection_off);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            txtBtn_like.setCompoundDrawables(drawable,null,null,null);
+            txtBtn_like.setTextColor(0x60000000);
+            txtBtn_like.setBackgroundResource(R.drawable.shape_border_rounded_rectangle);
+            txtBtn_like.setText(R.string.details_add_collection);
+        }
     }
 
     private void initListener(){
@@ -175,6 +205,21 @@ public class DetailsActivity extends AppCompatActivity
                     }
                 });
                 builder.create().show();
+            }
+        });
+
+        txtBtn_like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!like){
+                    CollectionHolder collectionHolder = new CollectionHolder(context);
+                    collectionHolder.addCollection(comic);
+                    updateLikeStatus();
+                }else{
+                    CollectionHolder collectionHolder = new CollectionHolder(context);
+                    collectionHolder.deleteComic(comic.getComicId());
+                    updateLikeStatus();
+                }
             }
         });
 
@@ -280,7 +325,6 @@ public class DetailsActivity extends AppCompatActivity
                 setInfoText(view_updateStatus,txt_updateStatus,comic.getUpdateStatus());
                 setInfoText(view_status,txt_status,comic.isEnd()?"已完结":"连载中");
                 setInfoText(instruction,txt_info,comic.getInfo());
-//                chaptersDistribute(comic.getChapters());
                 new ChaptersDistributeTask(comic.getChapters()).execute();
                 //默认焦点为顶部图片，防止滚轮不置顶
                 img_cover.setFocusableInTouchMode(true);

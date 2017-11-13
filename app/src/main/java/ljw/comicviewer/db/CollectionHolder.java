@@ -2,6 +2,11 @@ package ljw.comicviewer.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import ljw.comicviewer.bean.Comic;
 
@@ -18,9 +23,56 @@ public class CollectionHolder {
         dbHelper.open(context);
     }
 
-    public synchronized void addCollection(Comic comic){
-        if (comic == null) return;
+    public synchronized long addCollection(Comic comic){
+        if (comic == null) return -1;
+        if (hasComic(comic.getComicId())) return -1;
         ContentValues contentValues = new ContentValues();
+        contentValues.put("comicId",comic.getComicId());
+        contentValues.put("name",comic.getName());
+        contentValues.put("imageUrl",comic.getImageUrl());
+        contentValues.put("score",comic.getScore());
+        contentValues.put("updateDate",comic.getUpdate());
+        contentValues.put("updateStatus",comic.getUpdateStatus());
+        contentValues.put("isEnd",comic.isEnd()?1:0);
+        contentValues.put("comeFrom",comic.getComeFrom());
+        contentValues.put("tag",comic.getTag());
+        try {
+            long res = dbHelper.insert(tableName,contentValues);
+            Log.d("----", "addCollection: "+(res==-1?"插入失败":"插入成功"));
+            return res;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
+    public synchronized List<Comic> getComics(){
+        List<Comic> comics = new ArrayList<>();
+
+        Cursor cursor = dbHelper.query("select * from "+tableName);
+        Log.d("----", "getComics: "+cursor.getCount());
+        while (cursor.moveToNext()){
+            Comic comic = new Comic();
+            comic.setComicId(cursor.getString(cursor.getColumnIndex("comicId")));
+            comic.setName(cursor.getString(cursor.getColumnIndex("name")));
+            comic.setImageUrl(cursor.getString(cursor.getColumnIndex("imageUrl")));
+            comic.setScore(cursor.getString(cursor.getColumnIndex("score")));
+            comic.setUpdate(cursor.getString(cursor.getColumnIndex("updateDate")));
+            comic.setUpdateStatus(cursor.getString(cursor.getColumnIndex("updateStatus")));
+            comic.setEnd(cursor.getInt(cursor.getColumnIndex("isEnd"))>0);
+            comic.setComeFrom(cursor.getString(cursor.getColumnIndex("comeFrom")));
+            comic.setTag(cursor.getString(cursor.getColumnIndex("tag")));
+            comics.add(comic);
+        }
+        return comics;
+    }
+
+    public synchronized boolean hasComic(String comicId){
+        String findQuery = "select * from " + tableName + " where comicId = ?";
+        return dbHelper.query(findQuery,comicId).getCount()>0;
+    }
+
+    public synchronized void deleteComic(String comicId){
+        dbHelper.delete(tableName,"`comicId` = ?",new String[]{comicId});
+    }
 }

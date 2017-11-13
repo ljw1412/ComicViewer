@@ -190,14 +190,20 @@
                                 android:text="@string/details_add_collection"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/textView2"
-                                android:textSize="20sp" />
+                                android:id="@+id/btn_add_collection"
+                                android:textSize="20sp"
+                                android:drawableLeft="@drawable/icon_collection_off"
+                                android:drawablePadding="3dp"
+                                android:textColor="@color/black_60"
+                                android:background="@drawable/shape_border_rounded_rectangle"
+                                android:paddingLeft="5dp"
+                                android:paddingRight="5dp" />
 
                             <TextView
                                 android:text="@string/details_to_read"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/textView"
+                                android:id="@+id/btn_to_reading"
                                 android:textSize="20sp"
                                 android:layout_marginLeft="10dp" />
                         </LinearLayout>

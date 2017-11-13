@@ -10,6 +10,7 @@
     <string name="title_activity_details">详细页</string>
     <string name="details_to_read">阅读</string>
     <string name="details_add_collection">收藏</string>
+    <string name="details_del_collection">取关</string>
     <string name="details_txt_chapters">漫画章节</string>
     <string name="dialog_title_warming">警告</string>
     <string name="dialog_content_warming">该漫画中有部份章节可能含有暴力、血腥、色情或不当的语言等内容，根据中国法律法规，我们将对其进行屏蔽。</string>
