@@ -26,6 +26,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.db.CollectionHolder;
@@ -43,7 +44,7 @@ public class CollectionFragment extends BaseFragment
     private List<Comic> allComics;
     private int currentPage = 1;
     private PictureGridAdapter pictureGridAdapter;
-
+    private boolean isLoading = false;
     @BindView(R.id.comic_info_pull_refresh_grid)
     PullToRefreshGridView pullToRefreshGridView;
     GridView gridView;
@@ -52,10 +53,11 @@ public class CollectionFragment extends BaseFragment
     @BindView(R.id.grid_loading)
     RelativeLayout loading;
 
-    public CollectionFragment() {
-        // Required empty public constructor
-    }
+    public CollectionFragment() {}
 
+    public boolean isLoading() {
+        return isLoading;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -116,13 +118,18 @@ public class CollectionFragment extends BaseFragment
     @Override
     public void initLoad() {
         //数据库处理
+        currentPage = 1;
+        comics.clear();
         CollectionHolder collectionHolder = new CollectionHolder(context);
         allComics = collectionHolder.getComics();
+        getActivity().setTitle(getString(R.string.txt_collection)+"("+allComics.size()+")");
         maxPage = allComics.size() % 20 > 0 ? (allComics.size() / 20 + 1) : allComics.size() / 20;
         add20(currentPage);
         loading.setVisibility(View.GONE);
-        clearAndLoadImage();
+        delayedFlushAdapter();
+        isLoading = true;
     }
+
 
     private int maxPage;
     public void add20(int page){
@@ -207,7 +214,21 @@ public class CollectionFragment extends BaseFragment
             intent.putExtra("id",comic.getComicId());
             intent.putExtra("score",comic.getScore());
             intent.putExtra("title",comic.getName());
-            startActivity(intent);
+            startActivityForResult(intent, Global.CollectionToDetails);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case Global.CollectionToDetails:
+                Log.d(TAG, "onActivityResult: "+data);
+                if( data!=null ){
+                    if(data.getBooleanExtra("like_change",false)){
+                        initLoad();
+                    }
+                }
+                break;
         }
     }
 }

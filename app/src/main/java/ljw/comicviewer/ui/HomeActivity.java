@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -117,6 +118,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         hideAllFragment(ft);
         ft.show(fragment).commit();
         currentFragment = fragment;
+        if(currentFragment instanceof CollectionFragment){
+            if (((CollectionFragment) currentFragment).isLoading())
+                ((CollectionFragment) currentFragment).initLoad();
+        }
     }
 
     //让所有底部导航栏为未选中状态
@@ -134,6 +139,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    //更新顶部导航栏
     private void changeTitleBar(){
         if(img_comic.isSelected()){
             nav_Tabs.setVisibility(View.VISIBLE);
@@ -144,6 +150,20 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    //设置内容和顶部导航栏
+    public void setContent(Fragment fragment){
+        if(currentFragment == fragment) return;
+        if(fragment instanceof HomeFragment){
+            setTitle("");
+        }else if(fragment instanceof CollectionFragment){
+            setTitle(R.string.txt_collection);
+        }else if(fragment instanceof MineFragment){
+            setTitle(R.string.txt_mine);
+        }
+        setCurrentFragment(fragment);
+        changeTitleBar();
+    }
+
     //点击事件
     @OnClick({R.id.goto_comic,R.id.goto_collection,R.id.goto_mine,R.id.nav_btn_search})
     @Override
@@ -151,30 +171,21 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.goto_comic:
                 setBtnSelected(img_comic);
-                setCurrentFragment(homeFragment);
-                setTitle(R.string.app_name);
-                btnSearch.setVisibility(View.VISIBLE);
-                changeTitleBar();
+                setContent(homeFragment);
                 break;
             case R.id.goto_collection:
                 setBtnSelected(img_collection);
                 if(collectionFragment == null){
                     collectionFragment = new CollectionFragment();
                 }
-                setCurrentFragment(collectionFragment);
-                setTitle(R.string.txt_collection);
-                btnSearch.setVisibility(View.VISIBLE);
-                changeTitleBar();
+                setContent(collectionFragment);
                 break;
             case R.id.goto_mine:
                 setBtnSelected(img_mine);
                 if(mineFragment == null){
                     mineFragment = new MineFragment();
                 }
-                setCurrentFragment(mineFragment);
-                setTitle(R.string.txt_mine);
-                btnSearch.setVisibility(View.GONE);
-                changeTitleBar();
+                setContent(mineFragment);
                 break;
             case R.id.nav_btn_search:
                 Intent intent = new Intent(context,SearchActivity.class);

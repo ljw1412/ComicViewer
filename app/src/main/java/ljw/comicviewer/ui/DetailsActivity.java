@@ -1,10 +1,12 @@
 package ljw.comicviewer.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -51,7 +53,7 @@ import retrofit2.Call;
 public class DetailsActivity extends AppCompatActivity
         implements SwipeRefreshLayout.OnRefreshListener, ComicService.RequestCallback {
     private String TAG = this.getClass().getSimpleName()+"----";
-    private Context context;
+    private Activity context;
     private boolean isLoaded = false;
     private Comic comic = new Comic();
     private String comic_id;
@@ -124,7 +126,6 @@ public class DetailsActivity extends AppCompatActivity
         initViewAndData();
         initChapterFragment();
         initListener();
-
     }
 
     private void initViewAndData(){
@@ -181,6 +182,7 @@ public class DetailsActivity extends AppCompatActivity
     }
 
     private void initListener(){
+        //标题
         txt_title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -207,22 +209,25 @@ public class DetailsActivity extends AppCompatActivity
                 builder.create().show();
             }
         });
-
+        //收藏按钮
         txtBtn_like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent();
                 if(!like){
                     CollectionHolder collectionHolder = new CollectionHolder(context);
                     collectionHolder.addCollection(comic);
                     updateLikeStatus();
+                    context.setResult(Global.CollectionToDetails,intent.putExtra("like_change",false));
                 }else{
                     CollectionHolder collectionHolder = new CollectionHolder(context);
                     collectionHolder.deleteComic(comic.getComicId());
                     updateLikeStatus();
+                    context.setResult(Global.CollectionToDetails,intent.putExtra("like_change",true));
                 }
             }
         });
-
+        //简介
         instruction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -382,6 +387,12 @@ public class DetailsActivity extends AppCompatActivity
             call_loadComicInformation.cancel();
             Log.d(TAG, "onDestroy: "+"取消网络请求！");
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: "+requestCode);
     }
 
     //根据类型分发章节

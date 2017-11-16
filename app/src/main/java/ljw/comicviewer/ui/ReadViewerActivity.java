@@ -419,6 +419,7 @@ public class ReadViewerActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        this.setResult(123);
     }
 
     public void gotoLoading(boolean isAdd){

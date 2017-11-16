@@ -19,7 +19,7 @@ import ljw.comicviewer.ui.SettingsActivity;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MineFragment extends Fragment {
+public class MineFragment extends BaseFragment {
     private static String TAG = MineFragment.class.getSimpleName()+"----";
     private Context context;
     @BindView(R.id.layout_my_setting)
@@ -40,7 +40,13 @@ public class MineFragment extends Fragment {
         return view;
     }
 
-    private void initView(){
+    @Override
+    public void initView() {
+
+    }
+
+    @Override
+    public void initLoad() {
 
     }
 
@@ -60,5 +66,4 @@ public class MineFragment extends Fragment {
         });
 
     }
-
 }
