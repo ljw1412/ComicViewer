@@ -46,23 +46,18 @@
                 android:value="ljw.comicviewer.ui.HomeActivity" />
         </activity>
         <activity
-            android:name=".ui.ReadViewerLoadingActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.NoTitleBar.Fullscreen" />
-        <activity
-            android:name=".ui.ReadViewerActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.NoTitleBar.Fullscreen" />
-        <activity
             android:name=".ui.SearchActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.RedStatusBar" />
-        <activity android:name=".ui.AboutActivity"
+        <activity
+            android:name=".ui.AboutActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".ui.ComicReaderActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.NoTitleBar.Fullscreen" />
     </application>
 
 </manifest>

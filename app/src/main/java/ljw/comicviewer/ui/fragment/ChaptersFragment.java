@@ -10,20 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import ljw.comicviewer.others.MyGridView;
 import ljw.comicviewer.R;
+import ljw.comicviewer.bean.Chapter;
+import ljw.comicviewer.others.MyGridView;
 import ljw.comicviewer.store.ComicReadStore;
-import ljw.comicviewer.ui.ReadViewerLoadingActivity;
+import ljw.comicviewer.ui.ComicReaderActivity;
 import ljw.comicviewer.ui.adapter.ChaptersAdapter;
 import ljw.comicviewer.util.DisplayUtil;
-import ljw.comicviewer.bean.Chapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -70,7 +67,7 @@ public class ChaptersFragment extends Fragment  {
 
             Chapter chapter = chapters.get(position);
             Log.d(TAG,"加载章节:"+chapter.getChapter_name());
-            Intent intent = new Intent(context,ReadViewerLoadingActivity.class);
+            Intent intent = new Intent(context,ComicReaderActivity.class);
             intent.putExtra("comic_id",chapter.getComic_id());
             intent.putExtra("comic_name",comicName);
             intent.putExtra("chapter_id",chapter.getChapter_id());

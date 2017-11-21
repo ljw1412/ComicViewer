@@ -1,8 +1,6 @@
 package ljw.comicviewer.ui;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -15,6 +13,9 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.ValueCallback;
+import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -28,6 +29,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,29 +37,37 @@ import butterknife.ButterKnife;
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Chapter;
+import ljw.comicviewer.bean.ManhuaguiComicInfo;
+import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.others.MyViewPager;
+import ljw.comicviewer.others.MyWebView;
 import ljw.comicviewer.store.ComicReadStore;
 import ljw.comicviewer.ui.adapter.PicturePagerAdapter;
 import ljw.comicviewer.ui.listeners.OnItemLongClickListener;
 import ljw.comicviewer.util.AnimationUtil;
 import ljw.comicviewer.util.AreaClickHelper;
-import ljw.comicviewer.util.DisplayUtil;
+import ljw.comicviewer.util.WebViewUtil;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-
-public class ReadViewerActivity extends AppCompatActivity {
+public class ComicReaderActivity extends AppCompatActivity {
     private String TAG = getClass().getSimpleName()+"----";
     private Context context;
+    private MyOnItemLongClickListener onItemLongClickListener;
     private PicturePagerAdapter picturePagerAdapter;
     private String comic_id,comic_name,chapter_id,chapter_name;
-    private List<String> imgUrls;
-    private MyOnItemLongClickListener onItemLongClickListener;
-    private boolean isShowTools = true;
-    private boolean isScroll = false;
-    private int currPos = 0;
-    @BindView(R.id.container)
-    RelativeLayout container;
+    private int tryTime = 0, currPos;
+    private List<String> imgUrls = new ArrayList<>();
+    private boolean isShowTools = true, isScroll = false;
+    private WebView webView;
+    @BindView(R.id.reader_loading_view)
+    View view_loading;
+    @BindView(R.id.load_fail)
+    LinearLayout layout_load_fail;
+    @BindView(R.id.loading)
+    LinearLayout layout_loading;
+    @BindView(R.id.btn_refresh)
+    ImageView refresh;
     @BindView(R.id.view_pager)
     MyViewPager viewPager;
     @BindView(R.id.rv_picture)
@@ -92,41 +102,47 @@ public class ReadViewerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_read_viewer);
-        context = this;
+        setContentView(R.layout.activity_comic_reader);
         ButterKnife.bind(this);
-
+        context = this;
         comic_id = (String) getIntent().getExtras().get("comic_id");
         comic_name = (String) getIntent().getExtras().get("comic_name");
         chapter_id = (String) getIntent().getExtras().get("chapter_id");
         chapter_name = (String) getIntent().getExtras().get("chapter_name");
-        currPos = (int) getIntent().getExtras().get("position") - 1;
-        String[] urls= (String[]) getIntent().getExtras().get("urls");
-        imgUrls = DisplayUtil.strArrayToList(urls);
+        currPos = (int) getIntent().getExtras().get("position")-1;
+
 
 
         //store数据打印
         ComicReadStore.get().printList();
-
-        viewMask.setOnClickListener(null);
-        onItemLongClickListener = new MyOnItemLongClickListener();
-        initView();
-        initSeekBar();
+        view_loading.setOnClickListener(null);
+        initWebView();
         setTime();
+        addListener();
     }
 
-    private void initView() {
-        viewNotClick.setOnClickListener(null);
+    private void initWebView(){
+        //破解屏蔽
+        WebViewUtil.syncCookie(context, Global.MANHUAGUI_DOMAIN,"country=US");
+        webView = new WebView(this);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
+        webView.loadUrl(Global.MANHUAGUI_HOST+"/comic/"+comic_id+"/"+chapter_id+"/");
+        webView.setWebViewClient(new MyWebView());
+        getInfo();
+    }
+
+    //getInfo() 获取到数据后 执行这个
+    private void initView(){
         txtComicName.setText(comic_name);
         txtComicChapterName.setText(chapter_name);
         txtChapterName.setText(chapter_name);
         setPageText((currPos+1)+"",""+imgUrls.size());
         viewPager.setVisibility(View.VISIBLE);
         rvPicture.setVisibility(View.GONE);
-
         picturePagerAdapter = new PicturePagerAdapter(this, imgUrls);
+        onItemLongClickListener = new MyOnItemLongClickListener();
         picturePagerAdapter.setOnItemLongClickListener(onItemLongClickListener);
-
         viewPager.setAreaClickListener(new AreaClickHelper.OnLeftRightClickListener() {
             @Override
             public void left() {
@@ -159,6 +175,49 @@ public class ReadViewerActivity extends AppCompatActivity {
             }
         });
         viewPager.setAdapter(picturePagerAdapter);
+        viewPager.setOffscreenPageLimit(2);//TODO:之后改为可以设置的
+        viewPager.setCurrentItem(0);//跳页
+        initSeekBar();
+    }
+
+    public void initSeekBar() {
+        mySeekBar.setMax(imgUrls.size() - 1);
+        mySeekBar.setProgress(currPos);
+        mySeekBar.setSecondaryProgress(currPos);
+        txtSeekBarTips.setText((currPos+1) + "/" + imgUrls.size());
+    }
+
+    private void addListener(){
+        viewMask.setOnClickListener(null);
+        viewNotClick.setOnClickListener(null);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                layout_load_fail.setVisibility(View.GONE);
+                layout_loading.setVisibility(View.VISIBLE);
+                tryTime = 0;
+                getInfo();
+            }
+        });
+        mySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar sb, int i, boolean b) {
+                txtSeekBarTips.setText((i+1)+"/"+imgUrls.size());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                txtSeekBarTips.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                txtSeekBarTips.setVisibility(View.GONE);
+                gotoPage(seekBar.getProgress());
+
+            }
+        });
+
         viewPager.setOnTouchListener(new View.OnTouchListener() {
             //TIPS:PhotoViewAttacher加载时会拦截此监听
             @Override
@@ -237,34 +296,45 @@ public class ReadViewerActivity extends AppCompatActivity {
             }
 
         });
-        viewPager.setOffscreenPageLimit(2);//TODO:之后改为可以设置的
-        viewPager.setCurrentItem(0);//跳页
     }
 
-    public void initSeekBar(){
-        mySeekBar.setMax(imgUrls.size()-1);
-        mySeekBar.setProgress(currPos);
-        mySeekBar.setSecondaryProgress(currPos);
-        txtSeekBarTips.setText((currPos+1)+"/"+imgUrls.size());
-        mySeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+    //获得漫画章节信息
+    public void getInfo(){
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onProgressChanged(SeekBar sb, int i, boolean b) {
-               txtSeekBarTips.setText((i+1)+"/"+imgUrls.size());
+            public void run() {
+                webView.evaluateJavascript("cInfo;", new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String s) {
+                        Log.d(TAG,"debug!!="+s);
+                        if (s.equals("null")){
+                            //加载失败
+                            if(tryTime>=3){
+                                layout_load_fail.setVisibility(View.VISIBLE);
+                                layout_loading.setVisibility(View.GONE);
+                            }else{
+                                tryTime++;
+                                getInfo();
+                            }
+                        }else{
+                            ManhuaguiComicInfo info = ComicFetcher.parseCurrentChapter(s);
+                            for(int i = 0 ; i < info.getFiles().size() ; i++){
+                                imgUrls.add(Global.MANHUAGUI_IMAGE_HOST+info.getPath()+info.getFiles().get(i));
+                            }
+                            webView.loadUrl("about:blank");
+                            initView();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view_loading.setVisibility(View.GONE);
+                                }
+                            }, 500);
+                            return;
+                        }
+                    }
+                });
             }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                txtSeekBarTips.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                txtSeekBarTips.setVisibility(View.GONE);
-                gotoPage(seekBar.getProgress());
-
-            }
-        });
-
+        }, 1500);
     }
 
     public void loadImage(final String url, final Object viewHolder,int position){
@@ -277,10 +347,10 @@ public class ReadViewerActivity extends AppCompatActivity {
         RequestOptions options = new RequestOptions();
 
         Glide.with(context)
-            .asBitmap()
-            .load(new GlideUrl(url
-                    ,new LazyHeaders.Builder().addHeader("Referer","http://www.manhuagui.com").build()
-            )).into(new BitmapImageViewTarget(pic){
+                .asBitmap()
+                .load(new GlideUrl(url
+                        ,new LazyHeaders.Builder().addHeader("Referer","http://www.manhuagui.com").build()
+                )).into(new BitmapImageViewTarget(pic){
             @Override
             public void onLoadStarted(@Nullable Drawable placeholder) {
                 super.onLoadStarted(placeholder);
@@ -326,7 +396,7 @@ public class ReadViewerActivity extends AppCompatActivity {
     }
 
     private void gotoPage(int page){
-        currPos = page - 1;
+        currPos = page + 1;
         viewPager.setCurrentItem(page);
     }
 
@@ -337,8 +407,7 @@ public class ReadViewerActivity extends AppCompatActivity {
             viewPager.setCurrentItem(currItem - 1);
             updateSeekBar(currPos);
         }
-        else
-            gotoLoading(false);
+        else gotoLoading(false);
     }
 
     private void nextPage(){
@@ -348,8 +417,37 @@ public class ReadViewerActivity extends AppCompatActivity {
             viewPager.setCurrentItem(currItem + 1);
             updateSeekBar(currPos);
         }
-        else
-            gotoLoading(true);
+        else gotoLoading(true);
+    }
+
+    private void gotoLoading(boolean isAdd){
+        ComicReadStore comicReadStore = ComicReadStore.get();
+        int index = comicReadStore.getCurrentIndex();
+        if (index == 0 && !isAdd){
+            Toast.makeText(context, R.string.tips_is_first,Toast.LENGTH_LONG).show();
+        }else if (index == comicReadStore.getSize()-1 && isAdd){
+            Toast.makeText(context,R.string.tips_is_last,Toast.LENGTH_LONG).show();
+        }else{
+            if (isAdd){
+                index++;
+            }else{
+                index--;
+            }
+            Chapter toChapter = comicReadStore.getObj().get(index);
+            comicReadStore.setCurrentIndex(index);
+            comic_id = toChapter.getComic_id();
+            chapter_id = toChapter.getChapter_id();
+            chapter_name = toChapter.getChapter_name();
+            loadChapter();
+        }
+    }
+
+    private void loadChapter(){
+        view_loading.setVisibility(View.VISIBLE);
+        webView.loadUrl(Global.MANHUAGUI_HOST+"/comic/"+comic_id+"/"+chapter_id+"/");
+        imgUrls.clear();
+        currPos = 0;
+        getInfo();
     }
 
     private void updateSeekBar(int progress){
@@ -367,7 +465,6 @@ public class ReadViewerActivity extends AppCompatActivity {
                 viewBottomTools.setAnimation(AnimationUtil.moveToViewBottomIn());
                 viewHead.setVisibility(View.VISIBLE);
                 viewHead.setAnimation(AnimationUtil.moveToViewTopIn());
-                updateSeekBar(currPos);
             }else {
                 Log.d(TAG, "showOrHideTools: 隐藏");
                 viewBottomStatus.setVisibility(View.VISIBLE);
@@ -416,52 +513,12 @@ public class ReadViewerActivity extends AppCompatActivity {
         finish();
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        this.setResult(123);
-    }
-
-    public void gotoLoading(boolean isAdd){
-        ComicReadStore comicReadStore = ComicReadStore.get();
-        int index = comicReadStore.getCurrentIndex();
-        if (index == 0 && !isAdd){
-            Toast.makeText(context, R.string.tips_is_first,Toast.LENGTH_LONG).show();
-        }else if (index == comicReadStore.getSize()-1 && isAdd){
-            Toast.makeText(context,R.string.tips_is_last,Toast.LENGTH_LONG).show();
-        }else{
-            if (isAdd){
-                index++;
-            }else{
-                index--;
-            }
-            Chapter preChapter = comicReadStore.getObj().get(index);
-            comicReadStore.setCurrentIndex(index);
-            gotoReadView(preChapter.getChapter_id(),preChapter.getChapter_name(),
-                    isAdd ? Global.RIGHT : Global.LEFT);
+        if (webView!=null){
+            webView.destroy();
         }
-    }
-
-    public void gotoReadView(String chapterId,String chapterName,int animDirection){
-        Intent intent = new Intent(context,ReadViewerLoadingActivity.class);
-        intent.putExtra("comic_id",comic_id);
-        intent.putExtra("comic_name",comic_name);
-        intent.putExtra("chapter_id",chapterId);
-        intent.putExtra("chapter_name",chapterName);
-        intent.putExtra("position",1);
-        intent.putExtra("anim_mode",animDirection);
-        startActivity(intent);
-
-        //设置切换动画
-        switch (animDirection){
-            case Global.LEFT:
-                overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
-                break;
-            case Global.RIGHT:
-                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
-                break;
-        }
-
-        finish();
     }
 }

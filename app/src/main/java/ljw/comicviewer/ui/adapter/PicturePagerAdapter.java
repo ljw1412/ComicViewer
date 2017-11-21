@@ -18,7 +18,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
-import ljw.comicviewer.ui.ReadViewerActivity;
+import ljw.comicviewer.ui.ComicReaderActivity;
 import ljw.comicviewer.ui.listeners.OnItemLongClickListener;
 import ljw.comicviewer.util.AreaClickHelper;
 import uk.co.senab.photoview.PhotoView;
@@ -29,13 +29,13 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 
 public class PicturePagerAdapter extends PagerAdapter {
-    private ReadViewerActivity context;
+    private ComicReaderActivity context;
     private List<String> imgUrls;
     private OnItemLongClickListener mOnItemLongClickListener;
     private List<PictureViewHolder> viewHolders = new ArrayList<>();
     private AreaClickHelper areaClickHelper;
 
-    public PicturePagerAdapter(ReadViewerActivity context, List<String> imgUrls) {
+    public PicturePagerAdapter(ComicReaderActivity context, List<String> imgUrls) {
         this.context = context;
         this.imgUrls = imgUrls;
         for (int i = 0; i < imgUrls.size(); i++){
