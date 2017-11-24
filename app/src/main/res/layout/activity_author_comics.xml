@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_author_comics"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ljw.comicviewer.ui.AuthorComicsActivity">
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        layout="@layout/navigation_bar_child" />
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/search_pull_refresh_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:layout_below="@+id/search_bar">
+    </com.handmark.pulltorefresh.library.PullToRefreshListView>
+</RelativeLayout>

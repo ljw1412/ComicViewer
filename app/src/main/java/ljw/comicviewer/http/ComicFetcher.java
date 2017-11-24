@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ljw.comicviewer.bean.Author;
 import ljw.comicviewer.bean.CallBackData;
 import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.bean.Comic;
@@ -129,6 +130,28 @@ public class ComicFetcher {
         comic.setImageUrl((String) getRuleFetcher().parser(doc,map.get("comic-image-url")));
         comic.setTag((String) getRuleFetcher().parser(doc,map.get("comic-tag")));
         comic.setAuthor((String) getRuleFetcher().parser(doc,map.get("comic-author")));
+
+        String authorStr = (String) getRuleFetcher().parser(doc,map.get("comic-author"));
+        String[] authors = authorStr.split(" ");
+        String hrefStr = (String) getRuleFetcher().parser(doc,map.get("comic-author-href"));
+        String[] hrefs = hrefStr.split(" ");
+        List<Author> authorList = new ArrayList<>();
+        for(int i = 0 ; i < authors.length ; i++){
+            Author author = new Author();
+            try {
+                author.setName(authors[i]);
+                author.setMark(hrefs[i]);
+            } catch (Exception e) {
+                Log.e("----", "getComicDetails: "+"作者相关数组越界");
+            }
+            authorList.add(author);
+        }
+
+        comic.setAuthors(authorList);
+
+        Log.d("----", "getComicDetails: "+getRuleFetcher().parser(doc,map.get("comic-author")));
+        Log.d("----", "getComicDetails: "+getRuleFetcher().parser(doc,map.get("comic-author-href")));
+
         comic.setUpdateStatus("更新至"+(String) getRuleFetcher().parser(doc,map.get("comic-update-status")));
         comic.setUpdate((String) getRuleFetcher().parser(doc,map.get("comic-update")));
         comic.setEnd((Boolean) getRuleFetcher().parser(doc,map.get("comic-end")));

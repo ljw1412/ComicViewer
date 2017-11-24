@@ -38,4 +38,5 @@
     <string name="opt_category">分类</string>
     <string name="opt_update">更新</string>
     <string name="mine_setting">设置</string>
+    <string name="author_comics">"%1$s"的漫画</string>
 </resources>

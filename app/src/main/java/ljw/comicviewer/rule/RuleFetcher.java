@@ -80,7 +80,8 @@ public class RuleFetcher {
                 "replace\\('(.+)','(.*)'\\)",
                 "indexOf\\('(.*)'\\)",
                 "length",
-                "size\\(\\)"
+                "size\\(\\)",
+                "join\\('(.*)'\\)"
         };
 
         Object currentObj = element;
@@ -122,7 +123,12 @@ public class RuleFetcher {
                             cssQuery = StringUtil.getPattern(regexps[i], ss, 1);
                             index = Integer.valueOf(StringUtil.getPattern(regexps[i], ss, 2));
                             if (currentObj instanceof String){
-                                currentObj = StringUtil.getPattern(cssQuery, (String) currentObj,index);
+                                //[-1]为获取全部以"空格"隔开
+                                if (index!=-1){
+                                    currentObj = StringUtil.getPattern(cssQuery, (String) currentObj,index);
+                                }else {
+                                    currentObj = StringUtil.getPatternAll(cssQuery, (String) currentObj);
+                                }
                                 error = false;
                             }
                             break;
@@ -214,6 +220,13 @@ public class RuleFetcher {
                         case 17://size()
                             if(currentObj instanceof Elements){
                                 currentObj = ((Elements) currentObj).size();
+                                error = false;
+                            }
+                            break;
+                        case 18:
+                            cssQuery = StringUtil.getPattern(regexps[i], ss, 1);
+                            if(currentObj instanceof String[]){
+                                currentObj = StringUtil.join((String[]) currentObj,cssQuery);
                                 error = false;
                             }
                             break;

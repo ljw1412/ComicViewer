@@ -54,10 +54,15 @@
         <activity
             android:name=".ui.AboutActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.ComicReaderActivity"
+        <activity
+            android:name=".ui.ComicReaderActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.NoTitleBar.Fullscreen" />
+        <activity android:name=".ui.AuthorComicsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.RedStatusBar"/>
     </application>
 
 </manifest>

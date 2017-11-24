@@ -2,6 +2,8 @@ package ljw.comicviewer.util;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,11 +30,32 @@ public class StringUtil {
         return null;
     }
 
+    public static String[] getPatternAll(String reg,String str){
+        Pattern pattern = Pattern.compile(reg);
+        Matcher matcher = pattern.matcher(str);
+        List<String> list = new ArrayList<>();
+        while (matcher.find()){
+            list.add(matcher.group());
+        }
+        if (list.size()>0){
+            return list.toArray(new String[list.size()]);
+        }
+        return null;
+    }
+
     public static boolean isExits(String reg, String str){
         Pattern pattern = Pattern.compile(reg);
         Matcher matcher = pattern.matcher(str);
         boolean res = matcher.matches();
         if(DEBUG) Log.d("StringUtil----", "isExits: {"+reg+","+str+"}"+res);
+        return res;
+    }
+
+    public static String join(String[] strings, String cssQuery) {
+        String res = "";
+        for(int i = 0 ; i < strings.length ; i++){
+            res += strings[i] + (i != strings.length ? cssQuery : "");
+        }
         return res;
     }
 }

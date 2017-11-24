@@ -50,6 +50,7 @@
 			"comic-image-url":"$('.hcover img').attr('src').match('http[s]{0,1}:.+.(?:jpg|jpeg|png|gif|bmp)')[0]",
 			"comic-tag":"$('.detail-list li').eq(1).find('span').eq(0).find('a').text()",
 			"comic-author":"$('.detail-list li').eq(1).find('span').eq(1).find('a').text()",
+			"comic-author-href":"$('.detail-list li').eq(1).find('span').eq(1).html().match('/author/\\w+/')[-1].join(' ')",
 			"comic-update":"$('.detail-list .status').html().match('\\w+-\\w+-\\w+')[0]",
 			"comic-update-status":"$('.detail-list li.status span a').text()",
 			"comic-end":"$('.detail-list li.status span span').first().text().indexOf('完结')!=-1",

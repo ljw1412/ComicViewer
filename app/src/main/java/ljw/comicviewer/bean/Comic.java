@@ -12,6 +12,7 @@ public class Comic {
     private String comicId;
     private String name;//漫画名
     private String author;//作者
+    private List<Author> authors;//作者,便于查询他(们)的作品
     private String imageUrl;//封面图片地址
     private String update;//更新日期
     private String updateStatus;//更新情况 如：更新至第1话
@@ -107,6 +108,14 @@ public class Comic {
         this.author = author;
     }
 
+    public List<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
+    }
+
     public String getTag() {
         return tag;
     }
@@ -137,6 +146,7 @@ public class Comic {
                 "id=" + comicId +
                 ", name='" + name + '\'' +
                 ", author='" + author + '\'' +
+                ", authors='" + listAuthor() + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", update='" + update + '\'' +
                 ", updateStatus='" + updateStatus + '\'' +
@@ -148,5 +158,16 @@ public class Comic {
                 ", Chapters_Size='" + (Chapters==null? "null" : Chapters.size()) + '\'' +
                 ", comeFrom=" + comeFrom +
                 '}';
+    }
+
+    private String listAuthor(){
+        String str = "[";
+        if (authors!=null){
+            for(Author a : authors){
+                str += a.toString() + ",";
+            }
+            return str.substring(0,str.length()-1)+"]";
+        }
+        return null;
     }
 }
