@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +22,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 import ljw.comicviewer.rule.RuleParser;
 import ljw.comicviewer.store.RuleStore;
@@ -25,6 +30,7 @@ import ljw.comicviewer.ui.fragment.CollectionFragment;
 import ljw.comicviewer.ui.fragment.HomeFragment;
 import ljw.comicviewer.ui.fragment.MineFragment;
 import ljw.comicviewer.util.FileUtil;
+import ljw.comicviewer.util.SnackbarUtil;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -57,8 +63,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     ImageView btnSearch;
     @BindView(R.id.nav_bar_tabs)
     LinearLayout nav_Tabs;
-
-
+    @BindView(R.id.home_coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
 
 
     @Override
@@ -153,12 +159,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     //设置内容和顶部导航栏
     public void setContent(Fragment fragment){
         if(currentFragment == fragment) return;
+        btnSearch.setVisibility(View.VISIBLE);
         if(fragment instanceof HomeFragment){
             setTitle("");
         }else if(fragment instanceof CollectionFragment){
             setTitle(R.string.txt_collection);
         }else if(fragment instanceof MineFragment){
             setTitle(R.string.txt_mine);
+            btnSearch.setVisibility(View.GONE);
         }
         setCurrentFragment(fragment);
         changeTitleBar();
@@ -198,9 +206,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public void changeToolBarOption(int position){
         for(int i = 0 ; i < tabIds.length ; i++){
             TextView tabText = (TextView) findViewById(tabIds[i]);
-            tabText.setTextColor(Color.rgb(255,255,255));
+            tabText.setTextColor(Color.WHITE);
         }
-        ((TextView) findViewById(tabIds[position])).setTextColor(Color.rgb(108,226,108));
+        ((TextView) findViewById(tabIds[position])).setTextColor(ContextCompat.getColor(context,R.color.green));
     }
 
     public void setToolBarClick(){
@@ -227,9 +235,31 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         nav_title.setText(getString(titleId));
     }
 
+    //点击两次返回退出相关对象
+    private Snackbar exitSnackBar;
+    private boolean confirmed = false;//返回2次退出程序标志
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        exitSnackBar = Snackbar.make(coordinatorLayout,getString(R.string.alert_confirm_exit), Global.SNACKBAR_DURATION)
+            .addCallback(new Snackbar.Callback(){
+                @Override
+                public void onDismissed(Snackbar transientBottomBar, int event) {
+                    super.onDismissed(transientBottomBar, event);
+                    if (event == DISMISS_EVENT_SWIPE ||
+                            event == DISMISS_EVENT_TIMEOUT ||
+                            event == DISMISS_EVENT_CONSECUTIVE) {
+                            confirmed = false;
+                    }
+                }
+            });
+        SnackbarUtil.snackbarAddView(exitSnackBar,R.drawable.icon_loudly_crying_face);
+        if (confirmed) {
+            // 返回桌面
+            super.onBackPressed();
+        } else {
+            exitSnackBar.show();
+            confirmed = true;
+        }
 
     }
 }

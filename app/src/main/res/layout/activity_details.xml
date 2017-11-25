@@ -6,9 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ljw.comicviewer.ui.DetailsActivity"
-    android:orientation="vertical"
     android:background="@drawable/bg">
-
 
     <LinearLayout
         android:orientation="vertical"
@@ -36,7 +34,8 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -361,5 +360,9 @@
         android:layout_height="300dp"
         android:visibility="gone">
     </WebView>
-
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/details_coordinatorLayout">
+    </android.support.design.widget.CoordinatorLayout>
 </RelativeLayout>

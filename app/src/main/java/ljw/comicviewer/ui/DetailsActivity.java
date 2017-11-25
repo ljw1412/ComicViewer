@@ -7,11 +7,14 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -47,6 +50,7 @@ import ljw.comicviewer.others.MyWebView;
 import ljw.comicviewer.ui.fragment.ChaptersFragment;
 import ljw.comicviewer.util.DialogUtil;
 import ljw.comicviewer.util.DisplayUtil;
+import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.WebViewUtil;
 import retrofit2.Call;
 
@@ -109,6 +113,8 @@ public class DetailsActivity extends AppCompatActivity
     LinearLayout view_updateDate;
     @BindView(R.id.btn_add_collection)
     TextView txtBtn_like;
+    @BindView(R.id.details_coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,7 +173,7 @@ public class DetailsActivity extends AppCompatActivity
             Drawable drawable= getDrawable(R.drawable.icon_collection_on);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             txtBtn_like.setCompoundDrawables(drawable,null,null,null);
-            txtBtn_like.setTextColor(0xFFFF9A23);
+            txtBtn_like.setTextColor(ContextCompat.getColor(context,R.color.star));
             txtBtn_like.setBackgroundResource(R.drawable.shape_border_rounded_rectangle_star_color);
             txtBtn_like.setText(R.string.details_del_collection);
         }else{
@@ -175,7 +181,7 @@ public class DetailsActivity extends AppCompatActivity
             Drawable drawable= getDrawable(R.drawable.icon_collection_off);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             txtBtn_like.setCompoundDrawables(drawable,null,null,null);
-            txtBtn_like.setTextColor(0x60000000);
+            txtBtn_like.setTextColor(ContextCompat.getColor(context,R.color.black_60));
             txtBtn_like.setBackgroundResource(R.drawable.shape_border_rounded_rectangle);
             txtBtn_like.setText(R.string.details_add_collection);
         }
@@ -214,16 +220,28 @@ public class DetailsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
+                CollectionHolder collectionHolder = new CollectionHolder(context);
                 if(!like){
-                    CollectionHolder collectionHolder = new CollectionHolder(context);
                     collectionHolder.addCollection(comic);
                     updateLikeStatus();
                     context.setResult(Global.CollectionToDetails,intent.putExtra("like_change",false));
+//                    SnackbarUtil.newColorfulSnackbar(coordinatorLayout,
+//                            getString(R.string.alert_add_collect_success),
+//                            ContextCompat.getColor(context,R.color.light_green)).show();
+                    SnackbarUtil.newAddImageColorfulSnackar(
+                            coordinatorLayout,
+                            getString(R.string.alert_add_collect_success),
+                            R.drawable.icon_delicious,
+                            ContextCompat.getColor(context,R.color.light_green)).show();
                 }else{
-                    CollectionHolder collectionHolder = new CollectionHolder(context);
                     collectionHolder.deleteComic(comic.getComicId());
                     updateLikeStatus();
                     context.setResult(Global.CollectionToDetails,intent.putExtra("like_change",true));
+                    SnackbarUtil.newAddImageColorfulSnackar(
+                            coordinatorLayout,
+                            getString(R.string.alert_del_collect_success),
+                            R.drawable.icon_crying_face,
+                            ContextCompat.getColor(context,R.color.holo_red_light)).show();
                 }
             }
         });

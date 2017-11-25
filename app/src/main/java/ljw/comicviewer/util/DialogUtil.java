@@ -1,8 +1,12 @@
 package ljw.comicviewer.util;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.widget.TextView;
 
+import ljw.comicviewer.Global;
 import ljw.comicviewer.others.BottomDialog;
 import ljw.comicviewer.R;
 
@@ -20,10 +24,6 @@ public class DialogUtil {
         bottomDialog.setTextOk(R.string.dialog_text_ok);
         bottomDialog.setTextCancel(R.string.dialog_text_cancel);
         return bottomDialog;
-    }
-
-    public static void showLoadingDialog(Context context){
-
     }
 
 }
