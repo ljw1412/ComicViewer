@@ -3,7 +3,6 @@ package ljw.comicviewer.ui;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -43,10 +42,8 @@ public class SearchActivity extends AppCompatActivity
     private String keyword;
     private int curPage = 1;
     private int maxPage = -1;
-    private boolean Searching = false;
     private boolean loading = false;
     private SearchListAdapter searchListAdapter;
-    private LinearLayoutManager linearLayoutManager;
     private Call searchCall;
     @BindView(R.id.search_button)
     Button btn_search;
@@ -57,6 +54,8 @@ public class SearchActivity extends AppCompatActivity
     ListView listview;
     @BindView(R.id.search_not_found)
     RelativeLayout tipsView;
+    @BindView(R.id.loading)
+    RelativeLayout view_loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +64,7 @@ public class SearchActivity extends AppCompatActivity
         context = this;
         ButterKnife.bind(this);
         initPTRGridView();
-        initGridView();
+        initListView();
         initTitleBar();
     }
 
@@ -78,16 +77,14 @@ public class SearchActivity extends AppCompatActivity
                 curPage = 1;
                 comics.clear();
                 searchListAdapter.notifyDataSetChanged();
-                curPage = 1;
-                loadSearch(keyword,curPage);
+                loadSearch(keyword);
             }
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 //                Toast.makeText(context, "上拉", Toast.LENGTH_SHORT).show();
                 Glide.get(context).clearMemory();
-                loading = true;
-//                Glide.clear();
-                loadSearch(keyword,++curPage);
+                ++curPage;
+                loadSearch(keyword);
                 Log.d(TAG,"load next page; currentLoadingPage = "+curPage);
             }
         });
@@ -95,13 +92,11 @@ public class SearchActivity extends AppCompatActivity
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
     }
 
-    private void initGridView() {
+    private void initListView() {
         listview = pullToRefreshListView.getRefreshableView();
 
         searchListAdapter = new SearchListAdapter(context,comics);
         listview.setAdapter(searchListAdapter);
-//        listview.setOnScrollListener(this);
-//        listview.setOnItemClickListener(new ComicGridFragment.ItemClickListener());
         searchListAdapter.notifyDataSetChanged();
     }
 
@@ -145,6 +140,9 @@ public class SearchActivity extends AppCompatActivity
     public void searching(View view){
         keyword = edit_search.getText().toString();
         if (!keyword.trim().equals("")){
+            if(loading){
+                searchCall.cancel();
+            }
             curPage = 1;
             maxPage = -1;
             Toast.makeText(context,keyword,Toast.LENGTH_LONG).show();
@@ -154,15 +152,17 @@ public class SearchActivity extends AppCompatActivity
             pullToRefreshListView.setFocusableInTouchMode(true);
             pullToRefreshListView.requestFocus();
             HideKeyboard(view);
-            loadSearch(keyword,curPage);
+            loadSearch(keyword);
         } else {
             Toast.makeText(context,"关键字不能为空白！",Toast.LENGTH_LONG).show();
         }
     }
 
 
-    public void loadSearch(String keyword, int page){
-        searchCall = ComicService.get().getComicSearch(this,keyword,page);
+    public void loadSearch(String keyword){
+        searchCall = ComicService.get().getComicSearch(this,keyword,curPage);
+        loading = true;
+        view_loading.setVisibility(View.VISIBLE);
     }
 
     //隐藏虚拟键盘
@@ -187,6 +187,7 @@ public class SearchActivity extends AppCompatActivity
                 String html = (String) data;
                 CallBackData callbackdata = ComicFetcher.getSearchResults(html);
                 comics.addAll((List<Comic>) callbackdata.getObj());
+                view_loading.setVisibility(View.GONE);
                 if(comics.size()==0){
                     tipsView.setVisibility(View.VISIBLE);
                 }

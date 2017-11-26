@@ -8,15 +8,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -40,6 +45,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
+import ljw.comicviewer.bean.Author;
 import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.db.CollectionHolder;
@@ -115,6 +121,8 @@ public class DetailsActivity extends AppCompatActivity
     TextView txtBtn_like;
     @BindView(R.id.details_coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.details_authors_view)
+    LinearLayout view_authors;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,12 +169,12 @@ public class DetailsActivity extends AppCompatActivity
 
 
     }
-
+    //数据库查询是否已经添加收藏
     private boolean isLike(){
         CollectionHolder collectionHolder = new CollectionHolder(this);
         return collectionHolder.hasComic(comic.getComicId());
     }
-
+    //更新界面收藏状态
     private void updateLikeStatus(){
         if(isLike()){
             like = true;
@@ -318,16 +326,53 @@ public class DetailsActivity extends AppCompatActivity
             }
         }, 1500);
     }
-    //按标题栏返回按钮
-    public void onBack(View view) {
-        finish();
-    }
+
 
     public void setInfoText(LinearLayout parent,TextView textView,String str){
         if (str != null && !str.equals("")){
             textView.setText(str);
         }else{
             parent.setVisibility(View.GONE);
+        }
+    }
+
+    //添加可点击作者
+    private void setAuthor(List<Author> authors){
+        if(authors != null && authors.size() > 0){
+            for(final Author author : authors){
+                if(author.getName()!=null){
+                    TextView addView_author = new  TextView(context);
+                    //设置style
+                    TextViewCompat.setTextAppearance(addView_author,R.style.details_font);
+                    //增加下划线
+                    Spanned result;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        result = Html.fromHtml("<u>"+author.getName()+"</u>",Html.FROM_HTML_MODE_LEGACY);
+                    }else{
+                        result = Html.fromHtml("<u>"+author.getName()+"</u>");
+                    }
+                    addView_author.setText(result);
+                    //数组margin
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(0, 0, (int) DisplayUtil.dpToPx(context,2), 0);
+                    addView_author.setLayoutParams(params);
+                    addView_author.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context,AuthorComicsActivity.class);
+                            intent.putExtra("aName",author.getName());
+                            intent.putExtra("aMark",author.getMark());
+                            startActivity(intent);
+                        }
+                    });
+                    view_authors.addView(addView_author);
+                }
+            }
+        }else {
+            //当没有作者对象时，一般是有bug，就显示没有链接的文字即可，即comic.getAuthor();
+            Log.d(TAG, "setAuthor: bug");
+            view_authors.setVisibility(View.GONE);
         }
     }
 
@@ -347,6 +392,7 @@ public class DetailsActivity extends AppCompatActivity
                 setInfoText(view_updateStatus,txt_updateStatus,comic.getUpdateStatus());
                 setInfoText(view_status,txt_status,comic.isEnd()?"已完结":"连载中");
                 setInfoText(instruction,txt_info,comic.getInfo());
+                setAuthor(comic.getAuthors());
                 new ChaptersDistributeTask(comic.getChapters()).execute();
                 //默认焦点为顶部图片，防止滚轮不置顶
                 img_cover.setFocusableInTouchMode(true);
@@ -374,6 +420,11 @@ public class DetailsActivity extends AppCompatActivity
                 }
                 break;
         }
+    }
+
+    //按标题栏返回按钮
+    public void onBack(View view) {
+        finish();
     }
 
     @Override

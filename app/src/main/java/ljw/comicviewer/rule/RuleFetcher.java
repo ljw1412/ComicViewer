@@ -232,7 +232,7 @@ public class RuleFetcher {
                             break;
                     }
                     if (error){
-                        Log.e(TAG, "case "+ i +" error: 当前规则\""+rule+"\"存在问题！可能是语法不支持。");
+                        Log.e(TAG, "case "+ i +" error: 当前规则\""+rule+"\"存在问题！可能是语法不支持或者对象不存在。");
                         return null;
                     }
                     if(DEBUG_MODE)

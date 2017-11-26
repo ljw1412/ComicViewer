@@ -9,7 +9,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_gravity="center_horizontal"
-        android:layout_height="167.2dp">
+        android:layout_height="160dp"
+        android:background="@drawable/shape_border_gray">
 
         <ImageView
             android:layout_width="40dp"
@@ -23,7 +24,9 @@
             android:adjustViewBounds="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:layout_marginRight="1dp"
+            android:layout_marginLeft="1dp" />
 
         <LinearLayout
             android:orientation="horizontal"

@@ -7,15 +7,45 @@
     tools:context="ljw.comicviewer.ui.AuthorComicsActivity">
 
     <include
+        android:id="@+id/author_comics_bar"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         layout="@layout/navigation_bar_child" />
 
+    <RelativeLayout
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:background="@color/green"
+            android:layout_centerInParent="true">
+        </com.gc.materialdesign.views.ProgressBarCircularIndeterminate>
+    </RelativeLayout>
+
     <com.handmark.pulltorefresh.library.PullToRefreshListView
-        android:id="@+id/search_pull_refresh_list"
+        android:id="@+id/pull_refresh_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
-        android:layout_below="@+id/search_bar">
+        android:layout_below="@+id/author_comics_bar">
     </com.handmark.pulltorefresh.library.PullToRefreshListView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/search_bar"
+        android:id="@+id/search_not_found"
+        android:visibility="gone">
+
+        <TextView
+            android:text="@string/tips_search_not_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView4"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp" />
+    </RelativeLayout>
 </RelativeLayout>
