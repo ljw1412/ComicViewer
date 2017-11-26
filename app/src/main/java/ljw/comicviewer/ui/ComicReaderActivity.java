@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -46,6 +47,7 @@ import ljw.comicviewer.ui.adapter.PicturePagerAdapter;
 import ljw.comicviewer.ui.listeners.OnItemLongClickListener;
 import ljw.comicviewer.util.AnimationUtil;
 import ljw.comicviewer.util.AreaClickHelper;
+import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.WebViewUtil;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -98,6 +100,8 @@ public class ComicReaderActivity extends AppCompatActivity {
     SeekBar mySeekBar;
     @BindView(R.id.read_viewer_seekbar_tips)
     TextView txtSeekBarTips;
+    @BindView(R.id.reader_coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,8 +114,6 @@ public class ComicReaderActivity extends AppCompatActivity {
         chapter_id = (String) getIntent().getExtras().get("chapter_id");
         chapter_name = (String) getIntent().getExtras().get("chapter_name");
         currPos = (int) getIntent().getExtras().get("position")-1;
-
-
 
         //store数据打印
         ComicReadStore.get().printList();
@@ -423,10 +425,21 @@ public class ComicReaderActivity extends AppCompatActivity {
     private void gotoLoading(boolean isAdd){
         ComicReadStore comicReadStore = ComicReadStore.get();
         int index = comicReadStore.getCurrentIndex();
+        //如果是第一或最后的提示
         if (index == 0 && !isAdd){
-            Toast.makeText(context, R.string.tips_is_first,Toast.LENGTH_LONG).show();
+            SnackbarUtil.newAddImageColorfulSnackar(
+                    coordinatorLayout,
+                    getString(R.string.tips_is_first),
+                    R.drawable.icon_warning,
+                    ContextCompat.getColor(context, R.color.circular_blue),
+                    ContextCompat.getColor(context, R.color.white)).show();
         }else if (index == comicReadStore.getSize()-1 && isAdd){
-            Toast.makeText(context,R.string.tips_is_last,Toast.LENGTH_LONG).show();
+            SnackbarUtil.newAddImageColorfulSnackar(
+                    coordinatorLayout,
+                    getString(R.string.tips_is_last),
+                    R.drawable.icon_warning,
+                    ContextCompat.getColor(context, R.color.circular_blue),
+                    ContextCompat.getColor(context, R.color.white)).show();
         }else{
             if (isAdd){
                 index++;

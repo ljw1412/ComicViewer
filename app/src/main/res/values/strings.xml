@@ -40,6 +40,7 @@
     <string name="mine_setting">设置</string>
     <string name="author_comics">"%1$s"的漫画</string>
     <string name="alert_confirm_exit">再按一次返回键退出应用程序</string>
+    <string name="alert_copy_success">复制成功</string>
     <string name="alert_add_collect_success">收藏成功</string>
     <string name="alert_del_collect_success">取消收藏</string>
 </resources>

@@ -203,7 +203,9 @@ public class DetailsActivity extends AppCompatActivity
                         ClipData mClipData = ClipData.newPlainText("Label", txt_title.getText());
                         // 将ClipData内容放到系统剪贴板里。
                         cm.setPrimaryClip(mClipData);
-                        Toast.makeText(context, "复制成功!", Toast.LENGTH_LONG).show();
+                        SnackbarUtil.newAddImageColorfulSnackar(
+                                coordinatorLayout, getString(R.string.alert_copy_success),
+                                R.drawable.icon_ok, ContextCompat.getColor(context,R.color.purple)).show();
                     }
                 });
                 builder.setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
@@ -225,14 +227,11 @@ public class DetailsActivity extends AppCompatActivity
                     collectionHolder.addCollection(comic);
                     updateLikeStatus();
                     context.setResult(Global.CollectionToDetails,intent.putExtra("like_change",false));
-//                    SnackbarUtil.newColorfulSnackbar(coordinatorLayout,
-//                            getString(R.string.alert_add_collect_success),
-//                            ContextCompat.getColor(context,R.color.light_green)).show();
                     SnackbarUtil.newAddImageColorfulSnackar(
                             coordinatorLayout,
                             getString(R.string.alert_add_collect_success),
                             R.drawable.icon_delicious,
-                            ContextCompat.getColor(context,R.color.light_green)).show();
+                            ContextCompat.getColor(context,R.color.smmcl_green)).show();
                 }else{
                     collectionHolder.deleteComic(comic.getComicId());
                     updateLikeStatus();
