@@ -43,6 +43,7 @@ import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.others.MyViewPager;
 import ljw.comicviewer.others.MyWebView;
 import ljw.comicviewer.store.ComicReadStore;
+import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.PicturePagerAdapter;
 import ljw.comicviewer.ui.listeners.OnItemLongClickListener;
 import ljw.comicviewer.util.AnimationUtil;
@@ -125,11 +126,11 @@ public class ComicReaderActivity extends AppCompatActivity {
 
     private void initWebView(){
         //破解屏蔽
-        WebViewUtil.syncCookie(context, Global.MANHUAGUI_DOMAIN,"country=US");
+        WebViewUtil.syncCookie(context, RuleStore.get().getDomain(),"country=US");
         webView = new WebView(this);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
-        webView.loadUrl(Global.MANHUAGUI_HOST+"/comic/"+comic_id+"/"+chapter_id+"/");
+        webView.loadUrl(RuleStore.get().getHost()+"/comic/"+comic_id+"/"+chapter_id+"/");
         webView.setWebViewClient(new MyWebView());
         getInfo();
     }
@@ -321,7 +322,7 @@ public class ComicReaderActivity extends AppCompatActivity {
                         }else{
                             ManhuaguiComicInfo info = ComicFetcher.parseCurrentChapter(s);
                             for(int i = 0 ; i < info.getFiles().size() ; i++){
-                                imgUrls.add(Global.MANHUAGUI_IMAGE_HOST+info.getPath()+info.getFiles().get(i));
+                                imgUrls.add(RuleStore.get().getImgHost()+info.getPath()+info.getFiles().get(i));
                             }
                             webView.loadUrl("about:blank");
                             initView();
@@ -351,7 +352,7 @@ public class ComicReaderActivity extends AppCompatActivity {
         Glide.with(context)
                 .asBitmap()
                 .load(new GlideUrl(url
-                        ,new LazyHeaders.Builder().addHeader("Referer","http://www.manhuagui.com").build()
+                        ,new LazyHeaders.Builder().addHeader("Referer",RuleStore.get().getHost()).build()
                 )).into(new BitmapImageViewTarget(pic){
             @Override
             public void onLoadStarted(@Nullable Drawable placeholder) {
@@ -457,7 +458,7 @@ public class ComicReaderActivity extends AppCompatActivity {
 
     private void loadChapter(){
         view_loading.setVisibility(View.VISIBLE);
-        webView.loadUrl(Global.MANHUAGUI_HOST+"/comic/"+comic_id+"/"+chapter_id+"/");
+        webView.loadUrl(RuleStore.get().getHost()+"/comic/"+comic_id+"/"+chapter_id+"/");
         imgUrls.clear();
         currPos = 0;
         getInfo();

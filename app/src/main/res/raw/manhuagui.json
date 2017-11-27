@@ -1,5 +1,7 @@
 {
 	"host":"http://www.manhuagui.com",
+	"domain":".manhuagui.com",
+	"imghost":"http://i.hamreus.com:8080",
 	"list":{
 		"url":"/list/",
 		"cssQuery":{

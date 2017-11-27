@@ -11,6 +11,8 @@ public class RuleStore {
     private final String TAG = this.getClass().getSimpleName()+"----";
     private static RuleStore ruleStore = null;
     private String host;
+    private String domain;
+    private String imgHost;
     private String currentRule;
     private Map<String,List<Map<String,String>>> typeRule;
     private Map<String,String> listRule;
@@ -34,6 +36,22 @@ public class RuleStore {
 
     public void setHost(String host) {
         this.host = host;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public String getImgHost() {
+        return imgHost;
+    }
+
+    public void setImgHost(String imgHost) {
+        this.imgHost = imgHost;
     }
 
     public String getCurrentRule() {

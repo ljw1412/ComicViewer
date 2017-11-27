@@ -50,6 +50,7 @@ import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.others.BottomDialog;
 import ljw.comicviewer.others.MyWebView;
+import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.fragment.ChaptersFragment;
 import ljw.comicviewer.util.DialogUtil;
 import ljw.comicviewer.util.DisplayUtil;
@@ -406,10 +407,10 @@ public class DetailsActivity extends AppCompatActivity
                     bottomDialog.setClickOK(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Log.d(TAG, "onCreate: "+ WebViewUtil.syncCookie(context,Global.MANHUAGUI_DOMAIN,"country=US"));
+                            Log.d(TAG, "onCreate: "+ WebViewUtil.syncCookie(context,RuleStore.get().getDomain(),"country=US"));
                             webview.getSettings().setJavaScriptEnabled(true);
                             webview.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
-                            webview.loadUrl(Global.MANHUAGUI_HOST+"/comic/"+comic_id+"/");
+                            webview.loadUrl(RuleStore.get().getHost()+"/comic/"+comic_id+"/");
                             webview.setWebViewClient(new MyWebView());
                             getChapters();
                             bottomDialog.dismiss();

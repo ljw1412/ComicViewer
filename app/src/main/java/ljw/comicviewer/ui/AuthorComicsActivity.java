@@ -136,16 +136,22 @@ public class AuthorComicsActivity extends AppCompatActivity
                 CallBackData callbackdata = ComicFetcher.getSearchResults(html);
                 comics.addAll((List<Comic>) callbackdata.getObj());
                 view_loading.setVisibility(View.GONE);
-                if(comics.size()==0){
-                    tipsView.setVisibility(View.VISIBLE);
-                }
                 if(maxPage == -1){
                     maxPage = (int) callbackdata.getArg1();
+                }
+                if(comics.size()==0){
+                    if (!flag){
+                        flag = true;
+                        maxPage = -1;
+                        loadAuthorComics();
+                    }else {
+                        tipsView.setVisibility(View.VISIBLE);
+                    }
                 }
                 pullToRefreshListView.onRefreshComplete();
                 pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
                 searchListAdapter.notifyDataSetChanged();
-                if(curPage == maxPage){
+                if(curPage >= maxPage){
                     pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
                 }
                 break;
@@ -154,7 +160,16 @@ public class AuthorComicsActivity extends AppCompatActivity
 
     @Override
     public void onError(String msg, String what) {
-        Log.d(TAG,msg);
+        switch (what) {
+            case Global.REQUEST_AUTHOR_COMICS:
+                flag = true;
+                maxPage = -1;
+                loadAuthorComics();
+                break;
+            case Global.REQUEST_COMICS_SEARCH:
+                tipsView.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 
     @Override

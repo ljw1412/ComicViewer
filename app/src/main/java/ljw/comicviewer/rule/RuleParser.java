@@ -51,6 +51,8 @@ public class RuleParser {
 
     public void parseAll(){
         parseHost();
+        parseDomain();
+        parseImgHost();
         parseListPage();
         parseLatestPage();
         parseDetailsPage();
@@ -61,6 +63,16 @@ public class RuleParser {
     private void parseHost(){
         String host = jsonObject.get("host").toString();
         ruleStore.setHost(host);
+    }
+
+    private void parseDomain(){
+        Object domain = jsonObject.get("domain");
+        ruleStore.setDomain(domain==null ? null : domain.toString());
+    }
+
+    private void parseImgHost(){
+        Object imghost = jsonObject.get("imghost");
+        ruleStore.setDomain(imghost==null ? null : imghost.toString());
     }
 
     private void parseListPage(){
