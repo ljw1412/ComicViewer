@@ -72,7 +72,7 @@ public class RuleParser {
 
     private void parseImgHost(){
         Object imghost = jsonObject.get("imghost");
-        ruleStore.setDomain(imghost==null ? null : imghost.toString());
+        ruleStore.setImgHost(imghost==null ? null : imghost.toString());
     }
 
     private void parseListPage(){
