@@ -7,8 +7,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -31,7 +29,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -181,7 +178,7 @@ public class DetailsActivity extends AppCompatActivity
             Drawable drawable= getDrawable(R.drawable.icon_collection_on);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             txtBtn_like.setCompoundDrawables(drawable,null,null,null);
-            txtBtn_like.setTextColor(ContextCompat.getColor(context,R.color.star));
+            txtBtn_like.setTextColor(ContextCompat.getColor(context,R.color.star_yellow));
             txtBtn_like.setBackgroundResource(R.drawable.shape_border_rounded_rectangle_star_color);
             txtBtn_like.setText(R.string.details_del_collection);
         }else{
@@ -338,6 +335,8 @@ public class DetailsActivity extends AppCompatActivity
 
     //添加可点击作者
     private void setAuthor(List<Author> authors){
+		//清除authors中所有组件
+		view_authors.removeAllViews();
         if(authors != null && authors.size() > 0){
             for(final Author author : authors){
                 if(author.getName()!=null){
@@ -352,7 +351,7 @@ public class DetailsActivity extends AppCompatActivity
                         result = Html.fromHtml("<u>"+author.getName()+"</u>");
                     }
                     addView_author.setText(result);
-                    //数组margin
+                    //添加margin
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     params.setMargins(0, 0, (int) DisplayUtil.dpToPx(context,2), 0);

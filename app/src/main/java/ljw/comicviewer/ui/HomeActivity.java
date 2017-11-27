@@ -172,6 +172,31 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         changeTitleBar();
     }
 
+    //标题栏界面更新相关
+    private int[] tabIds = {R.id.option1,R.id.option2,R.id.option3};
+    public void changeToolBarOption(int position){
+        for(int i = 0 ; i < tabIds.length ; i++){
+            TextView tabText = (TextView) findViewById(tabIds[i]);
+            tabText.setTextColor(Color.WHITE);
+        }
+        ((TextView) findViewById(tabIds[position])).setTextColor(ContextCompat.getColor(context,R.color.green));
+    }
+
+    //设置标题栏点击事件
+    public void setToolBarClick(){
+        for(int i = 0 ; i < tabIds.length ; i++){
+            TextView tabText = (TextView) findViewById(tabIds[i]);
+            final int finalI = i;
+            tabText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    changeToolBarOption(finalI);
+                    homeFragment.setPagePosition(finalI);
+                }
+            });
+        }
+    }
+
     //点击事件
     @OnClick({R.id.goto_comic,R.id.goto_collection,R.id.goto_mine,R.id.nav_btn_search})
     @Override
@@ -199,29 +224,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(context,SearchActivity.class);
                 startActivity(intent);
                 break;
-        }
-    }
-
-    private int[] tabIds = {R.id.option1,R.id.option2,R.id.option3};
-    public void changeToolBarOption(int position){
-        for(int i = 0 ; i < tabIds.length ; i++){
-            TextView tabText = (TextView) findViewById(tabIds[i]);
-            tabText.setTextColor(Color.WHITE);
-        }
-        ((TextView) findViewById(tabIds[position])).setTextColor(ContextCompat.getColor(context,R.color.green));
-    }
-
-    public void setToolBarClick(){
-        for(int i = 0 ; i < tabIds.length ; i++){
-            TextView tabText = (TextView) findViewById(tabIds[i]);
-            final int finalI = i;
-            tabText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    changeToolBarOption(finalI);
-                    homeFragment.setPagePosition(finalI);
-                }
-            });
         }
     }
 

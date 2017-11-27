@@ -83,7 +83,7 @@ public class CollectionFragment extends BaseFragment
         pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
-//                Toast.makeText(context, "下拉", Toast.LENGTH_SHORT).show();
+                //下拉
                 currentPage = 1;
                 comics.clear();
 
@@ -93,7 +93,7 @@ public class CollectionFragment extends BaseFragment
             }
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
-//                Toast.makeText(context, "上拉", Toast.LENGTH_SHORT).show();
+                //上拉
                 Glide.get(context).clearMemory();
                 add20(++currentPage);
                 Log.d(TAG,"load next page; currentLoadingPage = "+ currentPage);

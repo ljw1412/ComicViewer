@@ -51,4 +51,10 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp" />
     </RelativeLayout>
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_coordinatorLayout"
+        android:layout_below="@+id/search_bar">
+    </android.support.design.widget.CoordinatorLayout>
 </RelativeLayout>

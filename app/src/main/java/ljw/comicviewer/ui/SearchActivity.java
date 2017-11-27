@@ -2,6 +2,8 @@ package ljw.comicviewer.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -14,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -32,6 +33,7 @@ import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.ui.adapter.SearchListAdapter;
+import ljw.comicviewer.util.SnackbarUtil;
 import retrofit2.Call;
 
 public class SearchActivity extends AppCompatActivity
@@ -56,6 +58,8 @@ public class SearchActivity extends AppCompatActivity
     RelativeLayout tipsView;
     @BindView(R.id.loading)
     RelativeLayout view_loading;
+    @BindView(R.id.search_coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +77,7 @@ public class SearchActivity extends AppCompatActivity
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-//                Toast.makeText(context, "下拉", Toast.LENGTH_SHORT).show();
+                //下拉
                 curPage = 1;
                 comics.clear();
                 searchListAdapter.notifyDataSetChanged();
@@ -81,7 +85,7 @@ public class SearchActivity extends AppCompatActivity
             }
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-//                Toast.makeText(context, "上拉", Toast.LENGTH_SHORT).show();
+                //上拉
                 Glide.get(context).clearMemory();
                 ++curPage;
                 loadSearch(keyword);
@@ -145,7 +149,11 @@ public class SearchActivity extends AppCompatActivity
             }
             curPage = 1;
             maxPage = -1;
-            Toast.makeText(context,keyword,Toast.LENGTH_LONG).show();
+            SnackbarUtil.newAddImageColorfulSnackar(
+                    coordinatorLayout,
+                    String.format(getString(R.string.alert_search_loading_tips),keyword),
+                    R.drawable.icon_loading,
+                    ContextCompat.getColor(context,R.color.smmcl_green)).show();
             tipsView.setVisibility(View.GONE);
             comics.clear();
             searchListAdapter.notifyDataSetChanged();
@@ -154,7 +162,10 @@ public class SearchActivity extends AppCompatActivity
             HideKeyboard(view);
             loadSearch(keyword);
         } else {
-            Toast.makeText(context,"关键字不能为空白！",Toast.LENGTH_LONG).show();
+            SnackbarUtil.newAddImageColorfulSnackar(
+                    coordinatorLayout, getString(R.string.alert_search_keyword_no_empty),
+                    R.drawable.icon_error,
+                    ContextCompat.getColor(context,R.color.star_yellow)).show();
         }
     }
 

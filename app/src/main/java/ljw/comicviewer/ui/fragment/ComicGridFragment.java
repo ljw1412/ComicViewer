@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -22,9 +23,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +34,7 @@ import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
+import ljw.comicviewer.util.SnackbarUtil;
 
 
 /**
@@ -57,6 +57,8 @@ public class ComicGridFragment extends BaseFragment
     TextView txt_netError;
     @BindView(R.id.grid_loading)
     RelativeLayout loading;
+    @BindView(R.id.comic_grid_coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
 
     public ComicGridFragment() {
     }
@@ -91,7 +93,7 @@ public class ComicGridFragment extends BaseFragment
         pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
-//                Toast.makeText(context, "下拉", Toast.LENGTH_SHORT).show();
+                //下拉
                 loadedPage = 1;
                 comicList.clear();
                 pictureGridAdapter.notifyDataSetChanged();
@@ -100,10 +102,9 @@ public class ComicGridFragment extends BaseFragment
             }
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
-//                Toast.makeText(context, "上拉", Toast.LENGTH_SHORT).show();
+                //上拉
                 Glide.get(context).clearMemory();
                 isLoadingNext = true;
-//                Glide.clear();
                 getListItems(++loadedPage);
                 Log.d(TAG,"load next page; currentLoadingPage = "+loadedPage);
             }
@@ -224,7 +225,7 @@ public class ComicGridFragment extends BaseFragment
                     isLoadingNext = false;
                     clearAndLoadImage();
                 }else{
-                    Toast.makeText(context,getString(R.string.data_load_fail),Toast.LENGTH_LONG).show();
+                    netErrorTo();
                 }
                 break;
         }
@@ -248,17 +249,28 @@ public class ComicGridFragment extends BaseFragment
             case Global.REQUEST_COMICS_LIST:
                 pullToRefreshGridView.onRefreshComplete();
                 if(isLoadingNext) {
-                    Toast.makeText(context, R.string.gird_tips_loading_next_page_fail, Toast.LENGTH_LONG).show();
+                    SnackbarUtil.newAddImageColorfulSnackar(
+                            coordinatorLayout, getString(R.string.gird_tips_loading_next_page_fail),
+                            R.drawable.icon_error,
+                            ContextCompat.getColor(context,R.color.star_yellow)).show();
                 }else{
-                    pullToRefreshGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-                    loading.setVisibility(View.GONE);
-                    txt_netError.setVisibility(View.VISIBLE);
+                    netErrorTo();
                 }
                 isLoadingNext = false;
                 break;
         }
         Log.e(TAG, "Error: " + msg);
+    }
 
+    public void netErrorTo(){
+        if (pullToRefreshGridView.isRefreshing()) pullToRefreshGridView.onRefreshComplete();
+        SnackbarUtil.newAddImageColorfulSnackar(
+                coordinatorLayout, getString(R.string.data_load_fail),
+                R.drawable.icon_error,
+                ContextCompat.getColor(context,R.color.star_yellow)).show();
+        pullToRefreshGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        loading.setVisibility(View.GONE);
+        txt_netError.setVisibility(View.VISIBLE);
     }
 
     //-------------------

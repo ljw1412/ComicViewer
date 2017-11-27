@@ -124,7 +124,8 @@ public class UpdateFragment extends ComicGridFragment{
                     loading.setVisibility(View.GONE);
                     clearAndLoadImage();
                 }else{
-                    Toast.makeText(context,getString(R.string.data_load_fail),Toast.LENGTH_LONG).show();
+                    netErrorTo();
+//                    Toast.makeText(context,getString(R.string.data_load_fail),Toast.LENGTH_LONG).show();
                 }
                 break;
         }

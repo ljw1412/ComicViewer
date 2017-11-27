@@ -78,7 +78,7 @@ public class AuthorComicsActivity extends AppCompatActivity
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-//                Toast.makeText(context, "下拉", Toast.LENGTH_SHORT).show();
+                //下拉
                 curPage = 1;
                 comics.clear();
                 searchListAdapter.notifyDataSetChanged();
@@ -86,7 +86,7 @@ public class AuthorComicsActivity extends AppCompatActivity
             }
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-//                Toast.makeText(context, "上拉", Toast.LENGTH_SHORT).show();
+                //上拉
                 Glide.get(context).clearMemory();
                 ++curPage;
                 loadAuthorComics();
