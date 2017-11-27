@@ -3,6 +3,7 @@ package ljw.comicviewer.ui;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -46,6 +47,7 @@ public class SearchActivity extends AppCompatActivity
     private int maxPage = -1;
     private boolean loading = false;
     private SearchListAdapter searchListAdapter;
+    private Snackbar snackbar;
     private Call searchCall;
     @BindView(R.id.search_button)
     Button btn_search;
@@ -149,11 +151,12 @@ public class SearchActivity extends AppCompatActivity
             }
             curPage = 1;
             maxPage = -1;
-            SnackbarUtil.newAddImageColorfulSnackar(
+            snackbar = SnackbarUtil.newAddImageColorfulSnackar(
                     coordinatorLayout,
                     String.format(getString(R.string.alert_search_loading_tips),keyword),
                     R.drawable.icon_loading,
-                    ContextCompat.getColor(context,R.color.smmcl_green)).show();
+                    ContextCompat.getColor(context,R.color.smmcl_green));
+            snackbar.show();
             tipsView.setVisibility(View.GONE);
             comics.clear();
             searchListAdapter.notifyDataSetChanged();
@@ -182,7 +185,6 @@ public class SearchActivity extends AppCompatActivity
         InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService( Context.INPUT_METHOD_SERVICE );
         if ( imm.isActive() ) {
             imm.hideSoftInputFromWindow( v.getApplicationWindowToken() , 0 );
-
         }
     }
 

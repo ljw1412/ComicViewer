@@ -17,7 +17,7 @@ import ljw.comicviewer.util.StringUtil;
 
 public class RuleFetcher {
     private final String TAG = this.getClass().getSimpleName()+"----";
-    private final boolean DEBUG_MODE = false;
+    private final boolean DEBUG_MODE = true;
     private static RuleFetcher ruleFetcher = null;
 
     private RuleFetcher() {
@@ -231,12 +231,12 @@ public class RuleFetcher {
                             }
                             break;
                     }
+                    if(DEBUG_MODE)
+                        Log.d(TAG, "parser: " + ss + "\n" + currentObj);
                     if (error){
                         Log.e(TAG, "case "+ i +" error: 当前规则\""+rule+"\"存在问题！可能是语法不支持或者对象不存在。");
                         return null;
                     }
-                    if(DEBUG_MODE)
-                        Log.d(TAG, "parser: " + ss + "\n" + currentObj);
                 }
             }
 

@@ -40,9 +40,30 @@ public class ComicService {
         return getRetrofit(host).create(HttpInterface.ComicRequestServices.class);
     }
 
+    //获得网页源码
     private Call<String> getHTML(String path){
         return getService(host).getHTML(path);
     }
+    public Call getHTML(final RequestCallback requestCallback , String path, final String what){
+        Call<String> call = ComicService.get().getHTML(path);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if(response.body()!=null){
+                    requestCallback.onFinish(response.body().toString(),what);
+                }else {
+                    requestCallback.onError("获得response.body()为null，可能是代码失效！",what);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                requestCallback.onError("getUpdateList()网络请求失败！",what);
+            }
+        });
+        return call;
+    }
+
 
     //获得指定页数的漫画列表对象
     private Call<String> getList(int page){return getService(host).getList(page);}

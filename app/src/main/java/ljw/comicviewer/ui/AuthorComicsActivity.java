@@ -35,6 +35,7 @@ public class AuthorComicsActivity extends AppCompatActivity
     private String aName,aMark;
     private int curPage = 1;
     private int maxPage = -1;
+    private boolean flag = false;//是否调用备用方法
     private SearchListAdapter searchListAdapter;
     private Call loadCall;
     @BindView(R.id.nav_child_title)
@@ -63,8 +64,12 @@ public class AuthorComicsActivity extends AppCompatActivity
 
     public void loadAuthorComics(){
         view_loading.setVisibility(View.VISIBLE);
-        //备用方法：使用搜索功能来找作者相关漫画
-        loadCall = ComicService.get().getComicSearch(this,aName,curPage);
+        if(aMark!=null && !flag){
+            loadCall = ComicService.get().getHTML(this,aMark,Global.REQUEST_AUTHOR_COMICS);
+        }else {
+            //备用方法：使用搜索功能来找作者相关漫画
+            loadCall = ComicService.get().getComicSearch(this, aName, curPage);
+        }
     }
 
 
@@ -126,7 +131,6 @@ public class AuthorComicsActivity extends AppCompatActivity
     public void onFinish(Object data, String what) {
         switch (what) {
             case Global.REQUEST_AUTHOR_COMICS:
-                //
             case Global.REQUEST_COMICS_SEARCH:
                 String html = (String) data;
                 CallBackData callbackdata = ComicFetcher.getSearchResults(html);
@@ -150,7 +154,7 @@ public class AuthorComicsActivity extends AppCompatActivity
 
     @Override
     public void onError(String msg, String what) {
-
+        Log.d(TAG,msg);
     }
 
     @Override
