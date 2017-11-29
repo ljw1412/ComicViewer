@@ -1,6 +1,7 @@
 package ljw.comicviewer.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -35,6 +36,7 @@ import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.ui.adapter.SearchListAdapter;
 import ljw.comicviewer.util.SnackbarUtil;
+import ljw.comicviewer.util.StringUtil;
 import retrofit2.Call;
 
 public class SearchActivity extends AppCompatActivity
@@ -60,6 +62,8 @@ public class SearchActivity extends AppCompatActivity
     RelativeLayout tipsView;
     @BindView(R.id.loading)
     RelativeLayout view_loading;
+    @BindView(R.id.tips_search_by_id)
+    TextView txt_searchById;
     @BindView(R.id.search_coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
@@ -145,6 +149,13 @@ public class SearchActivity extends AppCompatActivity
 
     public void searching(View view){
         keyword = edit_search.getText().toString();
+        if(StringUtil.isExits("id:(\\d+)/",keyword)){
+            String comicId = StringUtil.getPattern("id:(\\d+)/",keyword,1);
+            Intent intent = new Intent(context, DetailsActivity.class);
+            intent.putExtra("id",comicId);
+            startActivity(intent);
+            return;
+        }
         if (!keyword.trim().equals("")){
             if(loading){
                 searchCall.cancel();
@@ -200,9 +211,9 @@ public class SearchActivity extends AppCompatActivity
                 String html = (String) data;
                 CallBackData callbackdata = ComicFetcher.getSearchResults(html);
                 comics.addAll((List<Comic>) callbackdata.getObj());
-                if (snackbar.isShown())
-                    snackbar.dismiss();
+                if (snackbar.isShown()) snackbar.dismiss();
                 view_loading.setVisibility(View.GONE);
+                txt_searchById.setVisibility(View.GONE);
                 if(comics.size()==0){
                     tipsView.setVisibility(View.VISIBLE);
                 }

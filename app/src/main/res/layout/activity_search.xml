@@ -51,6 +51,17 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp" />
     </RelativeLayout>
+
+    <TextView
+        android:text="@string/tips_search_by_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tips_search_by_id"
+        android:layout_centerHorizontal="false"
+        android:layout_marginTop="20dp"
+        android:layout_centerInParent="true"
+        android:gravity="center" />
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

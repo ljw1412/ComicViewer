@@ -385,8 +385,14 @@ public class DetailsActivity extends AppCompatActivity
     public void onFinish(Object data, String what) {
         switch (what){
             case Global.REQUEST_COMICS_INFO:
-                ComicFetcher.getComicDetails(data.toString(),comic);
-                ComicFetcher.getComicChapters(data.toString(),comic);
+                try {
+                    ComicFetcher.getComicDetails(data.toString(),comic);
+                    ComicFetcher.getComicChapters(data.toString(),comic);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    onError("未知异常",what);
+                    return;
+                }
                 getCover();
                 setInfoText(null,txt_title,comic.getName());
                 setInfoText(view_score,txt_score,comic.getScore());

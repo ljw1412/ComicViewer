@@ -34,6 +34,7 @@
     <string name="tips_is_first">前面没有了…</string>
     <string name="tips_is_last">后面没有了…</string>
     <string name="tips_search">请输入搜索的关键词</string>
+    <string name="tips_search_by_id">在搜索框中输入"id:ID号/"\n可以直接到达漫画详情页\n(如:"id:123/"不包含双引号)</string>
     <string name="opt_new">上新</string>
     <string name="opt_category">分类</string>
     <string name="opt_update">更新</string>
