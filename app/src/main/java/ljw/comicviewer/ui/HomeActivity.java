@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
+import ljw.comicviewer.db.DBHelper;
 import ljw.comicviewer.rule.RuleParser;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.fragment.CollectionFragment;

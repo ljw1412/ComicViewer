@@ -200,6 +200,8 @@ public class SearchActivity extends AppCompatActivity
                 String html = (String) data;
                 CallBackData callbackdata = ComicFetcher.getSearchResults(html);
                 comics.addAll((List<Comic>) callbackdata.getObj());
+                if (snackbar.isShown())
+                    snackbar.dismiss();
                 view_loading.setVisibility(View.GONE);
                 if(comics.size()==0){
                     tipsView.setVisibility(View.VISIBLE);

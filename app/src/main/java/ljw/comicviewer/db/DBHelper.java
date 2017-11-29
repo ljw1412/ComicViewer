@@ -5,12 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by ljw on 2017-11-11 011.
  */
 
 public class DBHelper {
+    private String TAG = this.getClass().getSimpleName()+"----";
     private final static String dbName = "comic_viewer.db";
     private SQLiteHelper mSQLiteHelper = null;
 
@@ -19,7 +21,7 @@ public class DBHelper {
         mSQLiteHelper = new SQLiteHelper(context, dbName, null, 1);
     }
 
-    public synchronized void insert(String sql) {
+    public synchronized void execSQL(String sql) {
         if (mSQLiteHelper == null) {
             return;
         }
@@ -108,12 +110,20 @@ public class DBHelper {
         @Override
         public void onCreate(SQLiteDatabase db) {
             //字段名不能为update，否则会导致插入失败的
-            db.execSQL("CREATE TABLE `collection`(`id` integer primary key autoincrement,`comicId`,`name`,`imageUrl`,`score`,`updateDate`,`updateStatus`,`isEnd`,`tag`,`comeFrom`)");
+            db.execSQL("CREATE TABLE `collection`(`id` integer primary key autoincrement," +
+                    "`comicId`,`name`,`imageUrl`,`score`,`updateDate`,`updateStatus`,`isEnd`,`tag`,`comeFrom`)");
+            db.execSQL("CREATE TABLE `history`(`id` integer primary key autoincrement," +
+                    "`comicId`,`name`,`imageUrl`,`isEnd`,`chapterId`,`chapterName`,`readTime`)");
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+            Log.d(TAG, "onUpgrade: oldVersion=" + oldVersion + " newVersion=" + newVersion);
+            if (newVersion == 1){
+                db.execSQL("DROP TABLE `history`;");
+                db.execSQL("CREATE TABLE `history`(`id` integer primary key autoincrement," +
+                        "`comicId`,`name`,`imageUrl`,`isEnd`,`chapterId`,`chapterName`,`readTime`)");
+            }
         }
     }
 }

@@ -12,7 +12,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
+import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.bean.Comic;
+import ljw.comicviewer.bean.History;
+import ljw.comicviewer.db.HistoryHolder;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 
@@ -34,24 +37,21 @@ public class SettingsActivity extends AppCompatActivity
         ButterKnife.bind(this);
         initView();
 
-        loadComicInformation();
+
     }
 
     private void initView(){
         title.setText(R.string.mine_setting);
+
+        HistoryHolder historyHolder = new HistoryHolder(context);
+        List<History> chapters = historyHolder.getHistories();
+        debug.setText(chapters.size()+"\n");
+        for (History history : chapters){
+            debug.append(history.toString());
+        }
     }
 
-    private void getListItems(int page){
-        ComicService.get().getListItems(this,page);
-    }
 
-    public void loadSearch(String keyword, int page){
-        ComicService.get().getComicSearch(this,keyword,page);
-    }
-
-    public void loadComicInformation(){
-         ComicService.get().getComicInfo(this,"16058");//18X id:"8788");"16058"
-    }
 
     //按标题栏返回按钮
     public void onBack(View view) {
@@ -60,30 +60,7 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     public void onFinish(Object data, String what) {
-        switch (what) {
-            case Global.REQUEST_COMICS_LIST:
-            case Global.REQUEST_COMICS_SEARCH:
-                List<Comic> comics = (List<Comic>) ComicFetcher.getSearchResults(data.toString()).getObj();
-                debug.setText("");
-                for (Comic comic:comics){
-                    debug.append(comic.toString()+"\n");
-                }
-                break;
-            case Global.REQUEST_COMICS_INFO:
-                Comic comic = new Comic();
-                comic.setComicId("16058");
-                comic.setScore("10");
-                ComicFetcher.getComicDetails(data.toString(),comic);
 
-                try {
-                    ComicFetcher.getComicChapters(data.toString(),comic);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                debug.setText(comic.toString());
-                break;
-        }
     }
 
     @Override

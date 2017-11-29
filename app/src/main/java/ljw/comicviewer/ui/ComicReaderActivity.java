@@ -1,6 +1,7 @@
 package ljw.comicviewer.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -303,6 +304,7 @@ public class ComicReaderActivity extends AppCompatActivity {
 
     //获得漫画章节信息
     public void getInfo(){
+        setHistory();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -462,6 +464,13 @@ public class ComicReaderActivity extends AppCompatActivity {
         imgUrls.clear();
         currPos = 0;
         getInfo();
+    }
+
+    private void setHistory(){
+        Intent intent = new Intent();
+        intent.putExtra("chapterId",chapter_id);
+        intent.putExtra("chapterName",chapter_name);
+        setResult(Global.REQUEST_COMIC_HISTORY,intent);
     }
 
     private void updateSeekBar(int progress){

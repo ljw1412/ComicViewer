@@ -73,6 +73,7 @@ public class CollectionHolder {
     }
 
     public synchronized void deleteComic(String comicId){
-        dbHelper.delete(tableName,"`comicId` = ?",new String[]{comicId});
+        long res = dbHelper.delete(tableName,"`comicId` = ?",new String[]{comicId});
+        Log.d("----", "addCollection: 成功删除"+res+"条记录");
     }
 }

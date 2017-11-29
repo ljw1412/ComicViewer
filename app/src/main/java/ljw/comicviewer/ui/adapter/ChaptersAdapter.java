@@ -63,6 +63,11 @@ public class ChaptersAdapter extends BaseAdapter {
             chapterViewHolder = (ChapterViewHolder) convertView.getTag();
         }
         chapterViewHolder.name.setText(chapters.get(position).getChapter_name());
+        if(chapters.get(position).isReadHere()){
+            chapterViewHolder.name.setBackgroundResource(R.drawable.shape_border_read_here);
+        }else{
+            chapterViewHolder.name.setBackgroundResource(R.drawable.shape_border);
+        }
         return convertView;
     }
 

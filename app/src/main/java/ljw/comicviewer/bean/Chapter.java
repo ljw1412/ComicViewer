@@ -9,6 +9,7 @@ public class Chapter {
     private String chapter_id;
     private String Chapter_name;
     private int type;//0单行本,1单话，2其他
+    private boolean readHere = false;
 
     public String getComic_id() {
         return comic_id;
@@ -40,6 +41,14 @@ public class Chapter {
 
     public void setChapter_name(String chapter_name) {
         Chapter_name = chapter_name;
+    }
+
+    public boolean isReadHere() {
+        return readHere;
+    }
+
+    public void setReadHere(boolean readHere) {
+        this.readHere = readHere;
     }
 
     @Override

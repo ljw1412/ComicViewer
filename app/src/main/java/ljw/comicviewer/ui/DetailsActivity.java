@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -45,7 +46,9 @@ import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Author;
 import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.bean.Comic;
+import ljw.comicviewer.bean.History;
 import ljw.comicviewer.db.CollectionHolder;
+import ljw.comicviewer.db.HistoryHolder;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.others.BottomDialog;
@@ -329,7 +332,7 @@ public class DetailsActivity extends AppCompatActivity
     public void setInfoText(LinearLayout parent,TextView textView,String str){
         if (str != null && !str.equals("")){
             textView.setText(str);
-        }else{
+        }else if(parent != null){
             parent.setVisibility(View.GONE);
         }
     }
@@ -385,6 +388,7 @@ public class DetailsActivity extends AppCompatActivity
                 ComicFetcher.getComicDetails(data.toString(),comic);
                 ComicFetcher.getComicChapters(data.toString(),comic);
                 getCover();
+                setInfoText(null,txt_title,comic.getName());
                 setInfoText(view_score,txt_score,comic.getScore());
                 setInfoText(view_author,txt_author,comic.getAuthor());
                 setInfoText(view_tag,txt_tag,comic.getTag());
@@ -460,7 +464,26 @@ public class DetailsActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: "+requestCode);
+        Log.d(TAG, "onActivityResult: requestCode:"+requestCode + "resultCode:"+resultCode);
+        switch (resultCode){
+            case Global.REQUEST_COMIC_HISTORY:
+                History history = new History();
+                history.setChapterId(data.getStringExtra("chapterId"));
+                history.setChapterName(data.getStringExtra("chapterName"));
+                history.setComicName(comic.getName());
+                history.setImgUrl(comic.getImageUrl());
+                history.setComicId(comic.getComicId());
+                history.setEnd(comic.isEnd());
+//                history.setReadTime(System.currentTimeMillis());
+                Log.d(TAG, "onActivityResult: "+history.toString());
+                HistoryHolder historyHolder = new HistoryHolder(context);
+                historyHolder.updateOrAddHistory(history);
+                for(int i = 0 ; i<TYPE_MAX ;i++){
+                    chaptersFragment_map.get(i).updateChapters();
+                }
+                break;
+        }
+
     }
 
     //根据类型分发章节
@@ -478,8 +501,15 @@ public class DetailsActivity extends AppCompatActivity
                 List<Chapter> cList = new ArrayList<>();
                 map.put(i,cList);
             }
+            //查询历史记录
+            HistoryHolder historyHolder = new HistoryHolder(context);
+            String chapterId = historyHolder.getReadToChapterId(comic_id);
+            Log.d(TAG, "doInBackground: "+chapterId);
             for (Chapter chapter:list) {
                 int type = chapter.getType();
+                if (chapterId!=null && chapter.getChapter_id().equals(chapterId)){
+                    chapter.setReadHere(true);
+                }
                 map.get(type).add(chapter);
             }
             return map;

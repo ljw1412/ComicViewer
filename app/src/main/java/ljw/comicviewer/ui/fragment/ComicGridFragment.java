@@ -205,8 +205,9 @@ public class ComicGridFragment extends BaseFragment
     public Object myDoInBackground(String TAG,Object data) {
         switch (TAG) {
             case Global.REQUEST_COMICS_LIST:
-                comicList.addAll(ComicFetcher.getComicList(data.toString()));
-                return comicList.size();
+                List<Comic> tempList = ComicFetcher.getComicList(data.toString());
+                if(tempList.size()>0) comicList.addAll(tempList);
+                return tempList.size();
         }
         return null;
     }
@@ -256,7 +257,6 @@ public class ComicGridFragment extends BaseFragment
                 }else{
                     netErrorTo();
                 }
-                isLoadingNext = false;
                 break;
         }
         Log.e(TAG, "Error: " + msg);
@@ -268,9 +268,12 @@ public class ComicGridFragment extends BaseFragment
                 coordinatorLayout, getString(R.string.data_load_fail),
                 R.drawable.icon_error,
                 ContextCompat.getColor(context,R.color.star_yellow)).show();
-        pullToRefreshGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-        loading.setVisibility(View.GONE);
-        txt_netError.setVisibility(View.VISIBLE);
+        if (!isLoadingNext){
+            pullToRefreshGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+            loading.setVisibility(View.GONE);
+            txt_netError.setVisibility(View.VISIBLE);
+        }
+        isLoadingNext = false;
     }
 
     //-------------------

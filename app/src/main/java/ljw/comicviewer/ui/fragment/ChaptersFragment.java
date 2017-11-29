@@ -14,8 +14,10 @@ import android.widget.AdapterView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Chapter;
+import ljw.comicviewer.db.HistoryHolder;
 import ljw.comicviewer.others.MyGridView;
 import ljw.comicviewer.store.ComicReadStore;
 import ljw.comicviewer.ui.ComicReaderActivity;
@@ -73,10 +75,9 @@ public class ChaptersFragment extends Fragment  {
             intent.putExtra("chapter_id",chapter.getChapter_id());
             intent.putExtra("chapter_name",chapter.getChapter_name());
             intent.putExtra("position",1);
-            startActivity(intent);
+            startActivityForResult(intent, Global.REQUEST_COMIC_HISTORY);
         }
     }
-
 
     public void addChapters(List<Chapter> chapters) {
         this.chapters.addAll(chapters);
@@ -89,4 +90,20 @@ public class ChaptersFragment extends Fragment  {
         chaptersAdapter.notifyDataSetChanged();
     }
 
+    //更新读到的位置
+    public void updateChapters(){
+        if(chapters.size()>0) {
+            //查询历史记录
+            HistoryHolder historyHolder = new HistoryHolder(context);
+            String chapterId = historyHolder.getReadToChapterId(chapters.get(0).getComic_id());
+            for (Chapter chapter : chapters) {
+                if (chapterId != null && chapter.getChapter_id().equals(chapterId)) {
+                    chapter.setReadHere(true);
+                }else if (chapter.isReadHere()){
+                    chapter.setReadHere(false);
+                }
+            }
+            chaptersAdapter.notifyDataSetChanged();
+        }
+    }
 }

@@ -103,8 +103,9 @@ public class UpdateFragment extends ComicGridFragment{
     public Object myDoInBackground(String TAG, Object data) {
         switch (TAG) {
             case Global.REQUEST_COMICS_LATEST:
-                allList.addAll(ComicFetcher.getLatestList(data.toString()));
-                return allList.size();
+                List<Comic> tempList = ComicFetcher.getLatestList(data.toString());
+                if(tempList.size()>0) allList.addAll(tempList);
+                return tempList.size();
         }
         return null;
     }
