@@ -149,9 +149,6 @@ public class ComicFetcher {
 
         comic.setAuthors(authorList);
 
-        Log.d("----", "getComicDetails: "+getRuleFetcher().parser(doc,map.get("comic-author")));
-        Log.d("----", "getComicDetails: "+getRuleFetcher().parser(doc,map.get("comic-author-href")));
-
         comic.setUpdateStatus("更新至"+(String) getRuleFetcher().parser(doc,map.get("comic-update-status")));
         comic.setUpdate((String) getRuleFetcher().parser(doc,map.get("comic-update")));
         comic.setEnd((Boolean) getRuleFetcher().parser(doc,map.get("comic-end")));
@@ -190,9 +187,9 @@ public class ComicFetcher {
                 Elements chapterItems = (Elements) getRuleFetcher().parser(chapterList.get(j),map.get("chapter-items"));
                 for (int k = chapterItems.size()-1 ; k >= 0 ; k--){
                     Chapter chapter = new Chapter();
-                    chapter.setComic_id(comic.getComicId());
-                    chapter.setChapter_id((String) getRuleFetcher().parser(chapterItems.get(k),map.get("chapter-id")));
-                    chapter.setChapter_name((String) getRuleFetcher().parser(chapterItems.get(k),map.get("chapter-name")));
+                    chapter.setComicId(comic.getComicId());
+                    chapter.setChapterId((String) getRuleFetcher().parser(chapterItems.get(k),map.get("chapter-id")));
+                    chapter.setChapterName((String) getRuleFetcher().parser(chapterItems.get(k),map.get("chapter-name")));
                     chapter.setType(type);
                     chapters.add(chapter);
                 }

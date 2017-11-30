@@ -45,7 +45,7 @@
                 android:ellipsize="end"/>
 
             <TextView
-                android:text="chapter_name"
+                android:text="chapterName"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:id="@+id/read_viewer_comic_chapter_name"

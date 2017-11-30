@@ -191,26 +191,66 @@
                             android:layout_marginBottom="5dp"
                             android:id="@+id/read_favorite">
 
-                            <TextView
-                                android:text="@string/details_add_collection"
+                            <LinearLayout
+                                android:orientation="horizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/btn_add_collection"
-                                android:textSize="20sp"
-                                android:drawableLeft="@drawable/icon_collection_off"
-                                android:drawablePadding="3dp"
-                                android:textColor="@color/black_60"
                                 android:background="@drawable/shape_border_rounded_rectangle"
+                                android:layout_marginRight="10dp"
                                 android:paddingLeft="5dp"
-                                android:paddingRight="5dp" />
+                                android:paddingRight="5dp">
 
-                            <TextView
-                                android:text="@string/details_to_read"
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    app:srcCompat="@drawable/icon_collection_off"
+                                    android:id="@+id/icon_collection"
+                                    android:layout_weight="1"
+                                    android:layout_gravity="center" />
+
+                                <TextView
+                                    android:text="@string/details_add_collection"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/txt_add_collection"
+                                    android:textSize="20sp"
+                                    android:textColor="@color/black_60"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
+                                    android:layout_gravity="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:orientation="horizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/btn_to_reading"
-                                android:textSize="20sp"
-                                android:layout_marginLeft="10dp" />
+                                android:background="@drawable/shape_border_rounded_rectangle"
+                                android:paddingLeft="5dp"
+                                android:paddingRight="5dp">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    app:srcCompat="@drawable/icon_read_off"
+                                    android:id="@+id/icon_to_reading"
+                                    android:layout_weight="1"
+                                    android:adjustViewBounds="false"
+                                    android:layout_gravity="center" />
+
+                                <TextView
+                                    android:text="@string/details_to_read"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/txt_to_reading"
+                                    android:textSize="20sp"
+                                    android:textColor="@color/black_60"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginRight="2dp"
+                                    android:layout_gravity="center" />
+                            </LinearLayout>
+
                         </LinearLayout>
 
                     </LinearLayout>

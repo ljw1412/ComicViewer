@@ -34,6 +34,7 @@ public class HistoryHolder {
         cv.put("name",history.getComicName());
         cv.put("imageUrl",history.getImgUrl());
         cv.put("isEnd",history.isEnd()?1:0);
+        cv.put("page",history.getPage());
         cv.put("readTime",history.getReadTime());
         if (hasData(history.getComicId())){
             long res = dbHelper.update(tableName,cv,"comicId = ?",new String[]{history.getComicId()});
@@ -65,6 +66,7 @@ public class HistoryHolder {
         cv.put("name",history.getComicName());
         cv.put("imageUrl",history.getImgUrl());
         cv.put("isEnd",history.isEnd()?1:0);
+        cv.put("page",history.getPage());
         cv.put("readTime",history.getReadTime());
         try {
             long res = dbHelper.insert(tableName,cv);
@@ -89,6 +91,7 @@ public class HistoryHolder {
             history.setImgUrl(cursor.getString(cursor.getColumnIndex("imageUrl")));
             history.setEnd(cursor.getInt(cursor.getColumnIndex("isEnd"))==0?false:true);
             history.setReadTime(cursor.getLong(cursor.getColumnIndex("readTime")));
+            history.setPage(cursor.getInt(cursor.getColumnIndex("page")));
             list.add(history);
         }
         return list;
@@ -110,12 +113,21 @@ public class HistoryHolder {
         return dbHelper.query(findQuery,new String[]{comicId}).getCount()>0;
     }
 
-    public synchronized String getReadToChapterId(String comicId){
+    public synchronized History getHistory(String comicId){
+        History history = new History();
         String findQuery = "select * from " + tableName + " where comicId = ?";
         Cursor cursor = dbHelper.query(findQuery,new String[]{comicId});
         if(cursor.getCount()>0){
             cursor.moveToNext();
-            return cursor.getString(cursor.getColumnIndex("chapterId"));
+            history.setComicId(cursor.getString(cursor.getColumnIndex("comicId")));
+            history.setChapterId(cursor.getString(cursor.getColumnIndex("chapterId")));
+            history.setChapterName(cursor.getString(cursor.getColumnIndex("chapterName")));
+            history.setComicName(cursor.getString(cursor.getColumnIndex("name")));
+            history.setImgUrl(cursor.getString(cursor.getColumnIndex("imageUrl")));
+            history.setEnd(cursor.getInt(cursor.getColumnIndex("isEnd"))==0?false:true);
+            history.setReadTime(cursor.getLong(cursor.getColumnIndex("readTime")));
+            history.setPage(cursor.getInt(cursor.getColumnIndex("page")));
+            return history;
         }
         return null;
     }

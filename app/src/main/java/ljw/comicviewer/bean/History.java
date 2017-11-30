@@ -11,6 +11,7 @@ public class History {
     private String chapterId;//章节id
     private String chapterName;//章节名称
     private boolean isEnd;
+	private int page;
     private long readTime;
 
     public String getComicId() {
@@ -61,6 +62,14 @@ public class History {
         isEnd = end;
     }
 
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
     public long getReadTime() {
         return readTime;
     }
@@ -78,6 +87,7 @@ public class History {
                 ", chapterId='" + chapterId + '\'' +
                 ", chapterName='" + chapterName + '\'' +
                 ", isEnd=" + isEnd +
+                ", page=" + page +
                 ", readTime=" + readTime +
                 '}';
     }

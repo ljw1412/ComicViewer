@@ -5,26 +5,27 @@ package ljw.comicviewer.bean;
  */
 
 public class Chapter {
-    private String comic_id;
-    private String chapter_id;
-    private String Chapter_name;
+    private String comicId;
+    private String chapterId;
+    private String ChapterName;
     private int type;//0单行本,1单话，2其他
     private boolean readHere = false;
+    private int page = 1;
 
-    public String getComic_id() {
-        return comic_id;
+    public String getComicId() {
+        return comicId;
     }
 
-    public void setComic_id(String comic_id) {
-        this.comic_id = comic_id;
+    public void setComicId(String comicId) {
+        this.comicId = comicId;
     }
 
-    public String getChapter_id() {
-        return chapter_id;
+    public String getChapterId() {
+        return chapterId;
     }
 
-    public void setChapter_id(String chapter_id) {
-        this.chapter_id = chapter_id;
+    public void setChapterId(String chapter_id) {
+        this.chapterId = chapter_id;
     }
 
     public int getType() {
@@ -35,12 +36,12 @@ public class Chapter {
         this.type = type;
     }
 
-    public String getChapter_name() {
-        return Chapter_name;
+    public String getChapterName() {
+        return ChapterName;
     }
 
-    public void setChapter_name(String chapter_name) {
-        Chapter_name = chapter_name;
+    public void setChapterName(String chapterName) {
+        ChapterName = chapterName;
     }
 
     public boolean isReadHere() {
@@ -51,13 +52,23 @@ public class Chapter {
         this.readHere = readHere;
     }
 
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
     @Override
     public String toString() {
-        return "Chapter:{" +
-                "comic_id='" + comic_id + '\'' +
-                ", chapter_id='" + chapter_id + '\'' +
-                ", Chapter_name='" + Chapter_name + '\'' +
+        return "Chapter{" +
+                "comicId='" + comicId + '\'' +
+                ", chapter_id='" + chapterId + '\'' +
+                ", ChapterName='" + ChapterName + '\'' +
                 ", type=" + type +
+                ", readHere=" + readHere +
+                ", page=" + page +
                 '}';
     }
 }

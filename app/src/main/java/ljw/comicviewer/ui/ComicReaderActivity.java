@@ -63,6 +63,7 @@ public class ComicReaderActivity extends AppCompatActivity {
     private int tryTime = 0, currPos;
     private List<String> imgUrls = new ArrayList<>();
     private boolean isShowTools = true, isScroll = false;
+    Intent intent = new Intent();
     private WebView webView;
     @BindView(R.id.reader_loading_view)
     View view_loading;
@@ -116,7 +117,7 @@ public class ComicReaderActivity extends AppCompatActivity {
         chapter_id = (String) getIntent().getExtras().get("chapter_id");
         chapter_name = (String) getIntent().getExtras().get("chapter_name");
         currPos = (int) getIntent().getExtras().get("position")-1;
-
+        Log.d(TAG, "onCreate: "+currPos);
         //store数据打印
         ComicReadStore.get().printList();
         view_loading.setOnClickListener(null);
@@ -180,7 +181,7 @@ public class ComicReaderActivity extends AppCompatActivity {
         });
         viewPager.setAdapter(picturePagerAdapter);
         viewPager.setOffscreenPageLimit(2);//TODO:之后改为可以设置的
-        viewPager.setCurrentItem(0);//跳页
+        viewPager.setCurrentItem(currPos);//跳页
         initSeekBar();
     }
 
@@ -261,6 +262,7 @@ public class ComicReaderActivity extends AppCompatActivity {
                 updateSeekBar(currPos);
                 setPageText((position+1)+"",picturePagerAdapter.getCount()+"");
                 viewMask.setVisibility(View.GONE);
+                intent.putExtra("page",currPos+1);
             }
 
             private int prePage = -1;
@@ -451,9 +453,9 @@ public class ComicReaderActivity extends AppCompatActivity {
             }
             Chapter toChapter = comicReadStore.getObj().get(index);
             comicReadStore.setCurrentIndex(index);
-            comic_id = toChapter.getComic_id();
-            chapter_id = toChapter.getChapter_id();
-            chapter_name = toChapter.getChapter_name();
+            comic_id = toChapter.getComicId();
+            chapter_id = toChapter.getChapterId();
+            chapter_name = toChapter.getChapterName();
             loadChapter();
         }
     }
@@ -467,7 +469,6 @@ public class ComicReaderActivity extends AppCompatActivity {
     }
 
     private void setHistory(){
-        Intent intent = new Intent();
         intent.putExtra("chapterId",chapter_id);
         intent.putExtra("chapterName",chapter_name);
         setResult(Global.REQUEST_COMIC_HISTORY,intent);

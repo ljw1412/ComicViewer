@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -69,6 +68,7 @@ public class DetailsActivity extends AppCompatActivity
     private Comic comic = new Comic();
     private String comic_id;
     private Map<Integer,ChaptersFragment> chaptersFragment_map = new HashMap<>();//0单行本,1单话，2其他
+    Map<Integer,List<Chapter>> chapterTypeMap = new HashMap<>();
     private int[] fragmentId = {R.id.details_fragment0,R.id.details_fragment1,R.id.details_fragment2};
     private int[] typeTextId = {R.id.detail_type0,R.id.detail_type1,R.id.detail_type2};
     private int TYPE_MAX = 3;
@@ -119,7 +119,17 @@ public class DetailsActivity extends AppCompatActivity
     @BindView(R.id.updateDate)
     LinearLayout view_updateDate;
     @BindView(R.id.btn_add_collection)
-    TextView txtBtn_like;
+    LinearLayout btn_like;
+    @BindView(R.id.icon_collection)
+    ImageView btn_like_icon;
+    @BindView(R.id.txt_add_collection)
+    TextView btn_like_txt;
+    @BindView(R.id.btn_to_reading)
+    LinearLayout btn_read;
+    @BindView(R.id.icon_to_reading)
+    ImageView btn_read_icon;
+    @BindView(R.id.txt_to_reading)
+    TextView btn_read_txt;
     @BindView(R.id.details_coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
     @BindView(R.id.details_authors_view)
@@ -167,33 +177,8 @@ public class DetailsActivity extends AppCompatActivity
         //加载数据
         loadComicInformation();
         updateLikeStatus();
+        updateReadStatus();
 
-
-    }
-    //数据库查询是否已经添加收藏
-    private boolean isLike(){
-        CollectionHolder collectionHolder = new CollectionHolder(this);
-        return collectionHolder.hasComic(comic.getComicId());
-    }
-    //更新界面收藏状态
-    private void updateLikeStatus(){
-        if(isLike()){
-            like = true;
-            Drawable drawable= getDrawable(R.drawable.icon_collection_on);
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            txtBtn_like.setCompoundDrawables(drawable,null,null,null);
-            txtBtn_like.setTextColor(ContextCompat.getColor(context,R.color.star_yellow));
-            txtBtn_like.setBackgroundResource(R.drawable.shape_border_rounded_rectangle_star_color);
-            txtBtn_like.setText(R.string.details_del_collection);
-        }else{
-            like = false;
-            Drawable drawable= getDrawable(R.drawable.icon_collection_off);
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            txtBtn_like.setCompoundDrawables(drawable,null,null,null);
-            txtBtn_like.setTextColor(ContextCompat.getColor(context,R.color.black_60));
-            txtBtn_like.setBackgroundResource(R.drawable.shape_border_rounded_rectangle);
-            txtBtn_like.setText(R.string.details_add_collection);
-        }
     }
 
     private void initListener(){
@@ -227,7 +212,7 @@ public class DetailsActivity extends AppCompatActivity
             }
         });
         //收藏按钮
-        txtBtn_like.setOnClickListener(new View.OnClickListener() {
+        btn_like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
@@ -251,6 +236,13 @@ public class DetailsActivity extends AppCompatActivity
                             R.drawable.icon_crying_face,
                             ContextCompat.getColor(context,R.color.holo_red_light)).show();
                 }
+            }
+        });
+        //阅读按钮
+        btn_read.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                continueReading();
             }
         });
         //简介
@@ -295,7 +287,7 @@ public class DetailsActivity extends AppCompatActivity
     }
 
     private int tryTime = 0;
-    //获得信息
+    //获得章节信息
     public void getChapters(){
         details_container.setRefreshing(true);
         new Handler().postDelayed(new Runnable() {
@@ -328,8 +320,8 @@ public class DetailsActivity extends AppCompatActivity
         }, 1500);
     }
 
-
-    public void setInfoText(LinearLayout parent,TextView textView,String str){
+    //设置界面中的漫画信息文字
+    private void setInfoText(LinearLayout parent,TextView textView,String str){
         if (str != null && !str.equals("")){
             textView.setText(str);
         }else if(parent != null){
@@ -337,6 +329,42 @@ public class DetailsActivity extends AppCompatActivity
         }
     }
 
+    //数据库查询是否已经添加收藏
+    private boolean isLike(){
+        CollectionHolder collectionHolder = new CollectionHolder(this);
+        return collectionHolder.hasComic(comic.getComicId());
+    }
+    //更新界面收藏状态
+    private void updateLikeStatus(){
+        if(isLike()){
+            like = true;
+            btn_like.setBackgroundResource(R.drawable.shape_border_rounded_rectangle_star_color);
+            btn_like_icon.setImageResource(R.drawable.icon_collection_on);
+            btn_like_txt.setTextColor(ContextCompat.getColor(context,R.color.star_yellow));
+            btn_like_txt.setText(R.string.details_del_collection);
+        }else{
+            like = false;
+            btn_like.setBackgroundResource(R.drawable.shape_border_rounded_rectangle);
+            btn_like_icon.setImageResource(R.drawable.icon_collection_off);
+            btn_like_txt.setTextColor(ContextCompat.getColor(context,R.color.black_60));
+            btn_like_txt.setText(R.string.details_add_collection);
+        }
+    }
+
+    private void updateReadStatus(){
+        History history = getHistory();
+        if (history != null){
+            btn_read.setBackgroundResource(R.drawable.shape_border_rounded_rectangle_red_color);
+            btn_read_icon.setImageResource(R.drawable.icon_read_on);
+            btn_read_txt.setTextColor(ContextCompat.getColor(context,R.color.holo_red_light));
+            btn_read_txt.setText(R.string.details_continue_read);
+        }else{
+            btn_read.setBackgroundResource(R.drawable.shape_border_rounded_rectangle);
+            btn_read_icon.setImageResource(R.drawable.icon_read_off);
+            btn_read_txt.setTextColor(ContextCompat.getColor(context,R.color.black_60));
+            btn_read_txt.setText(R.string.details_to_read);
+        }
+    }
     //添加可点击作者
     private void setAuthor(List<Author> authors){
 		//清除authors中所有组件
@@ -378,7 +406,30 @@ public class DetailsActivity extends AppCompatActivity
             view_authors.setVisibility(View.GONE);
         }
     }
-
+    //获取当前漫画历史记录
+    private History getHistory(){
+        HistoryHolder historyHolder = new HistoryHolder(context);
+        return historyHolder.getHistory(comic_id);
+    }
+    //继续阅读（查询所在列表，并模拟点击）
+    private void continueReading(){
+        History history = getHistory();
+        if(history != null){
+            for(int i=0 ; i< TYPE_MAX ; i++){
+                for(int j = 0;j < chapterTypeMap.get(i).size();j++){
+                    if(chapterTypeMap.get(i).get(j).getChapterId().equals(history.getChapterId())){
+                        chaptersFragment_map.get(i).continueReadingClick(j);
+                    }
+                }
+            }
+        }else{
+            for(int i=0 ; i< TYPE_MAX ; i++){
+                if(chapterTypeMap.get(i).size()>0){
+                    chaptersFragment_map.get(i).continueReadingClick(0);
+                }
+            }
+        }
+    }
 
     //网络请求，更新UI
     @Override
@@ -473,6 +524,7 @@ public class DetailsActivity extends AppCompatActivity
         Log.d(TAG, "onActivityResult: requestCode:"+requestCode + "resultCode:"+resultCode);
         switch (resultCode){
             case Global.REQUEST_COMIC_HISTORY:
+                //阅读界面返回后更新阅读情况
                 History history = new History();
                 history.setChapterId(data.getStringExtra("chapterId"));
                 history.setChapterName(data.getStringExtra("chapterName"));
@@ -480,10 +532,12 @@ public class DetailsActivity extends AppCompatActivity
                 history.setImgUrl(comic.getImageUrl());
                 history.setComicId(comic.getComicId());
                 history.setEnd(comic.isEnd());
-//                history.setReadTime(System.currentTimeMillis());
+                history.setPage(data.getIntExtra("page",1));
+                history.setReadTime(System.currentTimeMillis());
                 Log.d(TAG, "onActivityResult: "+history.toString());
                 HistoryHolder historyHolder = new HistoryHolder(context);
                 historyHolder.updateOrAddHistory(history);
+                //刷新章节界面
                 for(int i = 0 ; i<TYPE_MAX ;i++){
                     chaptersFragment_map.get(i).updateChapters();
                 }
@@ -507,15 +561,8 @@ public class DetailsActivity extends AppCompatActivity
                 List<Chapter> cList = new ArrayList<>();
                 map.put(i,cList);
             }
-            //查询历史记录
-            HistoryHolder historyHolder = new HistoryHolder(context);
-            String chapterId = historyHolder.getReadToChapterId(comic_id);
-            Log.d(TAG, "doInBackground: "+chapterId);
             for (Chapter chapter:list) {
                 int type = chapter.getType();
-                if (chapterId!=null && chapter.getChapter_id().equals(chapterId)){
-                    chapter.setReadHere(true);
-                }
                 map.get(type).add(chapter);
             }
             return map;
@@ -528,6 +575,7 @@ public class DetailsActivity extends AppCompatActivity
                 txtError.setVisibility(View.VISIBLE);
                 txtError.setText(R.string.error_comic_chapter_load_fail);
             }else{
+                chapterTypeMap = map;
                 for(int i = 0 ; i<TYPE_MAX ;i++){
                     chaptersFragment_map.get(i).addChapters(map.get(i));
                     chaptersFragment_map.get(i).setComicName(comic.getName());
@@ -535,6 +583,7 @@ public class DetailsActivity extends AppCompatActivity
                         //显示章节类型文字
                         findViewById(typeTextId[i]).setVisibility(View.VISIBLE);
                     }
+                    chaptersFragment_map.get(i).updateChapters();
                 }
             }
         }

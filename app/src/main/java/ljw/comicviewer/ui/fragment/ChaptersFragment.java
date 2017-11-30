@@ -12,11 +12,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Chapter;
+import ljw.comicviewer.bean.History;
 import ljw.comicviewer.db.HistoryHolder;
 import ljw.comicviewer.others.MyGridView;
 import ljw.comicviewer.store.ComicReadStore;
@@ -68,14 +70,28 @@ public class ChaptersFragment extends Fragment  {
             ComicReadStore.get().setCurrentIndex(position);
 
             Chapter chapter = chapters.get(position);
-            Log.d(TAG,"加载章节:"+chapter.getChapter_name());
+            Log.d(TAG,"加载章节:"+chapter.getChapterName());
             Intent intent = new Intent(context,ComicReaderActivity.class);
-            intent.putExtra("comic_id",chapter.getComic_id());
+            intent.putExtra("comic_id",chapter.getComicId());
             intent.putExtra("comic_name",comicName);
-            intent.putExtra("chapter_id",chapter.getChapter_id());
-            intent.putExtra("chapter_name",chapter.getChapter_name());
-            intent.putExtra("position",1);
+            intent.putExtra("chapter_id",chapter.getChapterId());
+            intent.putExtra("chapter_name",chapter.getChapterName());
+            intent.putExtra("position",chapter.getPage());
             startActivityForResult(intent, Global.REQUEST_COMIC_HISTORY);
+        }
+    }
+
+    public void continueReadingClick(int position){
+        HashMap<Integer, View> map = chaptersAdapter.getViewMap();
+        if(map.size()>0){
+//            View view = map.get(position);
+//            if(view!=null){
+            try {
+                grid_chapters_list.performItemClick(null,position,0);
+            } catch (Exception e) {
+                Log.e(TAG, "continueReadingClick: 模拟点击事件异常");
+            }
+//            }
         }
     }
 
@@ -95,12 +111,15 @@ public class ChaptersFragment extends Fragment  {
         if(chapters.size()>0) {
             //查询历史记录
             HistoryHolder historyHolder = new HistoryHolder(context);
-            String chapterId = historyHolder.getReadToChapterId(chapters.get(0).getComic_id());
+            History history = historyHolder.getHistory(chapters.get(0).getComicId());
+            Log.d(TAG, "历史记录: "+(history != null ? history.toString():"还没有看过"));
             for (Chapter chapter : chapters) {
-                if (chapterId != null && chapter.getChapter_id().equals(chapterId)) {
+                if (history != null && chapter.getChapterId().equals(history.getChapterId())) {
                     chapter.setReadHere(true);
+                    chapter.setPage(history.getPage());
                 }else if (chapter.isReadHere()){
                     chapter.setReadHere(false);
+                    chapter.setPage(1);
                 }
             }
             chaptersAdapter.notifyDataSetChanged();

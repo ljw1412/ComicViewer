@@ -21,7 +21,7 @@ public class ChaptersAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private List<Chapter> chapters;
     //用map防止滚动图片位置乱跑
-    private HashMap<Integer, View> viewMap = new HashMap<>();
+    public HashMap<Integer, View> viewMap = new HashMap<>();
 
     public ChaptersAdapter(Context context, List<Chapter> chapters)
     {
@@ -62,13 +62,17 @@ public class ChaptersAdapter extends BaseAdapter {
             convertView = viewMap.get(position);
             chapterViewHolder = (ChapterViewHolder) convertView.getTag();
         }
-        chapterViewHolder.name.setText(chapters.get(position).getChapter_name());
+        chapterViewHolder.name.setText(chapters.get(position).getChapterName());
         if(chapters.get(position).isReadHere()){
             chapterViewHolder.name.setBackgroundResource(R.drawable.shape_border_read_here);
         }else{
             chapterViewHolder.name.setBackgroundResource(R.drawable.shape_border);
         }
         return convertView;
+    }
+
+    public HashMap<Integer, View> getViewMap(){
+        return viewMap;
     }
 
 

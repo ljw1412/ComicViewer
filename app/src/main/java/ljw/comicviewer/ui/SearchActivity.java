@@ -169,6 +169,7 @@ public class SearchActivity extends AppCompatActivity
                     ContextCompat.getColor(context,R.color.smmcl_green));
             snackbar.show();
             tipsView.setVisibility(View.GONE);
+            txt_searchById.setVisibility(View.GONE);
             comics.clear();
             searchListAdapter.notifyDataSetChanged();
             pullToRefreshListView.setFocusableInTouchMode(true);
@@ -213,7 +214,6 @@ public class SearchActivity extends AppCompatActivity
                 comics.addAll((List<Comic>) callbackdata.getObj());
                 if (snackbar.isShown()) snackbar.dismiss();
                 view_loading.setVisibility(View.GONE);
-                txt_searchById.setVisibility(View.GONE);
                 if(comics.size()==0){
                     tipsView.setVisibility(View.VISIBLE);
                 }
