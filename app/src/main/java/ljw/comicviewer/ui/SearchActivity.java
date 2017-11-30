@@ -2,6 +2,7 @@ package ljw.comicviewer.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -209,31 +210,15 @@ public class SearchActivity extends AppCompatActivity
     public void onFinish(Object data, String what) {
         switch (what){
             case Global.REQUEST_COMICS_SEARCH:
-                String html = (String) data;
-                CallBackData callbackdata = ComicFetcher.getSearchResults(html);
-                comics.addAll((List<Comic>) callbackdata.getObj());
-                if (snackbar.isShown()) snackbar.dismiss();
-                view_loading.setVisibility(View.GONE);
-                if(comics.size()==0){
-                    tipsView.setVisibility(View.VISIBLE);
-                }
-                if(maxPage == -1){
-                    maxPage = (int) callbackdata.getArg1();
-                }
-                pullToRefreshListView.onRefreshComplete();
-                pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-                searchListAdapter.notifyDataSetChanged();
-                loading = false;
-                if(curPage == maxPage){
-                    pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
-                }
+                SearchDataTask searchDataTask = new SearchDataTask(data);
+                searchDataTask.execute();
                 break;
         }
     }
 
     @Override
     public void onError(String msg, String what) {
-
+        Log.e(TAG, what+" Error: " + msg);
     }
 
     @Override
@@ -242,6 +227,43 @@ public class SearchActivity extends AppCompatActivity
         if(searchCall!=null && !searchCall.isCanceled()){
             searchCall.cancel();
             Log.d(TAG, "onDestroy: "+"取消网络请求！");
+        }
+    }
+
+    class SearchDataTask extends AsyncTask<Void,Void,Boolean>{
+        private Object data;
+        private CallBackData callbackdata;
+
+        public SearchDataTask(Object data) {
+            this.data = data;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            callbackdata = ComicFetcher.getSearchResults(data.toString());
+            comics.addAll((List<Comic>) callbackdata.getObj());
+            return comics.size()>0;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            view_loading.setVisibility(View.GONE);
+            if (snackbar.isShown()) snackbar.dismiss();
+            if(!aBoolean){
+                tipsView.setVisibility(View.VISIBLE);
+            }
+            if(maxPage == -1){
+                maxPage = (int) callbackdata.getArg1();
+            }
+            pullToRefreshListView.onRefreshComplete();
+            if(curPage >= maxPage){
+                pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
+            }else{
+                pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+            }
+            searchListAdapter.notifyDataSetChanged();
+            loading = false;
         }
     }
 }

@@ -146,11 +146,9 @@ public class ComicGridFragment extends BaseFragment
                 break;
             case SCROLL_STATE_FLING:
                 //屏幕处于滑动状态
-//                Glide.with(context).pauseRequests();//暂停请求
                 break;
             case SCROLL_STATE_IDLE:
                 //停止滑动状态
-//                Glide.with(context).resumeRequests();//重启请求
                 clearAndLoadImage();
                 break;
         }
@@ -259,7 +257,7 @@ public class ComicGridFragment extends BaseFragment
                 }
                 break;
         }
-        Log.e(TAG, "Error: " + msg);
+        Log.e(TAG,what + " Error: " + msg);
     }
 
     public void netErrorTo(){

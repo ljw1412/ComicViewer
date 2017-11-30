@@ -1,6 +1,7 @@
 package ljw.comicviewer.ui;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -132,28 +133,8 @@ public class AuthorComicsActivity extends AppCompatActivity
         switch (what) {
             case Global.REQUEST_AUTHOR_COMICS:
             case Global.REQUEST_COMICS_SEARCH:
-                String html = (String) data;
-                CallBackData callbackdata = ComicFetcher.getSearchResults(html);
-                comics.addAll((List<Comic>) callbackdata.getObj());
-                view_loading.setVisibility(View.GONE);
-                if(maxPage == -1){
-                    maxPage = (int) callbackdata.getArg1();
-                }
-                if(comics.size()==0){
-                    if (!flag){
-                        flag = true;
-                        maxPage = -1;
-                        loadAuthorComics();
-                    }else {
-                        tipsView.setVisibility(View.VISIBLE);
-                    }
-                }
-                pullToRefreshListView.onRefreshComplete();
-                pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-                searchListAdapter.notifyDataSetChanged();
-                if(curPage >= maxPage){
-                    pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
-                }
+                AuthorComicsDataTask authorComicsDataTask = new AuthorComicsDataTask(data);
+                authorComicsDataTask.execute();
                 break;
         }
     }
@@ -178,6 +159,48 @@ public class AuthorComicsActivity extends AppCompatActivity
         if(loadCall!=null && !loadCall.isCanceled()){
             loadCall.cancel();
             Log.d(TAG, "onDestroy: "+"取消网络请求！");
+        }
+    }
+
+    class AuthorComicsDataTask extends AsyncTask<Void,Void,Boolean>{
+        private Object data;
+        private CallBackData callbackdata;
+
+        public AuthorComicsDataTask(Object data) {
+            this.data = data;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            String html = (String) data;
+            callbackdata = ComicFetcher.getSearchResults(html);
+            comics.addAll((List<Comic>) callbackdata.getObj());
+            return comics.size()>0;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            view_loading.setVisibility(View.GONE);
+            if(maxPage == -1){
+                maxPage = (int) callbackdata.getArg1();
+            }
+            if(!aBoolean){
+                if (!flag){
+                    flag = true;
+                    maxPage = -1;
+                    loadAuthorComics();
+                }else {
+                    tipsView.setVisibility(View.VISIBLE);
+                }
+            }
+            pullToRefreshListView.onRefreshComplete();
+            if(curPage >= maxPage){
+                pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
+            }else {
+                pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+            }
+            searchListAdapter.notifyDataSetChanged();
         }
     }
 }

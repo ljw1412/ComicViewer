@@ -541,6 +541,7 @@ public class DetailsActivity extends AppCompatActivity
                 for(int i = 0 ; i<TYPE_MAX ;i++){
                     chaptersFragment_map.get(i).updateChapters();
                 }
+                updateReadStatus();
                 break;
         }
 
