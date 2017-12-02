@@ -9,11 +9,14 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
+import ljw.comicviewer.ui.HomeActivity;
 import ljw.comicviewer.ui.SettingsActivity;
 
 /**
@@ -24,6 +27,10 @@ public class MineFragment extends BaseFragment {
     private Context context;
     @BindView(R.id.layout_my_setting)
     RelativeLayout btn_setting;
+    @BindView(R.id.title)
+    TextView nav_title;
+    @BindView(R.id.nav_btn_search)
+    ImageView nav_btn_search;
 
     public MineFragment() {
     }
@@ -42,7 +49,10 @@ public class MineFragment extends BaseFragment {
 
     @Override
     public void initView() {
-
+        //隐藏搜索按钮
+        nav_btn_search.setVisibility(View.GONE);
+        if(getActivity() instanceof HomeActivity)
+            ((HomeActivity) getActivity()).setTitle(nav_title,R.string.txt_mine);
     }
 
     @Override
@@ -66,4 +76,5 @@ public class MineFragment extends BaseFragment {
         });
 
     }
+
 }

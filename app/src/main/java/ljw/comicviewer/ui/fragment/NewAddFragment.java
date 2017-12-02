@@ -41,9 +41,9 @@ import ljw.comicviewer.util.SnackbarUtil;
  * Created by ljw on 2017-08-23 023.
  */
 
-public class ComicGridFragment extends BaseFragment
+public class NewAddFragment extends BaseFragment
         implements AbsListView.OnScrollListener, ComicService.RequestCallback {
-    private String TAG = ComicGridFragment.class.getSimpleName()+"----";
+    private String TAG = NewAddFragment.class.getSimpleName()+"----";
     private Context context;
     protected PictureGridAdapter pictureGridAdapter;
     List<Comic> comicList = new ArrayList<>();
@@ -60,7 +60,7 @@ public class ComicGridFragment extends BaseFragment
     @BindView(R.id.comic_grid_coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
-    public ComicGridFragment() {
+    public NewAddFragment() {
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ComicGridFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = this.getActivity();
-        View rootView = inflater.inflate(R.layout.fragment_comic_grid,null);
+        View rootView = inflater.inflate(R.layout.fragment_newadd,null);
         ButterKnife.bind(this,rootView);
         initView();
         return rootView;

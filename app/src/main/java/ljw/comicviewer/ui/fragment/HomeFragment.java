@@ -2,19 +2,21 @@ package ljw.comicviewer.ui.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
-import ljw.comicviewer.ui.HomeActivity;
+import ljw.comicviewer.ui.SearchActivity;
 import ljw.comicviewer.ui.adapter.MyFragmentPagerAdapter;
 
 /**
@@ -22,15 +24,18 @@ import ljw.comicviewer.ui.adapter.MyFragmentPagerAdapter;
  */
 public class HomeFragment extends BaseFragment{
     private String TAG = getClass().getSimpleName()+"----";
-    HomeActivity context;
-
-    @BindView(R.id.home_fragment_viewPager)
-    ViewPager viewPager;
-    ComicGridFragment comicGridFragment;
+    Context context;
+    NewAddFragment newAddFragment;
     UpdateFragment updateFragment;
     CategoryFragment categoryFragment;
     BaseFragment currentFragment;
     MyFragmentPagerAdapter myFragmentPagerAdapter;
+    @BindView(R.id.home_fragment_viewPager)
+    ViewPager viewPager;
+    @BindView(R.id.tabLayout)
+    TabLayout tabLayout;
+    @BindView(R.id.nav_btn_search)
+    ImageView btn_search;
 
     public HomeFragment() {
     }
@@ -40,10 +45,11 @@ public class HomeFragment extends BaseFragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        context = (HomeActivity) getActivity();
+        context = getActivity();
         ButterKnife.bind(this,view);
+        initLoad();
         initView();
-
+        addListener();
         return view;
     }
 
@@ -55,6 +61,7 @@ public class HomeFragment extends BaseFragment{
     @Override
     public void initView() {
         initViewPager();
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     //采用了当界面处于当前页时加载并缓存页面
@@ -64,13 +71,13 @@ public class HomeFragment extends BaseFragment{
         viewPager.setAdapter(myFragmentPagerAdapter);
         viewPager.setOffscreenPageLimit(3);
 
-        comicGridFragment = new ComicGridFragment();
+        newAddFragment = new NewAddFragment();
         updateFragment = new UpdateFragment();
         categoryFragment = new CategoryFragment();
 
-        myFragmentPagerAdapter.addFragment(comicGridFragment);
-        myFragmentPagerAdapter.addFragment(updateFragment);
-        myFragmentPagerAdapter.addFragment(categoryFragment);
+        myFragmentPagerAdapter.addFragment(newAddFragment,getString(R.string.opt_new));
+        myFragmentPagerAdapter.addFragment(updateFragment,getString(R.string.opt_update));
+        myFragmentPagerAdapter.addFragment(categoryFragment,getString(R.string.opt_category));
 
         currentFragment = myFragmentPagerAdapter.getItem(0);
         myFragmentPagerAdapter.setLoaded(0);
@@ -80,9 +87,18 @@ public class HomeFragment extends BaseFragment{
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
             @Override
             public void onPageSelected(int position) {
-                context.changeToolBarOption(position);
                 currentFragment = myFragmentPagerAdapter.getItem(position);
                 loadFragment(position);
+            }
+        });
+    }
+
+    public void addListener(){
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context,SearchActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -91,10 +107,6 @@ public class HomeFragment extends BaseFragment{
         if (!myFragmentPagerAdapter.isLoaded(position)){
             myFragmentPagerAdapter.loadFragment(position,currentFragment);
         }
-    }
-
-    public void setPagePosition(int position){
-        viewPager.setCurrentItem(position);
     }
 
 }

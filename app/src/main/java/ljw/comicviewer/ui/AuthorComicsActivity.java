@@ -109,7 +109,7 @@ public class AuthorComicsActivity extends AppCompatActivity
         searchListAdapter = new SearchListAdapter(context,comics);
         listview.setAdapter(searchListAdapter);
 //        listview.setOnScrollListener(this);
-//        listview.setOnItemClickListener(new ComicGridFragment.ItemClickListener());
+//        listview.setOnItemClickListener(new NewAddFragment.ItemClickListener());
         searchListAdapter.notifyDataSetChanged();
     }
 

@@ -1,7 +1,8 @@
 {
 	"host":"http://www.manhuagui.com",
-	"domain":".manhuagui.com",
 	"imghost":"http://i.hamreus.com:8080",
+	"domain":".manhuagui.com",
+	"cookie":"country=US",
 	"list":{
 		"url":"/list/",
 		"cssQuery":{
@@ -47,6 +48,7 @@
 	},
 	"details_page":{
 		"url":"/comic/",
+		"wv-js":"document.getElementsByTagName('html')[0].outerHTML;",
 		"cssQuery":{
 			"comic-name":"$('.book-title h1').text()",
 			"comic-image-url":"$('.hcover img').attr('src').match('http[s]{0,1}:.+.(?:jpg|jpeg|png|gif|bmp)')[0]",

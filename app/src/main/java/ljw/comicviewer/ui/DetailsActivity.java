@@ -20,6 +20,7 @@ import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -74,6 +75,7 @@ public class DetailsActivity extends AppCompatActivity
     private int TYPE_MAX = 3;
     private boolean like = false;
     Call call_loadComicInformation;
+    private RuleStore ruleStore;
     @BindView(R.id.details_scroll_container)
     SwipeRefreshLayout details_container;
     @BindView(R.id.details_cover)
@@ -175,6 +177,7 @@ public class DetailsActivity extends AppCompatActivity
         comic.setScore(score);
 
         //加载数据
+        ruleStore = RuleStore.get();
         loadComicInformation();
         updateLikeStatus();
         updateReadStatus();
@@ -293,29 +296,34 @@ public class DetailsActivity extends AppCompatActivity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                webview.evaluateJavascript("document.getElementsByTagName('html')[0].outerHTML;", new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String s) {
-                        if (s.equals("null")){
-                            //加载失败
-                            if(tryTime>=5){
+                String js = ruleStore.getDetailsRule().get("wv-js");
+                if(js!=null) {
+                    webview.evaluateJavascript(js, new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String s) {
+                            if (s.equals("null")) {
+                                //加载失败
+                                if (tryTime >= 5) {
+                                    details_container.setRefreshing(false);
+                                    txtError.setVisibility(View.VISIBLE);
+                                    Log.d(TAG, "debug:第" + tryTime + "重连");
+                                } else {
+                                    tryTime++;
+                                    getChapters();
+                                }
+                            } else {
+                                s = DisplayUtil.unicodeDecode(s).replace("\\\"", "\"");
+                                Log.d(TAG, "onReceiveValue: " + s);
                                 details_container.setRefreshing(false);
-                                txtError.setVisibility(View.VISIBLE);
-                                Log.d(TAG,"debug:第"+tryTime+"重连");
-                            }else{
-                                tryTime++;
-                                getChapters();
+                                ComicFetcher.getComicChapters(s, comic);
+                                new ChaptersDistributeTask(comic.getChapters()).execute();
+                                return;
                             }
-                        }else{
-                            s=DisplayUtil.unicodeDecode(s).replace("\\\"","\"");
-                            Log.d(TAG, "onReceiveValue: "+s);
-                            details_container.setRefreshing(false);
-                            ComicFetcher.getComicChapters(s,comic);
-                            new ChaptersDistributeTask(comic.getChapters()).execute();
-                            return;
                         }
-                    }
-                });
+                    });
+                }else{
+                    onError("js is null","Details");
+                }
             }
         }, 1500);
     }
@@ -346,7 +354,7 @@ public class DetailsActivity extends AppCompatActivity
             like = false;
             btn_like.setBackgroundResource(R.drawable.shape_border_rounded_rectangle);
             btn_like_icon.setImageResource(R.drawable.icon_collection_off);
-            btn_like_txt.setTextColor(ContextCompat.getColor(context,R.color.black_60));
+            btn_like_txt.setTextColor(ContextCompat.getColor(context,R.color.white));
             btn_like_txt.setText(R.string.details_add_collection);
         }
     }
@@ -361,7 +369,7 @@ public class DetailsActivity extends AppCompatActivity
         }else{
             btn_read.setBackgroundResource(R.drawable.shape_border_rounded_rectangle);
             btn_read_icon.setImageResource(R.drawable.icon_read_off);
-            btn_read_txt.setTextColor(ContextCompat.getColor(context,R.color.black_60));
+            btn_read_txt.setTextColor(ContextCompat.getColor(context,R.color.white));
             btn_read_txt.setText(R.string.details_to_read);
         }
     }
@@ -455,9 +463,6 @@ public class DetailsActivity extends AppCompatActivity
                 setInfoText(instruction,txt_info,comic.getInfo());
                 setAuthor(comic.getAuthors());
                 new ChaptersDistributeTask(comic.getChapters()).execute();
-                //默认焦点为顶部图片，防止滚轮不置顶
-                img_cover.setFocusableInTouchMode(true);
-                img_cover.requestFocus();
                 //显示详细界面
                 viewMain.setVisibility(View.VISIBLE);
                 txtError.setVisibility(View.GONE);
@@ -468,10 +473,13 @@ public class DetailsActivity extends AppCompatActivity
                     bottomDialog.setClickOK(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Log.d(TAG, "onCreate: "+ WebViewUtil.syncCookie(context,RuleStore.get().getDomain(),"country=US"));
+                            if (ruleStore.getCookie()!=null) {
+                                //设置cookie
+                                Log.d(TAG, "onCreate: " + WebViewUtil.syncCookie(context, RuleStore.get().getDomain(), ruleStore.getCookie()));
+                            }
                             webview.getSettings().setJavaScriptEnabled(true);
                             webview.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
-                            webview.loadUrl(RuleStore.get().getHost()+"/comic/"+comic_id+"/");
+                            webview.loadUrl(ruleStore.getHost()+ruleStore.getDetailsRule().get("url")+comic_id+"/");
                             webview.setWebViewClient(new MyWebView());
                             getChapters();
                             bottomDialog.dismiss();

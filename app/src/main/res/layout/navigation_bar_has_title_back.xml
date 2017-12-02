@@ -18,23 +18,26 @@
         android:onClick="onBack"
         android:layout_width="48.0dp"
         android:elevation="1dp"
-        app:srcCompat="@drawable/img_back"
-        android:alpha="0.5" />
+        app:srcCompat="@drawable/img_back_white"
+        android:alpha="0.75" />
 
     <TextView
         android:id="@+id/title"
-        android:ellipsize="marquee"
-        android:gravity="center"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:gravity="center"
         android:text="title"
         android:textSize="18sp"
         android:singleLine="true"
+        android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:textStyle="normal|bold"
         android:layout_marginLeft="48dp"
-        android:layout_marginRight="48dp" />
+        android:layout_marginRight="48dp"
+        android:textColor="@color/white" />
 
 </RelativeLayout>

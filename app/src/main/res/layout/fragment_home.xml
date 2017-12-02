@@ -1,14 +1,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ljw.comicviewer.ui.fragment.HomeFragment">
 
 
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/navigation_bar_home_tab_search"
+        android:id="@+id/home_bar" />
+
     <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/home_fragment_viewPager">
+        android:id="@+id/home_fragment_viewPager"
+        android:layout_below="@id/home_bar">
     </android.support.v4.view.ViewPager>
 
 </RelativeLayout>

@@ -22,6 +22,7 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
     private FragmentManager mFragmentManager;
     private List<BaseFragment> fragments;
     private List<Boolean> loaded;
+    private List<String> pageTitles = new ArrayList<>();
 
     public MyFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -45,6 +46,12 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
         loaded.add(false);
     }
 
+    public void addFragment(BaseFragment fragment,String pageTitle){
+        fragments.add(fragment);
+        pageTitles.add(pageTitle);
+        loaded.add(false);
+    }
+
     public void loadFragment(int position,BaseFragment fragment){
         fragment.initLoad();
         loaded.set(position,true);
@@ -56,5 +63,10 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public boolean isLoaded(int position){
         return loaded.get(position);
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return pageTitles.get(position);
     }
 }

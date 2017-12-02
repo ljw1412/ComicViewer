@@ -215,7 +215,7 @@
                                     android:layout_height="wrap_content"
                                     android:id="@+id/txt_add_collection"
                                     android:textSize="20sp"
-                                    android:textColor="@color/black_60"
+                                    android:textColor="@color/white"
                                     android:layout_marginLeft="2dp"
                                     android:layout_marginRight="2dp"
                                     android:layout_gravity="center" />
@@ -245,7 +245,7 @@
                                     android:layout_height="wrap_content"
                                     android:id="@+id/txt_to_reading"
                                     android:textSize="20sp"
-                                    android:textColor="@color/black_60"
+                                    android:textColor="@color/white"
                                     android:layout_marginLeft="2dp"
                                     android:layout_marginRight="2dp"
                                     android:layout_gravity="center" />

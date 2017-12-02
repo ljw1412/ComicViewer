@@ -75,6 +75,11 @@ public class RuleParser {
         ruleStore.setImgHost(imghost==null ? null : imghost.toString());
     }
 
+    private void parseCookie(){
+        Object cookie = jsonObject.get("cookie");
+        ruleStore.setCookie(cookie==null ? null : cookie.toString());
+    }
+
     private void parseListPage(){
         if(ruleStr == null)
             throw new NullPointerException("规则没有定义！");
@@ -110,6 +115,9 @@ public class RuleParser {
         JSONObject list = jsonObject.getJSONObject(key);
         if(list.get("url")!=null)
             map.put("url",list.get("url").toString());
+        if(list.get("wv-js")!=null){
+            map.put("wv-js",list.get("wv-js").toString());
+        }
         JSONObject cssQuery = list.getJSONObject("cssQuery");
         for(Object k: cssQuery.keySet()){
             map.put(k.toString(),cssQuery.get(k).toString());

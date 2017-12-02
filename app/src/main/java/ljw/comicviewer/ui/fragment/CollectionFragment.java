@@ -31,6 +31,7 @@ import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.db.CollectionHolder;
 import ljw.comicviewer.ui.DetailsActivity;
+import ljw.comicviewer.ui.HomeActivity;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
 
 /**
@@ -38,7 +39,7 @@ import ljw.comicviewer.ui.adapter.PictureGridAdapter;
  */
 public class CollectionFragment extends BaseFragment
         implements AbsListView.OnScrollListener{
-    private String TAG = ComicGridFragment.class.getSimpleName()+"----";
+    private String TAG = NewAddFragment.class.getSimpleName()+"----";
     private Context context;
     private List<Comic> comics = new ArrayList<>();
     private List<Comic> allComics;
@@ -52,6 +53,8 @@ public class CollectionFragment extends BaseFragment
     TextView txt_netError;
     @BindView(R.id.grid_loading)
     RelativeLayout loading;
+    @BindView(R.id.title)
+    TextView nav_title;
 
     public CollectionFragment() {}
 
@@ -62,7 +65,7 @@ public class CollectionFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_comic_grid, container, false);
+        View view = inflater.inflate(R.layout.fragment_collection, container, false);
         ButterKnife.bind(this,view);
         context = getActivity();
         initView();
@@ -122,7 +125,8 @@ public class CollectionFragment extends BaseFragment
         comics.clear();
         CollectionHolder collectionHolder = new CollectionHolder(context);
         allComics = collectionHolder.getComics();
-        getActivity().setTitle(getString(R.string.txt_collection)+"("+allComics.size()+")");
+        if (getActivity() instanceof HomeActivity)
+            ((HomeActivity) getActivity()).setTitle(nav_title,getString(R.string.txt_collection)+"("+allComics.size()+")");
         maxPage = allComics.size() % 20 > 0 ? (allComics.size() / 20 + 1) : allComics.size() / 20;
         add20(currentPage);
         loading.setVisibility(View.GONE);

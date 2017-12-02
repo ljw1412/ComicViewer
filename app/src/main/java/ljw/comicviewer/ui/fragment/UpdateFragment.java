@@ -4,12 +4,10 @@ package ljw.comicviewer.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
@@ -17,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ljw.comicviewer.Global;
-import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
@@ -26,8 +23,8 @@ import ljw.comicviewer.ui.adapter.PictureGridAdapter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UpdateFragment extends ComicGridFragment{
-    private String TAG = ComicGridFragment.class.getSimpleName()+"----";
+public class UpdateFragment extends NewAddFragment {
+    private String TAG = NewAddFragment.class.getSimpleName()+"----";
     private Context context;
     private List<Comic> allList = new ArrayList<>();
     private int loadPage = 1;

@@ -12,6 +12,7 @@ public class RuleStore {
     private static RuleStore ruleStore = null;
     private String host;
     private String domain;
+    private String cookie;
     private String imgHost;
     private String currentRule;
     private Map<String,List<Map<String,String>>> typeRule;
@@ -44,6 +45,14 @@ public class RuleStore {
 
     public void setDomain(String domain) {
         this.domain = domain;
+    }
+
+    public String getCookie() {
+        return cookie;
+    }
+
+    public void setCookie(String cookie) {
+        this.cookie = cookie;
     }
 
     public String getImgHost() {

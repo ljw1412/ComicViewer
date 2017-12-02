@@ -44,7 +44,7 @@
     <!--详细页中文字字体-->
     <style name="details_font">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/black_60</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:paddingLeft">1dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -96,5 +96,11 @@
     <style name="read_viewer_text">
         <item name="android:maxLines">1</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="home_bar_tab_text_font">
+        <item name="android:textSize">@dimen/toolbar_font_size</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:maxLines">1</item>
     </style>
 </resources>

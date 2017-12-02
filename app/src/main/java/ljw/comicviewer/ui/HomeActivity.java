@@ -42,7 +42,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private MineFragment mineFragment;
     private FragmentManager fragmentManager;
     private CollectionFragment collectionFragment;
-
     @BindView(R.id.goto_comic)
     LinearLayout myBtn_comic;
     @BindView(R.id.goto_collection)
@@ -55,15 +54,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     ImageView img_collection;
     @BindView(R.id.img_mine)
     ImageView img_mine;
-
-    @BindView(R.id.nav_bar_default)
-    View nav_def;
-    @BindView(R.id.title)
-    TextView nav_title;
-    @BindView(R.id.nav_btn_search)
-    ImageView btnSearch;
-    @BindView(R.id.nav_bar_tabs)
-    LinearLayout nav_Tabs;
     @BindView(R.id.home_coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
@@ -88,9 +78,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         img_comic.setSelected(true);
 
         initRuleStore();
-        changeTitleBar();
-        setToolBarClick();
-        changeToolBarOption(0);
     }
 
     private void initRuleStore(){
@@ -146,60 +133,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    //更新顶部导航栏
-    private void changeTitleBar(){
-        if(img_comic.isSelected()){
-            nav_Tabs.setVisibility(View.VISIBLE);
-            nav_title.setVisibility(View.GONE);
-        }else if(img_collection.isSelected() || img_mine.isSelected()){
-            nav_Tabs.setVisibility(View.GONE);
-            nav_title.setVisibility(View.VISIBLE);
-        }
-    }
-
     //设置内容和顶部导航栏
     public void setContent(Fragment fragment){
         if(currentFragment == fragment) return;
-        btnSearch.setVisibility(View.VISIBLE);
-        if(fragment instanceof HomeFragment){
-            setTitle("");
-        }else if(fragment instanceof CollectionFragment){
-            setTitle(R.string.txt_collection);
-        }else if(fragment instanceof MineFragment){
-            setTitle(R.string.txt_mine);
-            btnSearch.setVisibility(View.GONE);
-        }
         setCurrentFragment(fragment);
-        changeTitleBar();
-    }
-
-    //标题栏界面更新相关
-    private int[] tabIds = {R.id.option1,R.id.option2,R.id.option3};
-    public void changeToolBarOption(int position){
-        for(int i = 0 ; i < tabIds.length ; i++){
-            TextView tabText = (TextView) findViewById(tabIds[i]);
-            tabText.setTextColor(Color.WHITE);
-        }
-        ((TextView) findViewById(tabIds[position])).setTextColor(ContextCompat.getColor(context,R.color.green));
-    }
-
-    //设置标题栏点击事件
-    public void setToolBarClick(){
-        for(int i = 0 ; i < tabIds.length ; i++){
-            TextView tabText = (TextView) findViewById(tabIds[i]);
-            final int finalI = i;
-            tabText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    changeToolBarOption(finalI);
-                    homeFragment.setPagePosition(finalI);
-                }
-            });
-        }
     }
 
     //点击事件
-    @OnClick({R.id.goto_comic,R.id.goto_collection,R.id.goto_mine,R.id.nav_btn_search})
+    @OnClick({R.id.goto_comic,R.id.goto_collection,R.id.goto_mine})
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -221,21 +162,15 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 setContent(mineFragment);
                 break;
-            case R.id.nav_btn_search:
-                Intent intent = new Intent(context,SearchActivity.class);
-                startActivity(intent);
-                break;
         }
     }
 
-    @Override
-    public void setTitle(CharSequence title) {
-        nav_title.setText(title);
+    //修改标题给该activity的fragment用的
+    public void setTitle(TextView textView,CharSequence title) {
+        textView.setText(title);
     }
-
-    @Override
-    public void setTitle(int titleId) {
-        nav_title.setText(getString(titleId));
+    public void setTitle(TextView textView,int titleId) {
+        textView.setText(getString(titleId));
     }
 
     //点击两次返回退出相关对象

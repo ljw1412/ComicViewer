@@ -65,6 +65,7 @@ public class ComicReaderActivity extends AppCompatActivity {
     private boolean isShowTools = true, isScroll = false;
     Intent intent = new Intent();
     private WebView webView;
+    private RuleStore ruleStore;
     @BindView(R.id.reader_loading_view)
     View view_loading;
     @BindView(R.id.load_fail)
@@ -120,6 +121,7 @@ public class ComicReaderActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: "+currPos);
         //store数据打印
         ComicReadStore.get().printList();
+        ruleStore = RuleStore.get();
         view_loading.setOnClickListener(null);
         initWebView();
         setTime();
@@ -128,11 +130,14 @@ public class ComicReaderActivity extends AppCompatActivity {
 
     private void initWebView(){
         //破解屏蔽
-        WebViewUtil.syncCookie(context, RuleStore.get().getDomain(),"country=US");
+        if (ruleStore.getCookie()!=null) {
+            //设置cookie
+            WebViewUtil.syncCookie(context, RuleStore.get().getDomain(), ruleStore.getCookie());
+        }
         webView = new WebView(this);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
-        webView.loadUrl(RuleStore.get().getHost()+"/comic/"+comic_id+"/"+chapter_id+"/");
+        webView.loadUrl(ruleStore.getHost()+ruleStore.getDetailsRule().get("url")+comic_id+"/"+chapter_id+"/");
         webView.setWebViewClient(new MyWebView());
         getInfo();
     }
@@ -306,7 +311,7 @@ public class ComicReaderActivity extends AppCompatActivity {
 
     //获得漫画章节信息
     public void getInfo(){
-        setHistory();
+        setHistory();//TODO:准备规则化
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -462,7 +467,7 @@ public class ComicReaderActivity extends AppCompatActivity {
 
     private void loadChapter(){
         view_loading.setVisibility(View.VISIBLE);
-        webView.loadUrl(RuleStore.get().getHost()+"/comic/"+comic_id+"/"+chapter_id+"/");
+        webView.loadUrl(RuleStore.get().getHost()+ruleStore.getDetailsRule().get("url")+comic_id+"/"+chapter_id+"/");
         imgUrls.clear();
         currPos = 0;
         getInfo();

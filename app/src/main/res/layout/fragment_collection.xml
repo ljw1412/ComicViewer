@@ -4,19 +4,22 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.CollectionFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <Button
-        android:text="Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/dbtestbtn"
-        android:layout_alignParentLeft="false"
-        android:layout_alignParentRight="true" />
 
-    <TextView
+    <include
+        android:id="@+id/collection_bar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        layout="@layout/navigation_bar_default" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="收藏页"
-        android:id="@+id/dbtest" />
+        android:layout_below="@id/collection_bar">
+
+        <include
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/comic_grid"/>
+    </RelativeLayout>
 
 </RelativeLayout>
