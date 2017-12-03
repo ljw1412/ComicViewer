@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:fabSize="mini"
         app:srcCompat="@drawable/img_arrow2top"
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/newAdd_btn_toTop"
         android:layout_marginRight="5dp"
         android:clickable="true"
         app:backgroundTint="@color/holo_red_light"

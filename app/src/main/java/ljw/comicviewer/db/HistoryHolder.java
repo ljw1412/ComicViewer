@@ -17,6 +17,7 @@ import ljw.comicviewer.bean.History;
  */
 
 public class HistoryHolder {
+    private String TAG = this.getClass().getSimpleName()+"----";
     private final static String tableName = "history";
     private DBHelper dbHelper;
 
@@ -38,7 +39,7 @@ public class HistoryHolder {
         cv.put("readTime",history.getReadTime());
         if (hasData(history.getComicId())){
             long res = dbHelper.update(tableName,cv,"comicId = ?",new String[]{history.getComicId()});
-            Log.d("----", "updateOrAddHistory: "+(res== -1 ? "更新失败" : "更新成功"));
+            Log.d(TAG, "updateOrAddHistory: "+(res== -1 ? "更新失败" : "更新成功"));
             return res;
         }else{
             return addHistory(cv);
@@ -49,7 +50,7 @@ public class HistoryHolder {
         if (cv == null) return -1;
         try {
             long res = dbHelper.insert(tableName,cv);
-            Log.d("----", "addHistory: "+(res==-1?"插入失败":"插入成功"));
+            Log.d(TAG, "addHistory: "+(res==-1?"插入失败":"插入成功"));
             return res;
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,7 +71,7 @@ public class HistoryHolder {
         cv.put("readTime",history.getReadTime());
         try {
             long res = dbHelper.insert(tableName,cv);
-            Log.d("----", "addHistory: "+(res==-1?"插入失败":"插入成功"));
+            Log.d(TAG, "addHistory: "+(res==-1?"插入失败":"插入成功"));
             return res;
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,7 +82,7 @@ public class HistoryHolder {
     public synchronized List<History> getHistories(){
         List<History> list = new ArrayList<>();
         Cursor cursor = dbHelper.query("select * from "+tableName);
-        Log.d("----", "getHistories: "+cursor.getCount());
+        Log.d(TAG, "getHistories: "+cursor.getCount());
         while (cursor.moveToNext()){
             History history = new History();
             history.setComicId(cursor.getString(cursor.getColumnIndex("comicId")));
@@ -109,8 +110,8 @@ public class HistoryHolder {
         String findQuery = "select * from " + tableName + " where comicId = ?";
         Cursor cursor = dbHelper.query(findQuery,new String[]{comicId});
         long size = cursor.getCount();
-        Log.d("----", "hasData: "+size);
-        return dbHelper.query(findQuery,new String[]{comicId}).getCount()>0;
+        Log.d(TAG, "hasData: "+size);
+        return size>0;
     }
 
     public synchronized History getHistory(String comicId){

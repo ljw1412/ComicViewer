@@ -51,5 +51,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.8.1'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
+    compile 'com.github.bumptech.glide:okhttp3-integration:4.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }

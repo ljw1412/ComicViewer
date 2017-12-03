@@ -114,16 +114,13 @@ public class DBHelper {
                     "`comicId`,`name`,`imageUrl`,`score`,`updateDate`,`updateStatus`,`isEnd`,`tag`,`comeFrom`)");
             db.execSQL("CREATE TABLE `history`(`id` integer primary key autoincrement," +
                     "`comicId`,`name`,`imageUrl`,`isEnd`,`chapterId`,`chapterName`,`readTime`,`page`)");
+            db.execSQL("CREATE TABLE `rule`(`id` integer primary key autoincrement," +
+                    "`name`,`rule` text)");
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.d(TAG, "onUpgrade: oldVersion=" + oldVersion + " newVersion=" + newVersion);
-            if (newVersion == 1){
-                db.execSQL("DROP TABLE `history`;");
-                db.execSQL("CREATE TABLE `history`(`id` integer primary key autoincrement," +
-                        "`comicId`,`name`,`imageUrl`,`isEnd`,`chapterId`,`chapterName`,`readTime`)");
-            }
         }
     }
 }

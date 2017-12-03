@@ -1,8 +1,11 @@
 package ljw.comicviewer.http;
 
+import android.content.Context;
+
 import ljw.comicviewer.Global;
 import ljw.comicviewer.bean.CallBackData;
 import ljw.comicviewer.store.RuleStore;
+import ljw.comicviewer.util.StoreUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

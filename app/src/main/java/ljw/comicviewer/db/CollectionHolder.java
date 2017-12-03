@@ -15,6 +15,7 @@ import ljw.comicviewer.bean.Comic;
  */
 
 public class CollectionHolder {
+    private String TAG = this.getClass().getSimpleName()+"----";
     private final static String tableName = "collection";
     private DBHelper dbHelper;
 
@@ -38,7 +39,7 @@ public class CollectionHolder {
         contentValues.put("tag",comic.getTag());
         try {
             long res = dbHelper.insert(tableName,contentValues);
-            Log.d("----", "addCollection: "+(res==-1?"插入失败":"插入成功"));
+            Log.d(TAG, "addCollection: "+(res==-1?"插入失败":"插入成功"));
             return res;
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,7 +51,7 @@ public class CollectionHolder {
         List<Comic> comics = new ArrayList<>();
 
         Cursor cursor = dbHelper.query("select * from "+tableName);
-        Log.d("----", "getComics: "+cursor.getCount());
+        Log.d(TAG, "getComics: "+cursor.getCount());
         while (cursor.moveToNext()){
             Comic comic = new Comic();
             comic.setComicId(cursor.getString(cursor.getColumnIndex("comicId")));
@@ -74,6 +75,6 @@ public class CollectionHolder {
 
     public synchronized void deleteComic(String comicId){
         long res = dbHelper.delete(tableName,"`comicId` = ?",new String[]{comicId});
-        Log.d("----", "addCollection: 成功删除"+res+"条记录");
+        Log.d(TAG, "addCollection: 成功删除"+res+"条记录");
     }
 }

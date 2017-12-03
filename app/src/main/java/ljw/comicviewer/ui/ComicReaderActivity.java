@@ -349,7 +349,7 @@ public class ComicReaderActivity extends AppCompatActivity {
         }, 1500);
     }
 
-    public void loadImage(final String url, final Object viewHolder,int position){
+    public void loadImage(final String url, final Object viewHolder, int position){
         final PhotoView pic = ((PicturePagerAdapter.PictureViewHolder) viewHolder).ivPicture;
         final PhotoViewAttacher mAttacher = new PhotoViewAttacher(pic);
         //记录下标与PhotoViewAttacher的关系用于回收资源
@@ -357,11 +357,10 @@ public class ComicReaderActivity extends AppCompatActivity {
         final AreaClickHelper areaClickHelper = viewPager.getAreaClickHelper();
 
         RequestOptions options = new RequestOptions();
-
         Glide.with(context)
                 .asBitmap()
                 .load(new GlideUrl(url
-                        ,new LazyHeaders.Builder().addHeader("Referer",RuleStore.get().getHost()).build()
+                        ,new LazyHeaders.Builder().addHeader("Referer",ruleStore.getHost()).build()
                 )).into(new BitmapImageViewTarget(pic){
             @Override
             public void onLoadStarted(@Nullable Drawable placeholder) {

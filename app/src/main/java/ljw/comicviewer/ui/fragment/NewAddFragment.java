@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,6 +58,8 @@ public class NewAddFragment extends BaseFragment
     TextView txt_netError;
     @BindView(R.id.grid_loading)
     RelativeLayout loading;
+    @BindView(R.id.newAdd_btn_toTop)
+    FloatingActionButton btn_toTop;
     @BindView(R.id.comic_grid_coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
@@ -81,14 +84,13 @@ public class NewAddFragment extends BaseFragment
     public void initView() {
         //禁用上拉下拉
         pullToRefreshGridView.setMode(PullToRefreshBase.Mode.DISABLED);
-        initPTRGridView();
         initGridView();
+        addListener();
         myCache = context.getExternalCacheDir();
-
         initLoad();
     }
 
-    public void initPTRGridView() {
+    public void addListener() {
         // 设置监听器，这个监听器是可以监听双向滑动的，这样可以触发不同的事件
         pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
             @Override
@@ -109,14 +111,19 @@ public class NewAddFragment extends BaseFragment
                 Log.d(TAG,"load next page; currentLoadingPage = "+loadedPage);
             }
         });
+        //悬浮回到顶部按钮
+        btn_toTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(gridView != null && comicList.size()>0){
+                    gridView.smoothScrollToPosition(0);
+                }
+            }
+        });
     }
 
     public void initGridView() {
         gridView = pullToRefreshGridView.getRefreshableView();
-
-        //根据屏幕宽度设置列数
-//        int columns = DisplayUtil.getGridNumColumns(context,120);
-//        gridView.setNumColumns(columns);
 
         pictureGridAdapter = new PictureGridAdapter(context,comicList);
         gridView.setAdapter(pictureGridAdapter);
@@ -133,6 +140,7 @@ public class NewAddFragment extends BaseFragment
 
     //获得漫画列表对象并存入comicList
     public void getListItems(int page){
+        btn_toTop.setVisibility(View.GONE);
         ComicService.get().getListItems(this,page);
     }
 
@@ -146,6 +154,7 @@ public class NewAddFragment extends BaseFragment
                 break;
             case SCROLL_STATE_FLING:
                 //屏幕处于滑动状态
+
                 break;
             case SCROLL_STATE_IDLE:
                 //停止滑动状态
@@ -220,6 +229,7 @@ public class NewAddFragment extends BaseFragment
                     pullToRefreshGridView.onRefreshComplete();
                     txt_netError.setVisibility(View.GONE);
                     loading.setVisibility(View.GONE);
+                    btn_toTop.setVisibility(View.VISIBLE);
                     pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
                     isLoadingNext = false;
                     clearAndLoadImage();

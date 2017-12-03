@@ -32,6 +32,7 @@ import ljw.comicviewer.ui.fragment.HomeFragment;
 import ljw.comicviewer.ui.fragment.MineFragment;
 import ljw.comicviewer.util.FileUtil;
 import ljw.comicviewer.util.SnackbarUtil;
+import ljw.comicviewer.util.StoreUtil;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -77,18 +78,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         //默认漫画标签
         img_comic.setSelected(true);
 
-        initRuleStore();
+        //初始化ruleStore
+        StoreUtil.initRuleStore(context);
     }
 
-    private void initRuleStore(){
-        String rule = FileUtil.readJson(context);
-        RuleStore.get().setCurrentRule(rule.equals("fail") ? null : rule);
-        if(RuleStore.get().getCurrentRule()!=null){
-            RuleParser.get().parseAll();
-        }else{
-            throw new RuntimeException("初始化失败");
-        }
-    }
 
     //隐藏所有的fragment
     private void hideAllFragment(FragmentTransaction ft){

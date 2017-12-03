@@ -39,12 +39,12 @@ public class UpdateFragment extends NewAddFragment {
     public void initView() {
         //禁用上拉下拉
         pullToRefreshGridView.setMode(PullToRefreshBase.Mode.DISABLED);
-        initPTRGridView();
+        addListener();
         initGridView();
     }
 
     @Override
-    public void initPTRGridView() {
+    public void addListener() {
         pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
@@ -59,6 +59,14 @@ public class UpdateFragment extends NewAddFragment {
             public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
                 add30(++loadPage);
                 pullToRefreshGridView.onRefreshComplete();
+            }
+        });
+        btn_toTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(gridView != null && comicList.size()>0){
+                    gridView.smoothScrollToPosition(0);
+                }
             }
         });
     }
@@ -81,6 +89,7 @@ public class UpdateFragment extends NewAddFragment {
 
     @Override
     public void getListItems(int days) {
+        btn_toTop.setVisibility(View.GONE);
         ComicService.get().getUpdateList(this,days);
     }
 
@@ -120,6 +129,7 @@ public class UpdateFragment extends NewAddFragment {
                     pullToRefreshGridView.onRefreshComplete();
                     txt_netError.setVisibility(View.GONE);
                     loading.setVisibility(View.GONE);
+                    btn_toTop.setVisibility(View.VISIBLE);
                     clearAndLoadImage();
                 }else{
                     netErrorTo();

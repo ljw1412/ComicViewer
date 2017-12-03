@@ -57,14 +57,14 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="80dp"
         android:layout_height="30dp"
         android:layout_alignParentBottom="false"
         android:elevation="22dp"
         android:layout_above="@+id/read_viewer_tools"
         android:layout_centerInParent="true"
         android:layout_marginBottom="10dp"
-        android:gravity="center_vertical|center_horizontal">
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="120dp">
 
         <TextView
             android:text="seekbar_page"
@@ -141,7 +141,8 @@
                     android:layout_height="match_parent"
                     android:id="@+id/read_viewer_tools_page"
                     android:textColor="@color/white"
-                    android:gravity="center_vertical|center_horizontal" />
+                    android:gravity="center"
+                    android:layout_marginLeft="16dp" />
 
                 <SeekBar
                     android:layout_width="match_parent"
@@ -223,7 +224,7 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:id="@+id/read_viewer_status"
-        android:layout_height="16dp"
+        android:layout_height="18dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:elevation="10dp"
