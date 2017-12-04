@@ -22,7 +22,7 @@ import ljw.comicviewer.http.ComicService;
 public class SettingsActivity extends AppCompatActivity
         implements ComicService.RequestCallback {
     private String TAG = SettingsActivity.class.getSimpleName()+"----";
-    private static Context context;
+    private Context context;
 
     @BindView(R.id.nav_child_title)
     TextView title;
@@ -40,13 +40,7 @@ public class SettingsActivity extends AppCompatActivity
 
     private void initView(){
         title.setText(R.string.mine_setting);
-
-        HistoryHolder historyHolder = new HistoryHolder(context);
-        List<History> chapters = historyHolder.getHistories();
-        debug.setText(chapters.size()+"\n");
-        for (History history : chapters){
-            debug.append(history.toString());
-        }
+        
     }
 
 

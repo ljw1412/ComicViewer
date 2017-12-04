@@ -98,6 +98,24 @@ public class HistoryHolder {
         return list;
     }
 
+    public synchronized List<History> getHistories(int limit){
+        List<History> list = new ArrayList<>();
+        Cursor cursor = dbHelper.query("select * from "+tableName+" order by readTime desc limit "+limit);
+        Log.d(TAG, "getHistories: "+cursor.getCount());
+        while (cursor.moveToNext()){
+            History history = new History();
+            history.setComicId(cursor.getString(cursor.getColumnIndex("comicId")));
+            history.setChapterId(cursor.getString(cursor.getColumnIndex("chapterId")));
+            history.setChapterName(cursor.getString(cursor.getColumnIndex("chapterName")));
+            history.setComicName(cursor.getString(cursor.getColumnIndex("name")));
+            history.setImgUrl(cursor.getString(cursor.getColumnIndex("imageUrl")));
+            history.setEnd(cursor.getInt(cursor.getColumnIndex("isEnd"))==0?false:true);
+            history.setReadTime(cursor.getLong(cursor.getColumnIndex("readTime")));
+            history.setPage(cursor.getInt(cursor.getColumnIndex("page")));
+            list.add(history);
+        }
+        return list;
+    }
     public synchronized long delHistory(List<String> comicIdList){
         int delRows = 0;
         for (String comicId : comicIdList) {

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_history"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ljw.comicviewer.ui.HistoryActivity">
+    <include
+        android:layout_height="48dp"
+        android:layout_width="match_parent"
+        layout="@layout/navigation_bar_child"
+        android:id="@+id/history_bar"></include>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/history_bar">
+        </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

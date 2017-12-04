@@ -13,7 +13,7 @@ import ljw.comicviewer.R;
 
 public class AboutActivity extends AppCompatActivity {
     private String TAG = this.getClass().getSimpleName()+"----";
-    private static Context context;
+    private Context context;
     @BindView(R.id.nav_child_title)
     TextView title;
     @BindView(R.id.app_version)

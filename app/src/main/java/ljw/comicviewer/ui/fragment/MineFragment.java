@@ -17,7 +17,9 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
+import ljw.comicviewer.bean.History;
 import ljw.comicviewer.ui.AboutActivity;
+import ljw.comicviewer.ui.HistoryActivity;
 import ljw.comicviewer.ui.HomeActivity;
 import ljw.comicviewer.ui.SettingsActivity;
 
@@ -70,7 +72,8 @@ public class MineFragment extends BaseFragment {
         btn_history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(context, HistoryActivity.class);
+                startActivity(intent);
             }
         });
         btn_setting.setOnClickListener(new View.OnClickListener() {

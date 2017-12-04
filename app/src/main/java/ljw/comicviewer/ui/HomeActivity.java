@@ -39,7 +39,7 @@ import ljw.comicviewer.util.StoreUtil;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
     private String TAG = this.getClass().getSimpleName()+"----";
-    private static Context context;
+    private Context context;
     private Fragment currentFragment;
     private HomeFragment homeFragment;
     private MineFragment mineFragment;
