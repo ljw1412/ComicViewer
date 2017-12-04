@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
+import ljw.comicviewer.ui.AboutActivity;
 import ljw.comicviewer.ui.HomeActivity;
 import ljw.comicviewer.ui.SettingsActivity;
 
@@ -27,6 +29,10 @@ public class MineFragment extends BaseFragment {
     private Context context;
     @BindView(R.id.layout_my_setting)
     RelativeLayout btn_setting;
+    @BindView(R.id.layout_my_history)
+    RelativeLayout btn_history;
+    @BindView(R.id.layout_my_about)
+    RelativeLayout btn_about;
     @BindView(R.id.title)
     TextView nav_title;
     @BindView(R.id.nav_btn_search)
@@ -61,6 +67,12 @@ public class MineFragment extends BaseFragment {
     }
 
     private void initListener(){
+        btn_history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         btn_setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,10 +80,11 @@ public class MineFragment extends BaseFragment {
                 startActivity(intent);
             }
         });
-        btn_setting.setOnTouchListener(new View.OnTouchListener() {
+        btn_about.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return false;
+            public void onClick(View view) {
+                Intent intent = new Intent(context, AboutActivity.class);
+                startActivity(intent);
             }
         });
 

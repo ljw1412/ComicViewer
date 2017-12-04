@@ -58,6 +58,7 @@ public class RuleParser {
         parseDetailsPage();
         parseDetailsChapter();
         parseSearchPage();
+        parseReadPage();
     }
 
     private void parseHost(){
@@ -110,6 +111,13 @@ public class RuleParser {
         ruleStore.setSearchRule(parsePage("search_page"));
     }
 
+    private void parseReadPage(){
+        if (ruleStr == null){
+            throw new NullPointerException("规则没有定义！");
+        }
+        ruleStore.setReadRule(parsePage("read_page"));
+    }
+
     private Map<String,String> parsePage(String key){
         Map<String,String> map = new HashMap<>();
         JSONObject list = jsonObject.getJSONObject(key);
@@ -118,9 +126,11 @@ public class RuleParser {
         if(list.get("wv-js")!=null){
             map.put("wv-js",list.get("wv-js").toString());
         }
-        JSONObject cssQuery = list.getJSONObject("cssQuery");
-        for(Object k: cssQuery.keySet()){
-            map.put(k.toString(),cssQuery.get(k).toString());
+        if(list.get("cssQuery")!=null) {
+            JSONObject cssQuery = list.getJSONObject("cssQuery");
+            for (Object k : cssQuery.keySet()) {
+                map.put(k.toString(), cssQuery.get(k).toString());
+            }
         }
         return map;
     }

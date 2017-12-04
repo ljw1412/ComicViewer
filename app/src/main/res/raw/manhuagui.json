@@ -72,6 +72,9 @@
 			"chapter-name":"$('a.status0').attr('title')"
 		}
 	},
+	"read_page":{
+		"wv-js":"document.getElementsByTagName('html')[0].outerHTML;"
+	},
 	"type":{
 		"area":[
 			{"name":"全部","url":""},

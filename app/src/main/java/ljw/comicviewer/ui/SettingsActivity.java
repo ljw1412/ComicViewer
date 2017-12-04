@@ -23,7 +23,7 @@ public class SettingsActivity extends AppCompatActivity
         implements ComicService.RequestCallback {
     private String TAG = SettingsActivity.class.getSimpleName()+"----";
     private static Context context;
-    private String rule;
+
     @BindView(R.id.nav_child_title)
     TextView title;
     @BindView(R.id.debug)
@@ -36,8 +36,6 @@ public class SettingsActivity extends AppCompatActivity
         context = this;
         ButterKnife.bind(this);
         initView();
-
-
     }
 
     private void initView(){

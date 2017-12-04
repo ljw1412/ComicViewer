@@ -106,6 +106,8 @@ public class ComicReaderActivity extends AppCompatActivity {
     TextView txtSeekBarTips;
     @BindView(R.id.reader_coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.error_msg)
+    TextView txt_err;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -315,36 +317,44 @@ public class ComicReaderActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                webView.evaluateJavascript("cInfo;", new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String s) {
-                        Log.d(TAG,"debug!!="+s);
-                        if (s.equals("null")){
-                            //加载失败
-                            if(tryTime>=3){
-                                layout_load_fail.setVisibility(View.VISIBLE);
-                                layout_loading.setVisibility(View.GONE);
-                            }else{
-                                tryTime++;
-                                getInfo();
-                            }
-                        }else{
-                            ManhuaguiComicInfo info = ComicFetcher.parseCurrentChapter(s);
-                            for(int i = 0 ; i < info.getFiles().size() ; i++){
-                                imgUrls.add(RuleStore.get().getImgHost()+info.getPath()+info.getFiles().get(i));
-                            }
-                            webView.loadUrl("about:blank");
-                            initView();
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    view_loading.setVisibility(View.GONE);
+                String js = RuleStore.get().getReadRule().get("wv-js");
+                if(js!=null) {
+                    webView.evaluateJavascript("cInfo;", new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String s) {
+                            Log.d(TAG, "debug!!=" + s);
+                            if (s.equals("null")) {
+                                //加载失败
+                                if (tryTime >= 3) {
+                                    layout_load_fail.setVisibility(View.VISIBLE);
+                                    layout_loading.setVisibility(View.GONE);
+                                    txt_err.setText(R.string.data_load_fail);
+                                } else {
+                                    tryTime++;
+                                    getInfo();
                                 }
-                            }, 500);
-                            return;
+                            } else {
+                                ManhuaguiComicInfo info = ComicFetcher.parseCurrentChapter(s);
+                                for (int i = 0; i < info.getFiles().size(); i++) {
+                                    imgUrls.add(RuleStore.get().getImgHost() + info.getPath() + info.getFiles().get(i));
+                                }
+                                webView.loadUrl("about:blank");
+                                initView();
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        view_loading.setVisibility(View.GONE);
+                                    }
+                                }, 500);
+                                return;
+                            }
                         }
-                    }
-                });
+                    });
+                }else {
+                    layout_load_fail.setVisibility(View.VISIBLE);
+                    layout_loading.setVisibility(View.GONE);
+                    txt_err.setText(R.string.rule_error);
+                }
             }
         }, 1500);
     }

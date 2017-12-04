@@ -13,11 +13,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,8 +38,7 @@ import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.StoreUtil;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
-
-    private String TAG = HomeActivity.class.getSimpleName()+"----";
+    private String TAG = this.getClass().getSimpleName()+"----";
     private static Context context;
     private Fragment currentFragment;
     private HomeFragment homeFragment;
@@ -191,6 +193,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             exitSnackBar.show();
             confirmed = true;
         }
-
     }
+
 }

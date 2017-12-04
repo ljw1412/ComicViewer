@@ -26,7 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center_horizontal"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:id="@+id/error_msg" />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/loading"
