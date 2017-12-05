@@ -10,8 +10,6 @@ import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
 import java.util.ArrayList;
 import java.util.List;

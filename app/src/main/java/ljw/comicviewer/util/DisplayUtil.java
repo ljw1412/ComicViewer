@@ -2,11 +2,8 @@ package ljw.comicviewer.util;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;

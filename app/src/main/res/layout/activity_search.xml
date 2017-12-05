@@ -13,28 +13,18 @@
         android:layout_height="48dp"
         layout="@layout/navigation_bar_search" />
 
-    <RelativeLayout
-        android:id="@+id/loading"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/search_SmartRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:background="@color/green"
-            android:layout_centerInParent="true">
-        </com.gc.materialdesign.views.ProgressBarCircularIndeterminate>
-    </RelativeLayout>
-
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        android:id="@+id/search_pull_refresh_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
         android:layout_below="@+id/search_bar">
-    </com.handmark.pulltorefresh.library.PullToRefreshListView>
+        <ListView
+            android:id="@+id/search_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null">
+        </ListView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

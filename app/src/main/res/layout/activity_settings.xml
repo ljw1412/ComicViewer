@@ -18,9 +18,11 @@
         android:layout_below="@+id/nav_bar_child"
         android:id="@+id/setting_content">
 
+
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
             <TextView
                 android:text="TextView"

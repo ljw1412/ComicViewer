@@ -9,16 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ljw.comicviewer.Global;
+import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
+import ljw.comicviewer.util.RefreshLayoutUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,29 +41,37 @@ public class UpdateFragment extends NewAddFragment {
     @Override
     public void initView() {
         //禁用上拉下拉
-        pullToRefreshGridView.setMode(PullToRefreshBase.Mode.DISABLED);
-        addListener();
+        RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
+        //设置主题色
+        refreshLayout.setPrimaryColorsId(R.color.colorPrimary,R.color.white);
+        //下拉到底最后不自动加载，需要再拉一下
+        refreshLayout.setEnableAutoLoadmore(false);
+        //不在加载更多完成之后滚动内容显示新数据
+        refreshLayout.setEnableScrollContentWhenLoaded(false);
         initGridView();
+        addListener();
     }
 
     @Override
     public void addListener() {
-        pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
+        refreshLayout.setOnRefreshLoadmoreListener(new OnRefreshLoadmoreListener() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                add30(++loadPage);
+                RefreshLayoutUtil.onFinish(refreshlayout);
+            }
+
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
                 loadPage = 1;
                 allList.clear();
                 comicList.clear();
                 pictureGridAdapter.notifyDataSetChanged();
                 // 获取对象，重新获取当前目录对象
-                initLoad();
-            }
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
-                add30(++loadPage);
-                pullToRefreshGridView.onRefreshComplete();
+                getListItems(2);
             }
         });
+
         btn_toTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,8 +84,6 @@ public class UpdateFragment extends NewAddFragment {
 
     @Override
     public void initGridView() {
-        gridView = pullToRefreshGridView.getRefreshableView();
-
         pictureGridAdapter = new PictureGridAdapter(context,comicList);
         gridView.setAdapter(pictureGridAdapter);
         gridView.setOnScrollListener(this);
@@ -84,7 +93,8 @@ public class UpdateFragment extends NewAddFragment {
 
     @Override
     public void initLoad() {
-        getListItems(2);
+        //自动刷新，获取数据
+        refreshLayout.autoRefresh();
     }
 
     @Override
@@ -102,7 +112,7 @@ public class UpdateFragment extends NewAddFragment {
         }
         comicList.addAll(comics);
         pictureGridAdapter.notifyDataSetChanged();
-        if(loadPage == maxPage) pullToRefreshGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        if(loadPage == maxPage) RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
     }
 
     @Override
@@ -122,18 +132,16 @@ public class UpdateFragment extends NewAddFragment {
             case Global.REQUEST_COMICS_LATEST:
                 if (resultObj!=null && (Integer)resultObj > 0) {
                     maxPage = allList.size() % 30 > 0 ? (allList.size() / 30 + 1) : allList.size() / 30;
-                    pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
                     add30(1);
                     pictureGridAdapter.notifyDataSetChanged();
                     //得到数据立刻取消刷新状态
-                    pullToRefreshGridView.onRefreshComplete();
+                    RefreshLayoutUtil.onFinish(refreshLayout);
+                    RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Both);
                     txt_netError.setVisibility(View.GONE);
-                    loading.setVisibility(View.GONE);
                     btn_toTop.setVisibility(View.VISIBLE);
                     clearAndLoadImage();
                 }else{
                     netErrorTo();
-//                    Toast.makeText(context,getString(R.string.data_load_fail),Toast.LENGTH_LONG).show();
                 }
                 break;
         }

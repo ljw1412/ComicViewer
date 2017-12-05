@@ -18,9 +18,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshGridView;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,6 +35,7 @@ import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
+import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 
 
@@ -51,13 +52,12 @@ public class NewAddFragment extends BaseFragment
     private File myCache;
     private int loadedPage = 1;
     private boolean isLoadingNext = false;
-    @BindView(R.id.comic_info_pull_refresh_grid)
-    PullToRefreshGridView pullToRefreshGridView;
+    @BindView(R.id.refreshLayout)
+    RefreshLayout refreshLayout;
+    @BindView(R.id.grid_view)
     GridView gridView;
     @BindView(R.id.grid_net_error)
     TextView txt_netError;
-    @BindView(R.id.grid_loading)
-    RelativeLayout loading;
     @BindView(R.id.newAdd_btn_toTop)
     FloatingActionButton btn_toTop;
     @BindView(R.id.comic_grid_coordinatorLayout)
@@ -83,34 +83,43 @@ public class NewAddFragment extends BaseFragment
     @Override
     public void initView() {
         //禁用上拉下拉
-        pullToRefreshGridView.setMode(PullToRefreshBase.Mode.DISABLED);
+        RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
+        //设置主题色
+        refreshLayout.setPrimaryColorsId(R.color.colorPrimary,R.color.white);
+        //下拉到底最后不自动加载，需要再拉一下
+        refreshLayout.setEnableAutoLoadmore(false);
+        //不在加载更多完成之后滚动内容显示新数据
+        refreshLayout.setEnableScrollContentWhenLoaded(false);
+
         initGridView();
         addListener();
-        myCache = context.getExternalCacheDir();
+        //数据首次加载
         initLoad();
+//        myCache = context.getExternalCacheDir();
     }
 
     public void addListener() {
         // 设置监听器，这个监听器是可以监听双向滑动的，这样可以触发不同的事件
-        pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
+        refreshLayout.setOnRefreshLoadmoreListener(new OnRefreshLoadmoreListener() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
-                //下拉
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                //上拉加载
+                isLoadingNext = true;
+                getListItems(++loadedPage);
+                Log.d(TAG,"load next page; currentLoadingPage = "+loadedPage);
+            }
+
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                //下拉刷新
                 loadedPage = 1;
                 comicList.clear();
                 pictureGridAdapter.notifyDataSetChanged();
                 // 获取对象，重新获取当前目录对象
                 getListItems(loadedPage);
             }
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
-                //上拉
-                Glide.get(context).clearMemory();
-                isLoadingNext = true;
-                getListItems(++loadedPage);
-                Log.d(TAG,"load next page; currentLoadingPage = "+loadedPage);
-            }
         });
+
         //悬浮回到顶部按钮
         btn_toTop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,8 +132,6 @@ public class NewAddFragment extends BaseFragment
     }
 
     public void initGridView() {
-        gridView = pullToRefreshGridView.getRefreshableView();
-
         pictureGridAdapter = new PictureGridAdapter(context,comicList);
         gridView.setAdapter(pictureGridAdapter);
         gridView.setOnScrollListener(this);
@@ -133,10 +140,10 @@ public class NewAddFragment extends BaseFragment
     }
 
     @Override
-    public void initLoad(){
-        getListItems(1);
+    public void initLoad() {
+        //自动刷新，获取数据
+        refreshLayout.autoRefresh();
     }
-
 
     //获得漫画列表对象并存入comicList
     public void getListItems(int page){
@@ -154,7 +161,6 @@ public class NewAddFragment extends BaseFragment
                 break;
             case SCROLL_STATE_FLING:
                 //屏幕处于滑动状态
-
                 break;
             case SCROLL_STATE_IDLE:
                 //停止滑动状态
@@ -224,15 +230,13 @@ public class NewAddFragment extends BaseFragment
         switch (TAG){
             case Global.REQUEST_COMICS_LIST:
                 if (resultObj!=null && (Integer)resultObj > 0){
-                    pictureGridAdapter.notifyDataSetChanged();
-                    //得到数据立刻取消刷新状态
-                    pullToRefreshGridView.onRefreshComplete();
                     txt_netError.setVisibility(View.GONE);
-                    loading.setVisibility(View.GONE);
                     btn_toTop.setVisibility(View.VISIBLE);
-                    pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
-                    isLoadingNext = false;
+                    //结束刷新或加载状态
+                    RefreshLayoutUtil.onFinish(refreshLayout);
+                    RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Both);
                     clearAndLoadImage();
+                    isLoadingNext = false;
                 }else{
                     netErrorTo();
                 }
@@ -256,7 +260,7 @@ public class NewAddFragment extends BaseFragment
         switch (what){
             case Global.REQUEST_COMICS_LATEST:
             case Global.REQUEST_COMICS_LIST:
-                pullToRefreshGridView.onRefreshComplete();
+                RefreshLayoutUtil.onFinish(refreshLayout);
                 if(isLoadingNext) {
                     SnackbarUtil.newAddImageColorfulSnackar(
                             coordinatorLayout, getString(R.string.gird_tips_loading_next_page_fail),
@@ -271,14 +275,13 @@ public class NewAddFragment extends BaseFragment
     }
 
     public void netErrorTo(){
-        if (pullToRefreshGridView.isRefreshing()) pullToRefreshGridView.onRefreshComplete();
+        RefreshLayoutUtil.onFinish(refreshLayout);
         SnackbarUtil.newAddImageColorfulSnackar(
                 coordinatorLayout, getString(R.string.data_load_fail),
                 R.drawable.icon_error,
                 ContextCompat.getColor(context,R.color.star_yellow)).show();
         if (!isLoadingNext){
-            pullToRefreshGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-            loading.setVisibility(View.GONE);
+            RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
             txt_netError.setVisibility(View.VISIBLE);
         }
         isLoadingNext = false;

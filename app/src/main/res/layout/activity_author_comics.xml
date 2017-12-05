@@ -26,13 +26,19 @@
         </com.gc.materialdesign.views.ProgressBarCircularIndeterminate>
     </RelativeLayout>
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        android:id="@+id/pull_refresh_list"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/author_comics_SmartRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null"
         android:layout_below="@+id/author_comics_bar">
-    </com.handmark.pulltorefresh.library.PullToRefreshListView>
+        <ListView
+            android:id="@+id/author_comics_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null">
+        </ListView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

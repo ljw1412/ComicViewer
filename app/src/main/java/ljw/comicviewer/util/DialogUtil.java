@@ -1,14 +1,9 @@
 package ljw.comicviewer.util;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.design.widget.Snackbar;
-import android.view.View;
-import android.widget.TextView;
 
-import ljw.comicviewer.Global;
-import ljw.comicviewer.others.BottomDialog;
 import ljw.comicviewer.R;
+import ljw.comicviewer.others.BottomDialog;
 
 /**
  * Created by ljw on 2017-09-04 004.

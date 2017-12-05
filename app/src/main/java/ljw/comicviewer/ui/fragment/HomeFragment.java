@@ -4,6 +4,7 @@ package ljw.comicviewer.ui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -61,6 +62,7 @@ public class HomeFragment extends BaseFragment{
     @Override
     public void initView() {
         initViewPager();
+        //tab标题栏绑定viewpager
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -80,17 +82,10 @@ public class HomeFragment extends BaseFragment{
         myFragmentPagerAdapter.addFragment(categoryFragment,getString(R.string.opt_category));
 
         currentFragment = myFragmentPagerAdapter.getItem(0);
+        //第一个加载必须在那个fragment中执行，这里仅修改数组加载状态
         myFragmentPagerAdapter.setLoaded(0);
 
         myFragmentPagerAdapter.notifyDataSetChanged();
-
-        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
-            @Override
-            public void onPageSelected(int position) {
-                currentFragment = myFragmentPagerAdapter.getItem(position);
-                loadFragment(position);
-            }
-        });
     }
 
     public void addListener(){
@@ -99,6 +94,14 @@ public class HomeFragment extends BaseFragment{
             public void onClick(View view) {
                 Intent intent = new Intent(context,SearchActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                currentFragment = myFragmentPagerAdapter.getItem(position);
+                loadFragment(position);
             }
         });
     }

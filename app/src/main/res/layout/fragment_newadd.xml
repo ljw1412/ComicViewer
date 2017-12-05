@@ -19,5 +19,6 @@
         app:backgroundTint="@color/holo_red_light"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginBottom="5dp"
+        android:visibility="gone"/>
 </RelativeLayout>

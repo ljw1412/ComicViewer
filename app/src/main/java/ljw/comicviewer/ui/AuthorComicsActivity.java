@@ -10,9 +10,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +25,7 @@ import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.ui.adapter.SearchListAdapter;
+import ljw.comicviewer.util.RefreshLayoutUtil;
 import retrofit2.Call;
 
 public class AuthorComicsActivity extends AppCompatActivity
@@ -41,8 +41,8 @@ public class AuthorComicsActivity extends AppCompatActivity
     private Call loadCall;
     @BindView(R.id.nav_child_title)
     TextView nav_title;
-    @BindView(R.id.pull_refresh_list)
-    PullToRefreshListView pullToRefreshListView;
+    @BindView(R.id.author_comics_SmartRefreshLayout)
+    RefreshLayout refreshLayout;
     ListView listview;
     @BindView(R.id.search_not_found)
     RelativeLayout tipsView;
@@ -58,7 +58,7 @@ public class AuthorComicsActivity extends AppCompatActivity
         aName = getIntent().getStringExtra("aName");
         aMark = getIntent().getStringExtra("aMark");
         initView();
-        initPTRGridView();
+        addListener();
         initListView();
         loadAuthorComics();
     }
@@ -76,36 +76,33 @@ public class AuthorComicsActivity extends AppCompatActivity
 
     private void initView(){
         setTitle(String.format(getString(R.string.title_author_comics),aName));
-        pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        //未加载时，禁用上拉下拉界面
+        RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Disable);
     }
 
-    private void initPTRGridView() {
+    private void addListener() {
         // 设置监听器，这个监听器是可以监听双向滑动的，这样可以触发不同的事件
-        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+        refreshLayout.setOnRefreshLoadmoreListener(new OnRefreshLoadmoreListener() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                //上拉
+                ++curPage;
+                loadAuthorComics();
+                Log.d(TAG,"load next page; currentLoadingPage = "+curPage);
+            }
+
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
                 //下拉
                 curPage = 1;
                 comics.clear();
                 searchListAdapter.notifyDataSetChanged();
                 loadAuthorComics();
             }
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                //上拉
-                Glide.get(context).clearMemory();
-                ++curPage;
-                loadAuthorComics();
-                Log.d(TAG,"load next page; currentLoadingPage = "+curPage);
-            }
         });
-        //未加载时，禁用上拉下拉界面
-        pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
     }
 
     private void initListView() {
-        listview = pullToRefreshListView.getRefreshableView();
-
         searchListAdapter = new SearchListAdapter(context,comics);
         listview.setAdapter(searchListAdapter);
 //        listview.setOnScrollListener(this);
@@ -194,11 +191,11 @@ public class AuthorComicsActivity extends AppCompatActivity
                     tipsView.setVisibility(View.VISIBLE);
                 }
             }
-            pullToRefreshListView.onRefreshComplete();
+            RefreshLayoutUtil.onFinish(refreshLayout);
             if(curPage >= maxPage){
-                pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
+                RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Disable);
             }else {
-                pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+                RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_LoadMore);
             }
             searchListAdapter.notifyDataSetChanged();
         }

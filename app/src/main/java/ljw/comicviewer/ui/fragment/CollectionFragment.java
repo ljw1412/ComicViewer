@@ -18,8 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshGridView;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,7 @@ import ljw.comicviewer.db.CollectionHolder;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.HomeActivity;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
+import ljw.comicviewer.util.RefreshLayoutUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,13 +47,12 @@ public class CollectionFragment extends BaseFragment
     private int currentPage = 1;
     private PictureGridAdapter pictureGridAdapter;
     private boolean isLoading = false;
-    @BindView(R.id.comic_info_pull_refresh_grid)
-    PullToRefreshGridView pullToRefreshGridView;
+    @BindView(R.id.refreshLayout)
+    RefreshLayout refreshLayout;
+    @BindView(R.id.grid_view)
     GridView gridView;
     @BindView(R.id.grid_net_error)
     TextView txt_netError;
-    @BindView(R.id.grid_loading)
-    RelativeLayout loading;
     @BindView(R.id.title)
     TextView nav_title;
 
@@ -74,43 +74,47 @@ public class CollectionFragment extends BaseFragment
 
     @Override
     public void initView() {
+        //只允许刷新，以便初次启动时自动刷新
+        RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
         //禁用上拉下拉
-        pullToRefreshGridView.setMode(PullToRefreshBase.Mode.DISABLED);
-        initPTRGridView();
+        RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Disable);
+        //设置主题色
+        refreshLayout.setPrimaryColorsId(R.color.colorPrimary,R.color.white);
+        //下拉到底最后不自动加载，需要再拉一下
+        refreshLayout.setEnableAutoLoadmore(false);
+        //不在加载更多完成之后滚动内容显示新数据
+        refreshLayout.setEnableScrollContentWhenLoaded(false);
+        //执行自动刷新
+        refreshLayout.autoRefresh();
+        if (getActivity() instanceof HomeActivity)
+            ((HomeActivity) getActivity()).setTitle(nav_title,getString(R.string.txt_collection));
+        addListener();
         initGridView();
-        initLoad();
     }
 
-    public void initPTRGridView() {
+    public void addListener() {
         // 设置监听器，这个监听器是可以监听双向滑动的，这样可以触发不同的事件
-        pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
+        refreshLayout.setOnRefreshLoadmoreListener(new OnRefreshLoadmoreListener() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                //上拉
+                add20(++currentPage);
+                Log.d(TAG,"load next page; currentLoadingPage = "+ currentPage);
+            }
+
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
                 //下拉
                 currentPage = 1;
                 comics.clear();
-
                 pictureGridAdapter.notifyDataSetChanged();
                 // 获取对象，重新获取当前目录对象
                 initLoad();
-            }
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
-                //上拉
-                Glide.get(context).clearMemory();
-                add20(++currentPage);
-                Log.d(TAG,"load next page; currentLoadingPage = "+ currentPage);
             }
         });
     }
 
     public void initGridView() {
-        gridView = pullToRefreshGridView.getRefreshableView();
-
-        //根据屏幕宽度设置列数
-//        int columns = DisplayUtil.getGridNumColumns(context,120);
-//        gridView.setNumColumns(columns);
-
         pictureGridAdapter = new PictureGridAdapter(context,comics);
         gridView.setAdapter(pictureGridAdapter);
         gridView.setOnScrollListener(this);
@@ -121,15 +125,12 @@ public class CollectionFragment extends BaseFragment
     @Override
     public void initLoad() {
         //数据库处理
-        currentPage = 1;
-        comics.clear();
         CollectionHolder collectionHolder = new CollectionHolder(context);
         allComics = collectionHolder.getComics();
         if (getActivity() instanceof HomeActivity)
             ((HomeActivity) getActivity()).setTitle(nav_title,getString(R.string.txt_collection)+"("+allComics.size()+")");
         maxPage = allComics.size() % 20 > 0 ? (allComics.size() / 20 + 1) : allComics.size() / 20;
         add20(currentPage);
-        loading.setVisibility(View.GONE);
         delayedFlushAdapter();
         isLoading = true;
     }
@@ -143,8 +144,9 @@ public class CollectionFragment extends BaseFragment
         }
         comics.addAll(comicList);
         pictureGridAdapter.notifyDataSetChanged();
-        pullToRefreshGridView.onRefreshComplete();
-        if(currentPage == maxPage || maxPage == 0) pullToRefreshGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        RefreshLayoutUtil.onFinish(refreshLayout);
+        if(currentPage == maxPage || maxPage == 0)
+            RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Only_Refresh);
     }
 
     @Override

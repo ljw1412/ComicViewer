@@ -33,7 +33,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile project(':PullToRefresh')
+
     //配合support-v4:25.3.1
     //Material Designer （进度条，界面控件）
     //注解方式寻找view
@@ -53,4 +53,5 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
     compile 'com.github.bumptech.glide:okhttp3-integration:4.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
 }

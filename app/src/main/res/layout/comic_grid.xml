@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ptr="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
@@ -12,20 +11,6 @@
         android:layout_height="match_parent"
         >
 
-        <RelativeLayout
-            android:id="@+id/grid_loading"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:background="@color/green"
-                android:layout_centerInParent="true">
-            </com.gc.materialdesign.views.ProgressBarCircularIndeterminate>
-        </RelativeLayout>
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,20 +19,24 @@
             android:visibility="gone"
             android:gravity="center_horizontal|center_vertical"
             android:layout_centerInParent="true"/>
-
-        <com.handmark.pulltorefresh.library.PullToRefreshGridView
-            android:id="@+id/comic_info_pull_refresh_grid"
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:horizontalSpacing="5dp"
-            android:verticalSpacing="5dp"
-            android:columnWidth="100dp"
-            android:stretchMode="columnWidth"
-            android:numColumns="auto_fit"
-            android:scrollbars="none"
-            ptr:ptrMode="both"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp" />
+            android:layout_height="match_parent">
+            <GridView
+                android:id="@+id/grid_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:horizontalSpacing="5dp"
+                android:verticalSpacing="5dp"
+                android:columnWidth="100dp"
+                android:stretchMode="columnWidth"
+                android:numColumns="auto_fit"
+                android:scrollbars="vertical"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
     </RelativeLayout>
     <android.support.design.widget.CoordinatorLayout

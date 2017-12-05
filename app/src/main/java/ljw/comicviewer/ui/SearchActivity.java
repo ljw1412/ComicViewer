@@ -20,9 +20,10 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.ui.adapter.SearchListAdapter;
+import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.StringUtil;
 import retrofit2.Call;
@@ -56,13 +58,12 @@ public class SearchActivity extends AppCompatActivity
     Button btn_search;
     @BindView(R.id.search_edit)
     EditText edit_search;
-    @BindView(R.id.search_pull_refresh_list)
-    PullToRefreshListView pullToRefreshListView;
+    @BindView(R.id.search_SmartRefreshLayout)
+    RefreshLayout refreshLayout;
+    @BindView(R.id.search_listView)
     ListView listview;
     @BindView(R.id.search_not_found)
     RelativeLayout tipsView;
-    @BindView(R.id.loading)
-    RelativeLayout view_loading;
     @BindView(R.id.tips_search_by_id)
     TextView txt_searchById;
     @BindView(R.id.search_coordinatorLayout)
@@ -74,38 +75,46 @@ public class SearchActivity extends AppCompatActivity
         setContentView(R.layout.activity_search);
         context = this;
         ButterKnife.bind(this);
-        initPTRGridView();
+        initView();
+        addListener();
         initListView();
         initTitleBar();
     }
 
-    private void initPTRGridView() {
+    private void initView(){
+        //初始化时，禁用上拉下拉界面
+        RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Disable);
+        //设置主题色
+        refreshLayout.setPrimaryColorsId(R.color.colorPrimary,R.color.white);
+        //设置头部主题
+        refreshLayout.setRefreshHeader(new ClassicsHeader(context));
+    }
+
+    private void addListener() {
         // 设置监听器，这个监听器是可以监听双向滑动的，这样可以触发不同的事件
-        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+        refreshLayout.setOnRefreshLoadmoreListener(new OnRefreshLoadmoreListener() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                //下拉
-                curPage = 1;
-                comics.clear();
-                searchListAdapter.notifyDataSetChanged();
-                loadSearch(keyword);
-            }
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+            public void onLoadmore(RefreshLayout refreshlayout) {
                 //上拉
-                Glide.get(context).clearMemory();
                 ++curPage;
                 loadSearch(keyword);
                 Log.d(TAG,"load next page; currentLoadingPage = "+curPage);
             }
+
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                //下拉
+                curPage = 1;
+                maxPage = -1;
+                comics.clear();
+                searchListAdapter.notifyDataSetChanged();
+                loadSearch(keyword);
+            }
         });
-        //未加载时，禁用上拉下拉界面
-        pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
+
     }
 
     private void initListView() {
-        listview = pullToRefreshListView.getRefreshableView();
-
         searchListAdapter = new SearchListAdapter(context,comics);
         listview.setAdapter(searchListAdapter);
         searchListAdapter.notifyDataSetChanged();
@@ -161,22 +170,21 @@ public class SearchActivity extends AppCompatActivity
             if(loading){
                 searchCall.cancel();
             }
-            curPage = 1;
-            maxPage = -1;
-            snackbar = SnackbarUtil.newAddImageColorfulSnackar(
-                    coordinatorLayout,
-                    String.format(getString(R.string.alert_search_loading_tips),keyword),
-                    R.drawable.icon_loading,
-                    ContextCompat.getColor(context,R.color.smmcl_green));
-            snackbar.show();
+
+//            snackbar = SnackbarUtil.newAddImageColorfulSnackar(
+//                    coordinatorLayout,
+//                    String.format(getString(R.string.alert_search_loading_tips),keyword),
+//                    R.drawable.icon_loading,
+//                    ContextCompat.getColor(context,R.color.smmcl_green));
+//            snackbar.show();
             tipsView.setVisibility(View.GONE);
             txt_searchById.setVisibility(View.GONE);
-            comics.clear();
-            searchListAdapter.notifyDataSetChanged();
-            pullToRefreshListView.setFocusableInTouchMode(true);
-            pullToRefreshListView.requestFocus();
+
             HideKeyboard(view);
-            loadSearch(keyword);
+
+            RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
+            refreshLayout.autoRefresh();
+
         } else {
             SnackbarUtil.newAddImageColorfulSnackar(
                     coordinatorLayout, getString(R.string.alert_search_keyword_no_empty),
@@ -189,7 +197,6 @@ public class SearchActivity extends AppCompatActivity
     public void loadSearch(String keyword){
         searchCall = ComicService.get().getComicSearch(this,keyword,curPage);
         loading = true;
-        view_loading.setVisibility(View.VISIBLE);
     }
 
     //隐藏虚拟键盘
@@ -248,19 +255,17 @@ public class SearchActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            view_loading.setVisibility(View.GONE);
-            if (snackbar.isShown()) snackbar.dismiss();
             if(!aBoolean){
                 tipsView.setVisibility(View.VISIBLE);
             }
             if(maxPage == -1){
                 maxPage = (int) callbackdata.getArg1();
             }
-            pullToRefreshListView.onRefreshComplete();
+            RefreshLayoutUtil.onFinish(refreshLayout);
             if(curPage >= maxPage){
-                pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
-            }else{
-                pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+                RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Disable);
+            }else {
+                RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_LoadMore);
             }
             searchListAdapter.notifyDataSetChanged();
             loading = false;
