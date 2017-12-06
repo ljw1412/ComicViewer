@@ -100,6 +100,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     //设置当前要显示的fragment
     private void setCurrentFragment(Fragment fragment){
+        if(currentFragment == fragment) return;
         FragmentTransaction ft=fragmentManager.beginTransaction();
         if(!fragment.isAdded()){
             ft.add(R.id.content_home,fragment);
@@ -128,12 +129,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    //设置内容和顶部导航栏
-    public void setContent(Fragment fragment){
-        if(currentFragment == fragment) return;
-        setCurrentFragment(fragment);
-    }
-
     //点击事件
     @OnClick({R.id.goto_comic,R.id.goto_collection,R.id.goto_mine})
     @Override
@@ -141,21 +136,21 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.goto_comic:
                 setBtnSelected(img_comic);
-                setContent(homeFragment);
+                setCurrentFragment(homeFragment);
                 break;
             case R.id.goto_collection:
                 setBtnSelected(img_collection);
                 if(collectionFragment == null){
                     collectionFragment = new CollectionFragment();
                 }
-                setContent(collectionFragment);
+                setCurrentFragment(collectionFragment);
                 break;
             case R.id.goto_mine:
                 setBtnSelected(img_mine);
                 if(mineFragment == null){
                     mineFragment = new MineFragment();
                 }
-                setContent(mineFragment);
+                setCurrentFragment(mineFragment);
                 break;
         }
     }

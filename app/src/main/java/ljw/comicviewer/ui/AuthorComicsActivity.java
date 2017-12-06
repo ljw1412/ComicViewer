@@ -10,7 +10,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 
 import java.util.ArrayList;
@@ -43,11 +45,11 @@ public class AuthorComicsActivity extends AppCompatActivity
     TextView nav_title;
     @BindView(R.id.author_comics_SmartRefreshLayout)
     RefreshLayout refreshLayout;
+    @BindView(R.id.author_comics_listView)
     ListView listview;
     @BindView(R.id.search_not_found)
     RelativeLayout tipsView;
-    @BindView(R.id.loading)
-    RelativeLayout view_loading;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,14 +61,13 @@ public class AuthorComicsActivity extends AppCompatActivity
         aMark = getIntent().getStringExtra("aMark");
         initView();
         addListener();
-        initListView();
-        loadAuthorComics();
+
+
     }
 
     public void loadAuthorComics(){
-        view_loading.setVisibility(View.VISIBLE);
         if(aMark!=null && !flag){
-            loadCall = ComicService.get().getHTML(this,aMark,Global.REQUEST_AUTHOR_COMICS);
+            loadCall = ComicService.get().getHTML(this,aMark+"index_p"+curPage+".html",Global.REQUEST_AUTHOR_COMICS);
         }else {
             //备用方法：使用搜索功能来找作者相关漫画
             loadCall = ComicService.get().getComicSearch(this, aName, curPage);
@@ -75,9 +76,20 @@ public class AuthorComicsActivity extends AppCompatActivity
 
 
     private void initView(){
+        initListView();
         setTitle(String.format(getString(R.string.title_author_comics),aName));
         //未加载时，禁用上拉下拉界面
-        RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Disable);
+        RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
+        //设置主题色
+        refreshLayout.setPrimaryColorsId(R.color.colorPrimary);
+        //设置头部主题
+        RefreshHeader refreshHeader = new ClassicsHeader(context);//使用经典主题
+        refreshLayout.setRefreshHeader(refreshHeader);
+        ((ClassicsHeader)refreshHeader).REFRESH_HEADER_REFRESHING =
+                String.format(getString(R.string.title_author_comics),aName);
+        ((ClassicsHeader)refreshHeader).REFRESH_HEADER_PULLDOWN =
+                String.format(getString(R.string.title_author_comics),aName);
+        refreshLayout.autoRefresh();
     }
 
     private void addListener() {
@@ -178,10 +190,10 @@ public class AuthorComicsActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            view_loading.setVisibility(View.GONE);
             if(maxPage == -1){
                 maxPage = (int) callbackdata.getArg1();
             }
+            Log.d(TAG, "onPostExecute: "+maxPage);
             if(!aBoolean){
                 if (!flag){
                     flag = true;

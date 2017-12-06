@@ -52,8 +52,9 @@ public class SearchActivity extends AppCompatActivity
     private int maxPage = -1;
     private boolean loading = false;
     private SearchListAdapter searchListAdapter;
-    private Snackbar snackbar;
+    private RefreshHeader refreshHeader;
     private Call searchCall;
+    private Snackbar notEmptySnackBar;
     @BindView(R.id.search_button)
     Button btn_search;
     @BindView(R.id.search_edit)
@@ -85,9 +86,18 @@ public class SearchActivity extends AppCompatActivity
         //初始化时，禁用上拉下拉界面
         RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Disable);
         //设置主题色
-        refreshLayout.setPrimaryColorsId(R.color.colorPrimary,R.color.white);
+        refreshLayout.setPrimaryColorsId(R.color.colorPrimary);
         //设置头部主题
+        refreshHeader = new ClassicsHeader(context);//使用经典主题
         refreshLayout.setRefreshHeader(new ClassicsHeader(context));
+        ((ClassicsHeader)refreshHeader).REFRESH_HEADER_FINISH = "搜索完成";
+        ((ClassicsHeader)refreshHeader).REFRESH_HEADER_FAILED = "搜索失败";
+        ((ClassicsHeader)refreshHeader).REFRESH_HEADER_LASTTIME = "上次搜索 M-d HH:mm";
+        //初始化未输入内容的提示
+        notEmptySnackBar = SnackbarUtil.newAddImageColorfulSnackar(
+                coordinatorLayout, getString(R.string.alert_search_keyword_no_empty),
+                R.drawable.icon_error,
+                ContextCompat.getColor(context,R.color.star_yellow));
     }
 
     private void addListener() {
@@ -170,26 +180,24 @@ public class SearchActivity extends AppCompatActivity
             if(loading){
                 searchCall.cancel();
             }
+            if(notEmptySnackBar!=null && notEmptySnackBar.isShown())
+                notEmptySnackBar.dismiss();
 
-//            snackbar = SnackbarUtil.newAddImageColorfulSnackar(
-//                    coordinatorLayout,
-//                    String.format(getString(R.string.alert_search_loading_tips),keyword),
-//                    R.drawable.icon_loading,
-//                    ContextCompat.getColor(context,R.color.smmcl_green));
-//            snackbar.show();
             tipsView.setVisibility(View.GONE);
             txt_searchById.setVisibility(View.GONE);
 
             HideKeyboard(view);
 
+            ((ClassicsHeader)refreshHeader).REFRESH_HEADER_REFRESHING =
+                    String.format(getString(R.string.alert_search_loading_tips),keyword);
+            ((ClassicsHeader)refreshHeader).REFRESH_HEADER_PULLDOWN =
+                    String.format(getString(R.string.alert_search_loading_tips),keyword);
             RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
-            refreshLayout.autoRefresh();
+            refreshLayout.autoRefresh(100);
 
         } else {
-            SnackbarUtil.newAddImageColorfulSnackar(
-                    coordinatorLayout, getString(R.string.alert_search_keyword_no_empty),
-                    R.drawable.icon_error,
-                    ContextCompat.getColor(context,R.color.star_yellow)).show();
+            if(notEmptySnackBar!=null && !notEmptySnackBar.isShown())
+                notEmptySnackBar.show();
         }
     }
 
@@ -226,6 +234,7 @@ public class SearchActivity extends AppCompatActivity
     @Override
     public void onError(String msg, String what) {
         Log.e(TAG, what+" Error: " + msg);
+        refreshLayout.finishRefresh(false);
     }
 
     @Override

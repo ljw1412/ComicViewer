@@ -12,20 +12,6 @@
         android:layout_height="48dp"
         layout="@layout/navigation_bar_child" />
 
-    <RelativeLayout
-        android:id="@+id/loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:background="@color/green"
-            android:layout_centerInParent="true">
-        </com.gc.materialdesign.views.ProgressBarCircularIndeterminate>
-    </RelativeLayout>
-
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/author_comics_SmartRefreshLayout"
         android:layout_width="match_parent"

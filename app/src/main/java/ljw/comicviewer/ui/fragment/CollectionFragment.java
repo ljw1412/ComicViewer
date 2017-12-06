@@ -69,6 +69,8 @@ public class CollectionFragment extends BaseFragment
         ButterKnife.bind(this,view);
         context = getActivity();
         initView();
+        //数据首次加载
+        initLoad();
         return view;
     }
 
@@ -76,20 +78,16 @@ public class CollectionFragment extends BaseFragment
     public void initView() {
         //只允许刷新，以便初次启动时自动刷新
         RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
-        //禁用上拉下拉
-        RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Disable);
         //设置主题色
         refreshLayout.setPrimaryColorsId(R.color.colorPrimary,R.color.white);
         //下拉到底最后不自动加载，需要再拉一下
         refreshLayout.setEnableAutoLoadmore(false);
         //不在加载更多完成之后滚动内容显示新数据
         refreshLayout.setEnableScrollContentWhenLoaded(false);
-        //执行自动刷新
-        refreshLayout.autoRefresh();
         if (getActivity() instanceof HomeActivity)
-            ((HomeActivity) getActivity()).setTitle(nav_title,getString(R.string.txt_collection));
-        addListener();
+             ((HomeActivity) getActivity()).setTitle(nav_title,getString(R.string.txt_collection));
         initGridView();
+        addListener();
     }
 
     public void addListener() {
@@ -108,8 +106,8 @@ public class CollectionFragment extends BaseFragment
                 currentPage = 1;
                 comics.clear();
                 pictureGridAdapter.notifyDataSetChanged();
-                // 获取对象，重新获取当前目录对象
-                initLoad();
+                //重新获取当前目录对象
+                getDataFromDB();
             }
         });
     }
@@ -124,7 +122,13 @@ public class CollectionFragment extends BaseFragment
 
     @Override
     public void initLoad() {
-        //数据库处理
+        //执行自动刷新
+        refreshLayout.autoRefresh();
+        isLoading = true;
+    }
+
+    public void getDataFromDB(){
+        //数据库处理，获取对象
         CollectionHolder collectionHolder = new CollectionHolder(context);
         allComics = collectionHolder.getComics();
         if (getActivity() instanceof HomeActivity)
@@ -132,9 +136,8 @@ public class CollectionFragment extends BaseFragment
         maxPage = allComics.size() % 20 > 0 ? (allComics.size() / 20 + 1) : allComics.size() / 20;
         add20(currentPage);
         delayedFlushAdapter();
-        isLoading = true;
+        RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Both);
     }
-
 
     private int maxPage;
     public void add20(int page){
