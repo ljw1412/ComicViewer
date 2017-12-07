@@ -18,5 +18,6 @@ public class StoreUtil {
         }else{
             throw new RuntimeException("初始化失败");
         }
+        RuleStore.get().printRules();
     }
 }

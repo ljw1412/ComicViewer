@@ -1,7 +1,12 @@
 package ljw.comicviewer.store;
 
+import android.util.Log;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ljw.comicviewer.bean.Category;
 
 /**
  * Created by ljw on 2017-10-22 022.
@@ -15,7 +20,7 @@ public class RuleStore {
     private String cookie;
     private String imgHost;
     private String currentRule;
-    private Map<String,List<Map<String,String>>> typeRule;
+    private Map<String,List<Category>> typeRule;
     private Map<String,String> listRule;
     private Map<String,String> latestRule;
     private Map<String,String> detailsRule;
@@ -72,11 +77,11 @@ public class RuleStore {
         this.currentRule = currentRule;
     }
 
-    public Map<String, List<Map<String, String>>> getTypeRule() {
+    public Map<String,List<Category>> getTypeRule() {
         return typeRule;
     }
 
-    public void setTypeRule(Map<String, List<Map<String, String>>> typeRule) {
+    public void setTypeRule(Map<String,List<Category>> typeRule) {
         this.typeRule = typeRule;
     }
 
@@ -126,5 +131,16 @@ public class RuleStore {
 
     public void setReadRule(Map<String, String> readRule) {
         this.readRule = readRule;
+    }
+
+    public void printRules(){
+        Log.d(TAG, "RuleStore情况:typeRule:" + typeRule.size() +
+                " , listRule:" + listRule.size() +
+                " , latestRule:" + latestRule.size() +
+                " , detailsRule:" + detailsRule.size() +
+                " , searchRule:" + searchRule.size() +
+                " , detailsChapterRule:" + detailsChapterRule.size() +
+                " , readRule:" + readRule.size());
+
     }
 }

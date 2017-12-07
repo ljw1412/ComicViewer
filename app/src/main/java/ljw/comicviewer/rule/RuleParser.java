@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ljw.comicviewer.bean.Category;
 import ljw.comicviewer.store.RuleStore;
 
 /**
@@ -59,6 +60,11 @@ public class RuleParser {
         parseDetailsChapter();
         parseSearchPage();
         parseReadPage();
+        try{
+            parseType();
+        }catch (Exception e){
+            Log.e(TAG, "parseAll: typeRuleError");
+        }
     }
 
     private void parseHost(){
@@ -136,35 +142,31 @@ public class RuleParser {
     }
 
     private void parseType(){
-        Map<String,List<Map<String,String>>> map = new HashMap<>();
-        JSONObject type = jsonObject.getJSONObject("type");
-        for(Object key: type.keySet()){
-//            Log.d("----", "parseType: "+key);
-//            Log.d("----", "parseType: "+type.get(key.toString()).toString());
-            JSONArray array = JSON.parseArray(type.get(key.toString()).toString());
-            List<Map<String,String>> list = new ArrayList<>();
+        Map<String,List<Category>> map = new HashMap<>();
+        JSONObject list = jsonObject.getJSONObject("list");
+        JSONObject type = list.getJSONObject("type");
+        if (type!=null){
+            for(Object key: type.keySet()){
+                JSONArray array = JSON.parseArray(type.get(key.toString()).toString());
+                List<Category> categories = new ArrayList<>();
+                for(Object obj : array){
+                    JSONObject objJson = JSON.parseObject(obj.toString());
+                    Category category = new Category();
+                    Object name = objJson.get("name");
+                    Object value = objJson.get("value");
+//                    Log.d(TAG, "parseType: "+name+"  "+value);
+                    category.setName(name != null ? name.toString() : null);
+                    category.setValue(value != null ? value.toString() : null);
+                    categories.add(category);
+                }
+                map.put(key.toString(),categories);
+            }
+            ruleStore.setTypeRule(map);
+        }else{
+            ruleStore.setTypeRule(null);
+            Log.e(TAG, "parseType: 未找到类型规则" );
+        }
 
-            for(Object obj : array){
-                Map<String,String> inMap = new HashMap<>();
-                JSONObject objJson = JSON.parseObject(obj.toString());
-                for(Object objKey: objJson.keySet()){
-                    inMap.put(objKey.toString(),objJson.get(objKey).toString());
-//                    Log.d("----", "parseType: "+objKey+" "+objJson.get(objKey));
-                }
-                list.add(inMap);
-            }
-            map.put(key.toString(),list);
-        }
-        for (Map.Entry<String,List<Map<String,String>>> entry:map.entrySet()){
-            Log.d(TAG, "onCreate: "+entry.getKey());
-            for (Map<String,String> m : map.get(entry.getKey())){
-                for (Map.Entry<String,String> kv: m.entrySet()){
-                    Log.d(TAG, "onCreate: "+kv.getKey()+" "+kv.getValue());
-                }
-                Log.d(TAG, "onCreate: ");
-            }
-        }
-        ruleStore.setTypeRule(map);
     }
 
 
