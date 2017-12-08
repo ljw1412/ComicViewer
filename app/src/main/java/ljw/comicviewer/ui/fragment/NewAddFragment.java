@@ -28,9 +28,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
+import ljw.comicviewer.bean.CallBackData;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
+import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
 import ljw.comicviewer.util.RefreshLayoutUtil;
@@ -49,7 +51,9 @@ public class NewAddFragment extends BaseFragment
     List<Comic> comicList = new ArrayList<>();
     private File myCache;
     private int loadedPage = 1;
+    private int maxPage = -1;
     private boolean isLoadingNext = false;
+    RuleStore ruleStore = RuleStore.get();
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
     @BindView(R.id.grid_view)
@@ -111,6 +115,7 @@ public class NewAddFragment extends BaseFragment
             public void onRefresh(RefreshLayout refreshlayout) {
                 //下拉刷新
                 loadedPage = 1;
+                maxPage = -1;
                 comicList.clear();
                 pictureGridAdapter.notifyDataSetChanged();
                 // 获取对象，重新获取当前目录对象
@@ -146,7 +151,8 @@ public class NewAddFragment extends BaseFragment
     //获得漫画列表对象并存入comicList
     public void getListItems(int page){
         btn_toTop.setVisibility(View.GONE);
-        ComicService.get().getListItems(this,page);
+        ComicService.get().getHTML(this, Global.REQUEST_COMIC_NEWADD,
+                ruleStore.getListRule().get("url"),page);
     }
 
 
@@ -215,8 +221,12 @@ public class NewAddFragment extends BaseFragment
     @Override
     public Object myDoInBackground(String TAG,Object data) {
         switch (TAG) {
-            case Global.REQUEST_COMICS_LIST:
-                List<Comic> tempList = ComicFetcher.getComicList(data.toString());
+            case Global.REQUEST_COMIC_NEWADD:
+                CallBackData callBackData = ComicFetcher.getComicList(data.toString());
+                List<Comic> tempList = (List<Comic>) callBackData.getObj();
+                if(maxPage == -1){
+                    maxPage = (int) callBackData.getArg1();
+                }
                 if(tempList.size()>0) comicList.addAll(tempList);
                 return tempList.size();
         }
@@ -226,13 +236,17 @@ public class NewAddFragment extends BaseFragment
     @Override
     public void myOnPostExecute(String TAG,Object resultObj) {
         switch (TAG){
-            case Global.REQUEST_COMICS_LIST:
+            case Global.REQUEST_COMIC_NEWADD:
                 if (resultObj!=null && (Integer)resultObj > 0){
                     txt_netError.setVisibility(View.GONE);
                     btn_toTop.setVisibility(View.VISIBLE);
                     //结束刷新或加载状态
                     RefreshLayoutUtil.onFinish(refreshLayout);
-                    RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Both);
+                    if(loadedPage >= maxPage){
+                        RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
+                    }else{
+                        RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Both);
+                    }
                     clearAndLoadImage();
                     isLoadingNext = false;
                 }else{
@@ -246,7 +260,7 @@ public class NewAddFragment extends BaseFragment
     @Override
     public void onFinish(Object data, String what) {
         switch (what){
-            case Global.REQUEST_COMICS_LIST:
+            case Global.REQUEST_COMIC_NEWADD:
                 UIUpdateTask UIUpdateTask = new UIUpdateTask(what,data);
                 UIUpdateTask.execute();
                 break;
@@ -256,8 +270,8 @@ public class NewAddFragment extends BaseFragment
     @Override
     public void onError(String msg ,String what) {
         switch (what){
-            case Global.REQUEST_COMICS_LATEST:
-            case Global.REQUEST_COMICS_LIST:
+            case Global.REQUEST_COMICS_UPDATE:
+            case Global.REQUEST_COMIC_NEWADD:
                 RefreshLayoutUtil.onFinish(refreshLayout);
                 if(isLoadingNext) {
                     SnackbarUtil.newAddImageColorfulSnackar(

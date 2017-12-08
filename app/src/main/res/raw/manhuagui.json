@@ -4,7 +4,7 @@
 	"domain":".manhuagui.com",
 	"cookie":"country=US",
 	"list":{
-		"url":"/list/",
+		"url":"/list/{type:}index_p{page:}.html",
 		"cssQuery":{
 			"items":"$('.book-list #contList li')",
 			"comic-id":"$('a.bcover').attr('href').match('/(\\d+)/')[1]",
@@ -13,9 +13,20 @@
 			"comic-score":"$('span.updateon em').text()",
 			"comic-update":"$('span.updateon').html().match('\\w+-\\w+-\\w+')[0]",
 			"comic-update-status":"$('a.bcover span.tt').text()",
-			"comic-end":"$('a.bcover span').last().attr('class')!='sl'"
+			"comic-end":"$('a.bcover span').last().attr('class')!='sl'",
+			"max-page":"$('.pager a').last().attr('href').match('/.*_p(\\w+).html')[1]"
 		},
 		"type":{
+			"order":[
+				{"name":"separate","value":"_"},
+				{"name":"endStr","value":"/"},
+				{"name":0,"value":"area"},
+				{"name":1,"value":"genre"},
+				{"name":2,"value":"age"},
+				{"name":3,"value":"year"},
+				{"name":4,"value":"letter"},
+				{"name":5,"value":"status"}
+			],
 			"area":[
 				{"name":"全部","value":""},
 				{"name":"日本","value":"japan"},
@@ -127,7 +138,7 @@
 		}
 	},
 	"latest-list-url":{
-		"url":"/update/",
+		"url":"/update/d{page:}.html",
 		"cssQuery":{
 			"latest-list":"$('.latest-list')",
 			"latest-items":"$('ul li')",

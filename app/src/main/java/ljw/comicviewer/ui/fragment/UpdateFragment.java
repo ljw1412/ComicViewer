@@ -99,7 +99,9 @@ public class UpdateFragment extends NewAddFragment {
     @Override
     public void getListItems(int days) {
         btn_toTop.setVisibility(View.GONE);
-        ComicService.get().getUpdateList(this,days);
+//        ComicService.get().getUpdateList(this,days);
+        ComicService.get().getHTML(this,Global.REQUEST_COMICS_UPDATE,
+                ruleStore.getLatestRule().get("url"),days);
     }
 
 
@@ -117,7 +119,7 @@ public class UpdateFragment extends NewAddFragment {
     @Override
     public Object myDoInBackground(String TAG, Object data) {
         switch (TAG) {
-            case Global.REQUEST_COMICS_LATEST:
+            case Global.REQUEST_COMICS_UPDATE:
                 List<Comic> tempList = ComicFetcher.getLatestList(data.toString());
                 if(tempList.size()>0) allList.addAll(tempList);
                 return tempList.size();
@@ -128,7 +130,7 @@ public class UpdateFragment extends NewAddFragment {
     @Override
     public void myOnPostExecute(String TAG,Object resultObj) {
         switch (TAG) {
-            case Global.REQUEST_COMICS_LATEST:
+            case Global.REQUEST_COMICS_UPDATE:
                 if (resultObj!=null && (Integer)resultObj > 0) {
                     maxPage = allList.size() % 30 > 0 ? (allList.size() / 30 + 1) : allList.size() / 30;
                     add30(1);
@@ -150,7 +152,7 @@ public class UpdateFragment extends NewAddFragment {
     @Override
     public void onFinish(Object data, String what) {
         switch (what){
-            case Global.REQUEST_COMICS_LATEST:
+            case Global.REQUEST_COMICS_UPDATE:
                 UIUpdateTask UIUpdateTask = new UIUpdateTask(what,data);
                 UIUpdateTask.execute();
                 break;

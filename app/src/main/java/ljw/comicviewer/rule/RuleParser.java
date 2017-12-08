@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import ljw.comicviewer.bean.Category;
+import ljw.comicviewer.store.FilterStore;
 import ljw.comicviewer.store.RuleStore;
 
 /**
@@ -24,7 +25,7 @@ public class RuleParser {
     private static String ruleStr;
     private static JSONObject jsonObject;
     private static RuleStore ruleStore;
-
+    private static FilterStore filterStore;
     private RuleParser() {
     }
 
@@ -38,6 +39,7 @@ public class RuleParser {
 
     public static void setRuleStr(){
         ruleStore = RuleStore.get();
+        filterStore = FilterStore.get();
         ruleStr = ruleStore.getCurrentRule();
         if(ruleStr!=null){
             setJsonObject();
@@ -64,6 +66,7 @@ public class RuleParser {
             parseType();
         }catch (Exception e){
             Log.e(TAG, "parseAll: typeRuleError");
+            Log.e(TAG, "parseAll: ", e);
         }
     }
 
@@ -141,6 +144,7 @@ public class RuleParser {
         return map;
     }
 
+    //解析type的json，一般type是list的子对象;
     private void parseType(){
         Map<String,List<Category>> map = new HashMap<>();
         JSONObject list = jsonObject.getJSONObject("list");
@@ -159,18 +163,40 @@ public class RuleParser {
                     category.setValue(value != null ? value.toString() : null);
                     categories.add(category);
                 }
-                map.put(key.toString(),categories);
+                if(key.toString().equals("order")){//如果是顺序相关再次解析
+                    parseOrder(categories);
+                }else{
+                    map.put(key.toString(),categories);
+                }
             }
             ruleStore.setTypeRule(map);
+            filterStore.filterStatusReset();//初始化filterStatus
+            filterStore.printStore();
         }else{
             ruleStore.setTypeRule(null);
             Log.e(TAG, "parseType: 未找到类型规则" );
         }
-
     }
 
-
-
-
+    private void parseOrder(List<Category> categories){
+        List<String> order = new ArrayList<>();
+        for(Category category:categories){
+            String name = category.getName();
+            String value = category.getValue();
+            if (name == null || value == null) continue;
+            if(name.equals("separate")){
+                filterStore.setSeparate(value);
+            }else if(name.equals("endStr")){
+                filterStore.setEndStr(value);
+            }else{
+                try {
+                    order.add(Integer.valueOf(name),value);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        filterStore.setOrder(order);
+    }
 
 }

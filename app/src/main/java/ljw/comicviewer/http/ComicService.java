@@ -1,11 +1,11 @@
 package ljw.comicviewer.http;
 
-import android.content.Context;
+import android.util.Log;
 
 import ljw.comicviewer.Global;
-import ljw.comicviewer.bean.CallBackData;
+import ljw.comicviewer.store.FilterStore;
 import ljw.comicviewer.store.RuleStore;
-import ljw.comicviewer.util.StoreUtil;
+import ljw.comicviewer.util.StringUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,30 +49,55 @@ public class ComicService {
     }
     public Call getHTML(final RequestCallback requestCallback , String path, final String what){
         Call<String> call = ComicService.get().getHTML(path);
+        Log.d(TAG, "getHTML: " + call.request().toString());
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if(response.body()!=null){
                     requestCallback.onFinish(response.body().toString(),what);
                 }else {
-                    requestCallback.onError("获得response.body()为null，可能是代码失效！",what);
+                    requestCallback.onError(what +":获得response.body()为null，可能是代码失效！",what);
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                requestCallback.onError("getUpdateList()网络请求失败！",what);
+                requestCallback.onError(what + ":网络请求失败！",what);
             }
         });
         return call;
     }
 
+    /**
+     *
+     * @param oPath  含有参数的地址
+     * {type:} 匹配规则 主要有type，page
+     * @param page   当前页数
+     * @return
+     */
+    public Call<String> getHTML(final RequestCallback requestCallback,final String what,String oPath,int page){
+        String path = oPath.replaceAll("\\{page:.*?\\}", page + "");
+        FilterStore filterStore = FilterStore.get();
+        if (StringUtil.isExits("\\{type:.*?\\}", oPath)) {
+            String typeStr;
+            if(what.equals(Global.REQUEST_COMIC_NEWADD)){
+                typeStr = "";
+            }else{
+                typeStr = StringUtil.join(filterStore.getFilterStatus(), filterStore.getSeparate());
+                if(filterStore.getEndStr()!=null && !typeStr.equals(""))
+                    typeStr += filterStore.getEndStr();
+                Log.d(TAG, "getHTML: " + typeStr);
+            }
+            path = path.replaceAll("\\{type:.*?\\}",typeStr);
+        }
+        return getHTML(requestCallback,path,what);
+    }
 
     //获得指定页数的漫画列表对象
     private Call<String> getList(int page){return getService(host).getList(page);}
     public Call getListItems(final RequestCallback requestCallback,int page){
         Call<String> call = ComicService.get().getList(page);
-        final String what = Global.REQUEST_COMICS_LIST;
+        final String what = Global.REQUEST_COMIC_NEWADD;
         //网络请求回馈
         call.enqueue(new Callback<String>() {
             @Override
@@ -142,7 +167,7 @@ public class ComicService {
     public Call getUpdateList(final RequestCallback requestCallback , int days){
         String path = RuleStore.get().getLatestRule().get("url")+"/d"+days+".html";
         Call<String> call = ComicService.get().getHTML(path);
-        final String what = Global.REQUEST_COMICS_LATEST;
+        final String what = Global.REQUEST_COMICS_UPDATE;
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {

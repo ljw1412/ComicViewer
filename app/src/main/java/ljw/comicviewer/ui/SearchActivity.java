@@ -169,7 +169,8 @@ public class SearchActivity extends AppCompatActivity
 
     public void searching(View view){
         keyword = edit_search.getText().toString();
-        if(StringUtil.isExits("id:(\\d+)/",keyword)){
+        if(keyword.matches("id:(\\d+)/")){
+//        if(StringUtil.isExits("id:(\\d+)/",keyword)){
             String comicId = StringUtil.getPattern("id:(\\d+)/",keyword,1);
             Intent intent = new Intent(context, DetailsActivity.class);
             intent.putExtra("id",comicId);

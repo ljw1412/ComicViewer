@@ -32,26 +32,6 @@ import ljw.comicviewer.store.RuleStore;
  */
 
 public class ComicFetcher {
-    private static String REG_DATE = "\\w+-\\w+-\\w+";
-    private static String REG_COVER_URL_REG = "http[s]?:.+.(?:jpg|jpeg|png|gif|bmp)";
-    private static String REG_COMIC_ID = "/(\\d+)/";
-    private static String REG_CHAPTER_ID = "/(\\d+).html";
-
-    /**
-     * 正则表达式获得内容
-     * @param reg 正则表达式
-     * @param str 需要匹配的文字
-     * @param i   结果下标
-     * @return
-     */
-    private static String getPattern(String reg,String str,int i){
-        Pattern pattern = Pattern.compile(reg);
-        Matcher matcher = pattern.matcher(str);
-        if(matcher.find()){
-            return matcher.group(i);
-        }
-        return null;
-    }
 
     private static RuleStore getRuleStore(){
         return RuleStore.get();
@@ -62,7 +42,7 @@ public class ComicFetcher {
     }
 
     //获取列表页信息(规则版)
-    public static List<Comic> getComicList(String html){
+    public static CallBackData getComicList(String html){
         Map<String,String> map = getRuleStore().getListRule();
 
         List<Comic> comics = new ArrayList<>();
@@ -81,7 +61,18 @@ public class ComicFetcher {
                 comics.add(comic);
             }
         }
-        return comics;
+        CallBackData backData = new CallBackData();
+        backData.setObj(comics);
+        int maxPage = 99999;
+        try {
+            maxPage = Integer.valueOf((String) getRuleFetcher().parser(doc,map.get("max-page")));
+        }catch (Exception e){
+            if(e instanceof NumberFormatException){
+                maxPage = 1;
+            }
+        }
+        backData.setArg1(maxPage);
+        return backData;
     }
 
     //漫画搜索(规则版)

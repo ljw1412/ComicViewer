@@ -91,7 +91,7 @@ public class RuleFetcher {
             for(int i = 0 ; i < regexps.length ; i++ ){
                 cssQuery = "";
                 try {
-                    if(StringUtil.isExits(regexps[i] , ss)) {
+                    if(ss.matches(regexps[i])) {//完全匹配
                         boolean error = true;
                         switch (i){
                             case 12://find()

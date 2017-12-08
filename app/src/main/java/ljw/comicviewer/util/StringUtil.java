@@ -46,15 +46,24 @@ public class StringUtil {
     public static boolean isExits(String reg, String str){
         Pattern pattern = Pattern.compile(reg);
         Matcher matcher = pattern.matcher(str);
-        boolean res = matcher.matches();
+        boolean res = matcher.find();
         if(DEBUG) Log.d("StringUtil----", "isExits: {"+reg+","+str+"}"+res);
         return res;
     }
 
-    public static String join(String[] strings, String cssQuery) {
+    public static String join(String[] strings, String separate) {
         String res = "";
         for(int i = 0 ; i < strings.length ; i++){
-            res += strings[i] + (i != strings.length ? cssQuery : "");
+            res += strings[i] + (i != strings.length - 1 ? separate : "");
+        }
+        return res;
+    }
+
+    public static String join(List<String> list, String separate) {
+        String res = "";
+        for(int i = 0 ; i < list.size() ; i++){
+            if(list.get(i).equals("")) continue;
+            res += list.get(i) + (i != list.size() - 1 ? separate : "");
         }
         return res;
     }
