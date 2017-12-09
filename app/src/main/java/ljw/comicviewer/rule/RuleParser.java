@@ -62,6 +62,7 @@ public class RuleParser {
         parseDetailsChapter();
         parseSearchPage();
         parseReadPage();
+        parseAuthorPage();
         try{
             parseType();
         }catch (Exception e){
@@ -125,6 +126,13 @@ public class RuleParser {
             throw new NullPointerException("规则没有定义！");
         }
         ruleStore.setReadRule(parsePage("read_page"));
+    }
+
+    private void parseAuthorPage(){
+        if (ruleStr == null){
+            throw new NullPointerException("规则没有定义！");
+        }
+        ruleStore.setAuthorRule(parsePage("author_page"));
     }
 
     private Map<String,String> parsePage(String key){

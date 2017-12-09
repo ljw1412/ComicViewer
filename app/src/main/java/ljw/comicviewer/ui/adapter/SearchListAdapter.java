@@ -81,31 +81,7 @@ public class SearchListAdapter extends BaseAdapter{
         searchViewHolder.updateStatus.setText(comics.get(position).getUpdateStatus());
         searchViewHolder.end.setText(comics.get(position).isEnd()?"已完结":"连载中");
         searchViewHolder.end.setTextColor(comics.get(position).isEnd()?Color.rgb(236,19,111):Color.rgb(68,221,0));
-
-        final LinearLayout thisBody = searchViewHolder.body;
-        thisBody.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                go(position);
-            }
-        });
-        thisBody.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        //按住
-                        thisBody.setBackgroundResource(R.drawable.view_shadow_hover);
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP:
-                        thisBody.setBackgroundResource(R.drawable.view_shadow);
-                        break;
-                }
-                return false;
-            }
-        });
-        //TODO:图片加载代码移动到ComicGridFragment
+        //图片加载
         loadCover(position,searchViewHolder.image);
         return convertView;
     }

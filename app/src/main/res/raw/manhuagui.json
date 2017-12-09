@@ -151,7 +151,7 @@
 		}
 	},
 	"search_page":{
-		"url":"/s/",
+		"url":"/s/{keyword:}_p{page:}.html",
 		"cssQuery":{
 			"items":"$('.book-result li')",
 			"comic-id":"$('a.bcover').attr('href').match('/(\\d+)/')[1]",
@@ -168,7 +168,7 @@
 		}
 	},
 	"details_page":{
-		"url":"/comic/",
+		"url":"/comic/{comic:}/",
 		"wv-js":"document.getElementsByTagName('html')[0].outerHTML;",
 		"cssQuery":{
 			"comic-name":"$('.book-title h1').text()",
@@ -195,5 +195,22 @@
 	},
 	"read_page":{
 		"wv-js":"document.getElementsByTagName('html')[0].outerHTML;"
+	},
+	"author_page":{
+		"url":"{author:}index_p{page:}.html",
+		"cssQuery":{
+			"items":"$('.book-result li')",
+			"comic-id":"$('a.bcover').attr('href').match('/(\\d+)/')[1]",
+			"comic-name":"$('dt a').first().text()",
+			"comic-image-url":"$('a.bcover img').attr('src').match('http[s]?:.+.(?:jpg|jpeg|png|gif|bmp)')[0]",
+			"comic-score":"$('.book-score .score-avg strong').text()",
+			"comic-update":"$('.book-detail .status span span').eq(1).text()",
+			"comic-update-status":"$('.book-detail .status span a').first().text()",
+			"comic-end":"$('.book-detail .status span span').first().text().indexOf('完结')!=-1",
+			"comic-author":"$('.tags').eq(2).find('span a').text()",
+			"comic-tag":"$('.tags').eq(1).find('span').eq(2).find('a').text()",
+			"comic-info":"$('.intro').text().replace('\\[详情\\]','')",
+			"max-page":"$('.pager a').last().attr('href').match('/.*_p(\\w+).html')[1]"
+		}
 	}
 }

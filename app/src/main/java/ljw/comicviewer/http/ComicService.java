@@ -20,7 +20,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class ComicService {
     private static final String TAG ="ComicService----";
     private static ComicService comicService;
-    private static String host ;//= Global.MANHUAGUI_HOST;
+    private static FilterStore filterStore;
+    private static String host ;;
 
     private ComicService(){}
 
@@ -29,6 +30,7 @@ public class ComicService {
             comicService = new ComicService();
         }
         host = RuleStore.get().getHost();
+        filterStore = FilterStore.get();
         return comicService;
     }
 
@@ -43,13 +45,13 @@ public class ComicService {
         return getRetrofit(host).create(HttpInterface.ComicRequestServices.class);
     }
 
-    //获得网页源码
+    //获得网页源码（请求核心代码）
     private Call<String> getHTML(String path){
         return getService(host).getHTML(path);
     }
-    public Call getHTML(final RequestCallback requestCallback , String path, final String what){
+    public Call getHTML(final RequestCallback requestCallback, final String what, String path){
         Call<String> call = ComicService.get().getHTML(path);
-        Log.d(TAG, "getHTML: " + call.request().toString());
+        Log.d(TAG, what+": " + call.request().toString());
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -69,15 +71,15 @@ public class ComicService {
     }
 
     /**
-     *
-     * @param oPath  含有参数的地址
-     * {type:} 匹配规则 主要有type，page
+     * url参数解析 有页数
+     * @param requestCallback
+     * @param what
+     * @param oPath  含有参数的地址 主要有{type:}，{page:}
      * @param page   当前页数
      * @return
      */
     public Call<String> getHTML(final RequestCallback requestCallback,final String what,String oPath,int page){
         String path = oPath.replaceAll("\\{page:.*?\\}", page + "");
-        FilterStore filterStore = FilterStore.get();
         if (StringUtil.isExits("\\{type:.*?\\}", oPath)) {
             String typeStr;
             if(what.equals(Global.REQUEST_COMIC_NEWADD)){
@@ -90,100 +92,43 @@ public class ComicService {
             }
             path = path.replaceAll("\\{type:.*?\\}",typeStr);
         }
-        return getHTML(requestCallback,path,what);
+        return getHTML(requestCallback,what,path);
     }
 
-    //获得指定页数的漫画列表对象
-    private Call<String> getList(int page){return getService(host).getList(page);}
-    public Call getListItems(final RequestCallback requestCallback,int page){
-        Call<String> call = ComicService.get().getList(page);
-        final String what = Global.REQUEST_COMIC_NEWADD;
-        //网络请求回馈
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if(response.body()!=null){
-                    requestCallback.onFinish(response.body().toString(),what);
-                }else {
-                    requestCallback.onError("获得response.body()为null，可能是代码失效！",what);
-                }
-            }
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                requestCallback.onError("getList()网络请求失败",what);
-            }
-        });
-        return call;
+    /**
+     * url参数解析 有页数,有替换文字
+     * @param requestCallback 返回数据监听
+     * @param what  请求标识
+     * @param oPath 含参地址{page:},{keyword:}
+     * @param str 搜索的关键词
+     * @param page 当前页数
+     * @return
+     */
+    public Call<String> getHTML(final RequestCallback requestCallback, final String what, String oPath, String str, int page){
+        String path = oPath.replaceAll("\\{page:.*?\\}", page + "");
+        if (StringUtil.isExits("\\{keyword:.*?\\}", oPath)) {
+            path = path.replaceAll("\\{keyword:.*?\\}",str);
+        }
+        if(StringUtil.isExits("\\{author:.*?\\}", oPath)){
+            path = path.replaceAll("\\{author:.*?\\}",str);
+        }
+        return getHTML(requestCallback,what,path);
     }
 
-
-    //加载漫画数据
-    private Call<String> getDetails(String id){return getService(host).getDetails(id);}
-    public Call getComicInfo(final RequestCallback requestCallback, String comic_id){
-        Call<String> call = ComicService.get().getDetails(comic_id);
-        final String what = Global.REQUEST_COMICS_INFO;
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if(response.body()!=null){
-                    requestCallback.onFinish(response.body().toString(),what);
-                }else {
-                    requestCallback.onError("获得response.body()为null，可能是代码失效！",what);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                requestCallback.onError("getDetails()网络请求失败！",what);
-            }
-        });
-        return call;
-    }
-
-    private Call<String> getSearch(String keyword,String page){return getService(host).getSearch(keyword,page);}
-    //搜索页面
-    public Call getComicSearch(final RequestCallback requestCallback , String keyword , int page){
-        Call<String> call = ComicService.get().getSearch(keyword,page+"");
-        final String what = Global.REQUEST_COMICS_SEARCH;
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if(response.body()!=null){
-                    requestCallback.onFinish(response.body().toString(),what);
-                }else {
-                    requestCallback.onError("获得response.body()为null，可能是代码失效！",what);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                requestCallback.onError("getComicSearch()网络请求失败！",what);
-            }
-        });
-        return call;
-    }
-
-    //更新漫画页面
-    public Call getUpdateList(final RequestCallback requestCallback , int days){
-        String path = RuleStore.get().getLatestRule().get("url")+"/d"+days+".html";
-        Call<String> call = ComicService.get().getHTML(path);
-        final String what = Global.REQUEST_COMICS_UPDATE;
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if(response.body()!=null){
-                    requestCallback.onFinish(response.body().toString(),what);
-                }else {
-                    requestCallback.onError("获得response.body()为null，可能是代码失效！",what);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                requestCallback.onError("getUpdateList()网络请求失败！",what);
-            }
-        });
-        return call;
+    /**
+     * url参数解析 有替换文字
+     * @param requestCallback
+     * @param what
+     * @param oPath
+     * @param str
+     * @return
+     */
+    public Call<String> getHTML(final RequestCallback requestCallback, final String what, String oPath, String str){
+        String path = oPath;
+        if (StringUtil.isExits("\\{comic:.*?\\}", oPath)) {
+            path = path.replaceAll("\\{comic:.*?\\}",str);
+        }
+        return getHTML(requestCallback,what,path);
     }
 
     //自定义回调接口

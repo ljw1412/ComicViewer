@@ -75,7 +75,7 @@ public class DetailsActivity extends AppCompatActivity
     private int TYPE_MAX = 3;
     private boolean like = false;
     Call call_loadComicInformation;
-    private RuleStore ruleStore;
+    private RuleStore ruleStore = RuleStore.get();;
     @BindView(R.id.details_scroll_container)
     SwipeRefreshLayout details_container;
     @BindView(R.id.details_cover)
@@ -177,7 +177,6 @@ public class DetailsActivity extends AppCompatActivity
         comic.setScore(score);
 
         //加载数据
-        ruleStore = RuleStore.get();
         loadComicInformation();
         updateLikeStatus();
         updateReadStatus();
@@ -278,7 +277,8 @@ public class DetailsActivity extends AppCompatActivity
 
     //加载数据
     public void loadComicInformation(){
-        call_loadComicInformation = ComicService.get().getComicInfo(this,comic_id);//18X id:"8788");"16058"
+        call_loadComicInformation = ComicService.get().getHTML(this,Global.REQUEST_COMICS_INFO,
+                ruleStore.getDetailsRule().get("url"),comic_id);//18X id:"8788");"16058"
     }
 
     //加载封面
@@ -479,7 +479,8 @@ public class DetailsActivity extends AppCompatActivity
                             }
                             webview.getSettings().setJavaScriptEnabled(true);
                             webview.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
-                            webview.loadUrl(ruleStore.getHost()+ruleStore.getDetailsRule().get("url")+comic_id+"/");
+                            webview.loadUrl(ruleStore.getHost() +
+                                    ruleStore.getDetailsRule().get("url").replaceAll("\\{comic:.*?\\}",comic_id));
                             webview.setWebViewClient(new MyWebView());
                             getChapters();
                             bottomDialog.dismiss();

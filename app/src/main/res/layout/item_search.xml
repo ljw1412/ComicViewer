@@ -13,7 +13,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:id="@+id/search_body"
-        android:background="@drawable/view_shadow"
+        android:background="@drawable/selector_search_item_bg"
         android:paddingBottom="2.5dp">
 
         <ImageView

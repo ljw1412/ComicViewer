@@ -74,22 +74,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryItem
                     context.startActivity(intent);
                 }
             });
-            view.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    switch (motionEvent.getAction()){
-                        case MotionEvent.ACTION_DOWN:
-                            //按住
-                            view.setBackgroundResource(R.color.black_pressed);
-                            break;
-                        case MotionEvent.ACTION_CANCEL:
-                        case MotionEvent.ACTION_UP:
-                            view.setBackgroundResource(R.color.white);
-                            break;
-                    }
-                    return false;
-                }
-            });
         }
     }
 

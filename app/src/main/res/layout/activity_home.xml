@@ -43,7 +43,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
-                app:srcCompat="@drawable/main_index_tab_selector_cart"
+                app:srcCompat="@drawable/selector_home_bottom_tab_cart"
                 android:id="@+id/img_comic" />
 
             <TextView
@@ -68,7 +68,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
-                app:srcCompat="@drawable/main_index_tab_selector_collection"
+                app:srcCompat="@drawable/selector_home_bottom_tab_collection"
                 android:id="@+id/img_collection" />
 
             <TextView
@@ -92,7 +92,7 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                app:srcCompat="@drawable/main_index_tab_selector_mine"
+                app:srcCompat="@drawable/selector_home_bottom_tab_mine"
                 android:id="@+id/img_mine"
                 android:layout_height="32dp" />
 

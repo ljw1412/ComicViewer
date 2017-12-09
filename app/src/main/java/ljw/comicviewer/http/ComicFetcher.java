@@ -112,6 +112,43 @@ public class ComicFetcher {
         return backData;
     }
 
+    //漫画搜索(规则版)
+    public static CallBackData getAuthorResults(String html){
+        Map<String,String> map = getRuleStore().getSearchRule();
+
+        List<Comic> comics = new ArrayList<>();
+        Document doc = Jsoup.parse(html);
+        if(map!=null && map.size()>0){
+            Elements items = (Elements) getRuleFetcher().parser(doc , map.get("items"));
+            for(Element element : items){
+                Comic comic = new Comic();
+                comic.setComicId((String) getRuleFetcher().parser(element,map.get("comic-id")));
+                comic.setName((String) getRuleFetcher().parser(element,map.get("comic-name")));
+                comic.setImageUrl((String) getRuleFetcher().parser(element,map.get("comic-image-url")));
+                comic.setScore((String) getRuleFetcher().parser(element,map.get("comic-score")));
+                comic.setUpdate((String) getRuleFetcher().parser(element,map.get("comic-update")));
+                comic.setUpdateStatus("更新至"+(String) getRuleFetcher().parser(element,map.get("comic-update-status")));
+                comic.setEnd((Boolean) getRuleFetcher().parser(element,map.get("comic-end")));
+                comic.setAuthor((String) getRuleFetcher().parser(element,map.get("comic-author")));
+                comic.setTag((String) getRuleFetcher().parser(element,map.get("comic-tag")));
+                comic.setInfo((String) getRuleFetcher().parser(element,map.get("comic-info")));
+                comics.add(comic);
+            }
+        }
+        CallBackData backData = new CallBackData();
+        backData.setObj(comics);
+        int maxPage = 99999;
+        try {
+            maxPage = Integer.valueOf((String) getRuleFetcher().parser(doc,map.get("max-page")));
+        }catch (Exception e){
+            if(e instanceof NumberFormatException){
+                maxPage = 1;
+            }
+        }
+        backData.setArg1(maxPage);
+        return backData;
+    }
+
     //获取详细页信息(规则版)
     public static Comic getComicDetails(String html,Comic comic){
         Map<String,String> map = getRuleStore().getDetailsRule();

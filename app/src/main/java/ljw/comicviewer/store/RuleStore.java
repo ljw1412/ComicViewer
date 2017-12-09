@@ -27,6 +27,7 @@ public class RuleStore {
     private Map<String,String> searchRule;
     private Map<String,String> detailsChapterRule;
     private Map<String,String> readRule;
+    private Map<String,String> authorRule;
 
     private RuleStore(){}
 
@@ -131,6 +132,14 @@ public class RuleStore {
 
     public void setReadRule(Map<String, String> readRule) {
         this.readRule = readRule;
+    }
+
+    public Map<String, String> getAuthorRule() {
+        return authorRule;
+    }
+
+    public void setAuthorRule(Map<String, String> authorRule) {
+        this.authorRule = authorRule;
     }
 
     public void printRules(){

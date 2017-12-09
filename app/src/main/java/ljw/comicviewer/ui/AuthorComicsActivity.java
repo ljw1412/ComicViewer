@@ -1,11 +1,13 @@
 package ljw.comicviewer.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,6 +28,7 @@ import ljw.comicviewer.bean.CallBackData;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
+import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.SearchListAdapter;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import retrofit2.Call;
@@ -39,6 +42,7 @@ public class AuthorComicsActivity extends AppCompatActivity
     private int curPage = 1;
     private int maxPage = -1;
     private boolean flag = false;//是否调用备用方法
+    RuleStore ruleStore = RuleStore.get();
     private SearchListAdapter searchListAdapter;
     private Call loadCall;
     @BindView(R.id.nav_child_title)
@@ -67,10 +71,12 @@ public class AuthorComicsActivity extends AppCompatActivity
 
     public void loadAuthorComics(){
         if(aMark!=null && !flag){
-            loadCall = ComicService.get().getHTML(this,aMark+"index_p"+curPage+".html",Global.REQUEST_AUTHOR_COMICS);
+            loadCall = ComicService.get().getHTML(this,Global.REQUEST_AUTHOR_COMICS,
+                    ruleStore.getAuthorRule().get("url"),aMark,curPage);
         }else {
             //备用方法：使用搜索功能来找作者相关漫画
-            loadCall = ComicService.get().getComicSearch(this, aName, curPage);
+            loadCall = ComicService.get().getHTML(this,Global.REQUEST_COMICS_SEARCH,
+                    ruleStore.getSearchRule().get("url"), aName, curPage);
         }
     }
 
@@ -118,7 +124,17 @@ public class AuthorComicsActivity extends AppCompatActivity
         searchListAdapter = new SearchListAdapter(context,comics);
         listview.setAdapter(searchListAdapter);
 //        listview.setOnScrollListener(this);
-//        listview.setOnItemClickListener(new NewAddFragment.ItemClickListener());
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Comic comic = comics.get(position);
+                Intent intent = new Intent(context, DetailsActivity.class);
+                intent.putExtra("id",comic.getComicId());
+                intent.putExtra("score",comic.getScore());
+                intent.putExtra("title",comic.getName());
+                startActivity(intent);
+            }
+        });
         searchListAdapter.notifyDataSetChanged();
     }
 
@@ -141,9 +157,12 @@ public class AuthorComicsActivity extends AppCompatActivity
     public void onFinish(Object data, String what) {
         switch (what) {
             case Global.REQUEST_AUTHOR_COMICS:
-            case Global.REQUEST_COMICS_SEARCH:
                 AuthorComicsDataTask authorComicsDataTask = new AuthorComicsDataTask(data);
                 authorComicsDataTask.execute();
+                break;
+            case Global.REQUEST_COMICS_SEARCH:
+                SearchDataTask searchDataTask = new SearchDataTask(data);
+                searchDataTask.execute();
                 break;
         }
     }
@@ -176,6 +195,48 @@ public class AuthorComicsActivity extends AppCompatActivity
         private CallBackData callbackdata;
 
         public AuthorComicsDataTask(Object data) {
+            this.data = data;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            String html = (String) data;
+            callbackdata = ComicFetcher.getAuthorResults(html);
+            comics.addAll((List<Comic>) callbackdata.getObj());
+            return comics.size()>0;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if(maxPage == -1){
+                maxPage = (int) callbackdata.getArg1();
+            }
+            Log.d(TAG, "onPostExecute: "+maxPage);
+            if(!aBoolean){
+                if (!flag){
+                    flag = true;
+                    maxPage = -1;
+                    loadAuthorComics();
+                }else {
+                    tipsView.setVisibility(View.VISIBLE);
+                }
+            }
+            RefreshLayoutUtil.onFinish(refreshLayout);
+            if(curPage >= maxPage){
+                RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Disable);
+            }else {
+                RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_LoadMore);
+            }
+            searchListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    class SearchDataTask extends AsyncTask<Void,Void,Boolean>{
+        private Object data;
+        private CallBackData callbackdata;
+
+        public SearchDataTask(Object data) {
             this.data = data;
         }
 

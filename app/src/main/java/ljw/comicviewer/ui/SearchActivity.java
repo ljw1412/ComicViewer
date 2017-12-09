@@ -10,10 +10,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -36,6 +36,7 @@ import ljw.comicviewer.bean.CallBackData;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
+import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.SearchListAdapter;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.SnackbarUtil;
@@ -51,9 +52,10 @@ public class SearchActivity extends AppCompatActivity
     private int curPage = 1;
     private int maxPage = -1;
     private boolean loading = false;
+    RuleStore ruleStore = RuleStore.get();
     private SearchListAdapter searchListAdapter;
     private RefreshHeader refreshHeader;
-    private Call searchCall;
+    private Call<String> searchCall;
     private Snackbar notEmptySnackBar;
     @BindView(R.id.search_button)
     Button btn_search;
@@ -79,7 +81,6 @@ public class SearchActivity extends AppCompatActivity
         initView();
         addListener();
         initListView();
-        initTitleBar();
     }
 
     private void initView(){
@@ -121,44 +122,30 @@ public class SearchActivity extends AppCompatActivity
                 loadSearch(keyword);
             }
         });
-
-    }
-
-    private void initListView() {
-        searchListAdapter = new SearchListAdapter(context,comics);
-        listview.setAdapter(searchListAdapter);
-        searchListAdapter.notifyDataSetChanged();
-    }
-
-    private void initTitleBar(){
+        //列表对象点击事件
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Comic comic = comics.get(position);
+                Intent intent = new Intent(context, DetailsActivity.class);
+                intent.putExtra("id",comic.getComicId());
+                intent.putExtra("score",comic.getScore());
+                intent.putExtra("title",comic.getName());
+                startActivity(intent);
+            }
+        });
+        //搜索文本框编辑事件
         edit_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                //按下回车键
                 if(actionId == EditorInfo.IME_ACTION_DONE){
-                   searching(textView);
+                    searching(textView);
                 }
                 return true;
             }
         });
-
-        btn_search.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        //按住
-                        btn_search.setBackgroundResource(R.color.black_shadow);
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP:
-                        //抬起
-                        btn_search.setBackgroundResource(R.color.blue_A1E0F4);
-                        break;
-                }
-                return false;
-            }
-        });
-
+        //搜索按钮点击事件
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,10 +154,16 @@ public class SearchActivity extends AppCompatActivity
         });
     }
 
+    private void initListView() {
+        searchListAdapter = new SearchListAdapter(context,comics);
+        listview.setAdapter(searchListAdapter);
+        searchListAdapter.notifyDataSetChanged();
+    }
+
+
     public void searching(View view){
         keyword = edit_search.getText().toString();
         if(keyword.matches("id:(\\d+)/")){
-//        if(StringUtil.isExits("id:(\\d+)/",keyword)){
             String comicId = StringUtil.getPattern("id:(\\d+)/",keyword,1);
             Intent intent = new Intent(context, DetailsActivity.class);
             intent.putExtra("id",comicId);
@@ -204,7 +197,8 @@ public class SearchActivity extends AppCompatActivity
 
 
     public void loadSearch(String keyword){
-        searchCall = ComicService.get().getComicSearch(this,keyword,curPage);
+        searchCall = ComicService.get().getHTML(this,Global.REQUEST_COMICS_SEARCH,
+                ruleStore.getSearchRule().get("url"),keyword,curPage);
         loading = true;
     }
 
