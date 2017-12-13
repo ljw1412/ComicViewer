@@ -85,7 +85,7 @@ public class ComicService {
             if(what.equals(Global.REQUEST_COMIC_NEWADD)){
                 typeStr = "";
             }else{
-                typeStr = StringUtil.join(filterStore.getFilterStatus(), filterStore.getSeparate());
+                typeStr = StringUtil.join(filterStore.getOrder(),filterStore.getFilterStatus(), filterStore.getSeparate());
                 if(filterStore.getEndStr()!=null && !typeStr.equals(""))
                     typeStr += filterStore.getEndStr();
                 Log.d(TAG, "getHTML: " + typeStr);

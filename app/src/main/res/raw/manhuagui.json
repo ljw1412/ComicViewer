@@ -20,14 +20,14 @@
 			"order":[
 				{"name":"separate","value":"_"},
 				{"name":"endStr","value":"/"},
-				{"name":0,"value":"area"},
-				{"name":1,"value":"genre"},
-				{"name":2,"value":"age"},
-				{"name":3,"value":"year"},
-				{"name":4,"value":"letter"},
-				{"name":5,"value":"status"}
+				{"name":0,"value":"地区"},
+				{"name":1,"value":"剧情"},
+				{"name":2,"value":"受众"},
+				{"name":3,"value":"年份"},
+				{"name":4,"value":"字母"},
+				{"name":5,"value":"进度"}
 			],
-			"area":[
+			"地区":[
 				{"name":"全部","value":""},
 				{"name":"日本","value":"japan"},
 				{"name":"港台","value":"hongkong"},
@@ -36,7 +36,7 @@
 				{"name":"中国","value":"china"},
 				{"name":"韩国","value":"korea"}
 			],
-			"genre":[
+			"剧情":[
 				{"name":"全部","value":""},
 				{"name":"热血","value":"rexue"},
 				{"name":"冒险","value":"maoxian"},
@@ -77,7 +77,7 @@
 				{"name":"杂志","value":"zazhi"},
 				{"name":"黑道","value":"heidao"}
 			],
-			"age":[
+			"受众":[
 				{"name":"全部","value":""},
 				{"name":"少女","value":"shaonv"},
 				{"name":"少年","value":"shaonian"},
@@ -85,7 +85,7 @@
 				{"name":"儿童","value":"ertong"},
 				{"name":"通用","value":"tongyong"}
 			],
-			"year":[
+			"年份":[
 				{"name":"全部","value":""},
 				{"name":"2017年","value":"2017"},
 				{"name":"2016年","value":"2016"},
@@ -100,7 +100,7 @@
 				{"name":"80年代","value":"198x"},
 				{"name":"更早","value":"197x"}
 			],
-			"letter":[
+			"字母":[
 				{"name":"全部","value":""},
 				{"name":"A","value":"a"},
 				{"name":"B","value":"b"},
@@ -130,7 +130,7 @@
 				{"name":"Z","value":"z"},
 				{"name":"0-9","value":"0-9"}
 			],
-			"status":[
+			"进度":[
 				{"name":"全部","value":""},
 				{"name":"连载","value":"lianzai"},
 				{"name":"完结","value":"wanjie"}
@@ -194,6 +194,7 @@
 		}
 	},
 	"read_page":{
+		"url":"/comic/{comic:}/{chapter:}/",
 		"wv-js":"document.getElementsByTagName('html')[0].outerHTML;"
 	},
 	"author_page":{

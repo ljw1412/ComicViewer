@@ -138,8 +138,10 @@ public class ComicReaderActivity extends AppCompatActivity {
         }
         webView = new WebView(this);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
-        webView.loadUrl(ruleStore.getHost()+ruleStore.getDetailsRule().get("url")+comic_id+"/"+chapter_id+"/");
+        webView.getSettings().setUserAgentString(
+                "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
+        webView.loadUrl(ruleStore.getHost() +
+                ruleStore.getReadRule().get("url").replaceAll("\\{comic:.*?\\}",comic_id).replaceAll("\\{chapter:.*?\\}",chapter_id));
         webView.setWebViewClient(new MyWebView());
         getInfo();
     }

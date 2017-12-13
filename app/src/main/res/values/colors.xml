@@ -9,7 +9,7 @@
     <color name="black_shadow">#75000000</color>
     <color name="white_60">#a0ffffff</color>
     <color name="white">#ffffffff</color>
-    <color name="black">#ff000000</color>
+    <color name="black">#000000</color>
     <color name="black_b2">#b2000000</color>
     <color name="black_60">#606060</color>
     <color name="black_pressed">#33333333</color>

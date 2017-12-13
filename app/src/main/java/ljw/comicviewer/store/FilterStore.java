@@ -3,6 +3,7 @@ package ljw.comicviewer.store;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,14 +15,14 @@ import ljw.comicviewer.bean.Category;
 //类型筛选状态存储
 public class FilterStore {
     private final String TAG = this.getClass().getSimpleName()+"----";
-    private List<String> order;//筛选顺序
-    private List<String> filterStatus;//筛选状态
+    private static FilterStore filterStore;
+    private List<String> order;//父类型的筛选顺序
+    private Map<String,String> filterStatus;//当前筛选状态//TODO:改为Map<String,String>,<父类型，子类型>
     private String endStr;//结尾添加
     private String separate;//分隔符号
-    private static FilterStore filterStore;
 
     public FilterStore() {
-        filterStatus  = new ArrayList<>();
+        filterStatus  = new HashMap<>();
     }
 
     public static FilterStore get(){
@@ -39,12 +40,12 @@ public class FilterStore {
         this.order = order;
     }
 
-    public List<String> getFilterStatus() {
+    public Map<String,String> getFilterStatus() {
         return filterStatus;
     }
 
-    public void setFilterStatus(int i,String value) {
-        filterStatus.add(i, value);
+    public void setFilterStatus(String parent,String subType) {
+        filterStatus.put(parent, subType);
     }
 
     public String getEndStr() {
@@ -70,7 +71,7 @@ public class FilterStore {
                 for (Category category:map.get(key)){
                     if(category!=null && category.getName()!=null
                             && category.getName().equals("全部")){
-                        setFilterStatus(order.indexOf(key),category.getValue());
+                        setFilterStatus(key,category.getValue());
                         break;
                     }
                 }

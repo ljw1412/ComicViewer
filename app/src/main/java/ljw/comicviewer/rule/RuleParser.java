@@ -167,6 +167,7 @@ public class RuleParser {
                     Object name = objJson.get("name");
                     Object value = objJson.get("value");
 //                    Log.d(TAG, "parseType: "+name+"  "+value);
+                    category.setParentName(key != null ? key.toString() : null);
                     category.setName(name != null ? name.toString() : null);
                     category.setValue(value != null ? value.toString() : null);
                     categories.add(category);

@@ -96,7 +96,7 @@ public class NewAddFragment extends BaseFragment
         initGridView();
         addListener();
         //数据首次加载
-        initLoad();
+//        initLoad();
 //        myCache = context.getExternalCacheDir();
     }
 

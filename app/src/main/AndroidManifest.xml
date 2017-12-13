@@ -68,7 +68,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.RedStatusBar" />
-        <activity android:name=".ui.HistoryActivity"
+        <activity
+            android:name=".ui.HistoryActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.RedStatusBar" />
+        <activity android:name=".ui.FilterActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.RedStatusBar"></activity>

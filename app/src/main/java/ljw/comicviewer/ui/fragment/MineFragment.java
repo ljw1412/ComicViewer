@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.History;
 import ljw.comicviewer.ui.AboutActivity;
+import ljw.comicviewer.ui.FilterActivity;
 import ljw.comicviewer.ui.HistoryActivity;
 import ljw.comicviewer.ui.HomeActivity;
 import ljw.comicviewer.ui.SettingsActivity;

@@ -38,11 +38,15 @@
     <string name="tips_search">请输入搜索的关键词</string>
     <string name="tips_search_by_id">在搜索框中输入\"id:ID号/\"\n可以直接到达漫画详情页\n(如:\"id:123/\"不包含双引号)</string>
     <string name="opt_new">上新</string>
-    <string name="opt_category">分类</string>
+    <string name="opt_recommend">推荐</string>
     <string name="opt_update">更新</string>
+    <string name="btn_all_comics">全部漫画</string>
+    <string name="btn_new_comic">最近上新</string>
+    <string name="btn_update_comic">最近更新</string>
     <string name="mine_setting">设置</string>
     <string name="mine_history">观看记录</string>
     <string name="mine_about">关于</string>
+    <string name="title_filter">分类</string>
     <string name="title_author_comics">\"%1$s\"的漫画</string>
     <string name="alert_confirm_exit">再按一次返回键退出应用程序</string>
     <string name="alert_copy_success">复制成功</string>

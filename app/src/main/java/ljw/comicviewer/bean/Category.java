@@ -5,8 +5,17 @@ package ljw.comicviewer.bean;
  */
 
 public class Category {
-    private String name;
-    private String value;
+    private String parentName;//父类型名
+    private String name;//子类型名
+    private String value;//子类型值
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
 
     public String getName() {
         return name;

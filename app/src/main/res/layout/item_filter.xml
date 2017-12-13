@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:text="type"
+        android:layout_width="match_parent"
+        android:textColor="@color/black_b2"
+        android:id="@+id/item_category_txt"
+        android:background="@drawable/shape_border_rounded_rectangle_grey"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_height="26dp"
+        android:textSize="18sp" />
+</LinearLayout>

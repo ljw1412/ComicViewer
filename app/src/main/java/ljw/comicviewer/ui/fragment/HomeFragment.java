@@ -4,7 +4,6 @@ package ljw.comicviewer.ui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -28,7 +27,7 @@ public class HomeFragment extends BaseFragment{
     Context context;
     NewAddFragment newAddFragment;
     UpdateFragment updateFragment;
-    CategoryFragment categoryFragment;
+    RecommendFragment recommendFragment;
     BaseFragment currentFragment;
     MyFragmentPagerAdapter myFragmentPagerAdapter;
     @BindView(R.id.home_fragment_viewPager)
@@ -73,13 +72,14 @@ public class HomeFragment extends BaseFragment{
         viewPager.setAdapter(myFragmentPagerAdapter);
         viewPager.setOffscreenPageLimit(3);
 
+        recommendFragment = new RecommendFragment();
         newAddFragment = new NewAddFragment();
         updateFragment = new UpdateFragment();
-        categoryFragment = new CategoryFragment();
 
+        myFragmentPagerAdapter.addFragment(recommendFragment,getString(R.string.opt_recommend));
         myFragmentPagerAdapter.addFragment(newAddFragment,getString(R.string.opt_new));
         myFragmentPagerAdapter.addFragment(updateFragment,getString(R.string.opt_update));
-        myFragmentPagerAdapter.addFragment(categoryFragment,getString(R.string.opt_category));
+
 
         currentFragment = myFragmentPagerAdapter.getItem(0);
         //第一个加载必须在那个fragment中执行，这里仅修改数组加载状态
@@ -101,15 +101,9 @@ public class HomeFragment extends BaseFragment{
             @Override
             public void onPageSelected(int position) {
                 currentFragment = myFragmentPagerAdapter.getItem(position);
-                loadFragment(position);
+                if (!myFragmentPagerAdapter.isLoaded(position)){
+                    myFragmentPagerAdapter.loadFragment(position,currentFragment);
+                }
             }
         });
-    }
-
-    private void loadFragment(int position){
-        if (!myFragmentPagerAdapter.isLoaded(position)){
-            myFragmentPagerAdapter.loadFragment(position,currentFragment);
-        }
-    }
-
-}
+    }}

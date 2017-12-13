@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,6 +65,29 @@ public class StringUtil {
         for(int i = 0 ; i < list.size() ; i++){
             if(list.get(i).equals("")) continue;
             res += list.get(i) + (i != list.size() - 1 ? separate : "");
+        }
+        return res;
+    }
+
+    /**
+     * 根据顺序拼接字符串
+     * @param order 顺序
+     * @param map 选择类型情况 当值为""不加入拼接
+     * @param separate 分隔符
+     * @return
+     */
+    public static String join(List<String> order,Map<String,String> map, String separate){
+        String res = "";
+        List<String> joinList = new ArrayList<>();
+        for(int i = 0 ; i < order.size() ; i++){
+            if(order.get(i)==null && order.get(i).equals("")) continue;
+            String typeValue = map.get(order.get(i));
+            if(typeValue!=null && !typeValue.equals("")){
+                joinList.add(typeValue);
+            }
+        }
+        for(int i = 0 ; i < joinList.size() ; i++){
+            res += joinList.get(i) + (i != joinList.size() - 1 ? separate : "");
         }
         return res;
     }

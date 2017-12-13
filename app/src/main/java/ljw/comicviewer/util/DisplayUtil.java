@@ -73,20 +73,6 @@ public class DisplayUtil {
     }
 
     //unicode解码
-
-
-    public static String unicodeDecode1(String s) {
-        Pattern reUnicode = Pattern.compile("\\\\u([0-9a-zA-Z]{4})");
-        Matcher m = reUnicode.matcher(s);
-        StringBuffer sb = new StringBuffer(s.length());
-        while (m.find()) {
-            m.appendReplacement(sb,
-                    Character.toString((char) Integer.parseInt(m.group(1), 16)));
-        }
-        m.appendTail(sb);
-        return sb.toString();
-    }
-
     public static String unicodeDecode(String s) {
         StringBuilder sb = new StringBuilder(s.length());
         char[] chars = s.toCharArray();
@@ -112,5 +98,13 @@ public class DisplayUtil {
             sb.append(c);
         }
         return sb.toString();
+    }
+
+    public static double random(double min, double max){
+        return (Math.random()*(max-min)+min);
+    }
+
+    public static int randomInt(double min, double max){
+        return (int) random(min, max);
     }
 }
