@@ -21,6 +21,7 @@ public class RuleStore {
     private String imgHost;
     private String currentRule;
     private Map<String,List<Category>> typeRule;
+    private Map<String,String> homeRule;
     private Map<String,String> listRule;
     private Map<String,String> latestRule;
     private Map<String,String> detailsRule;
@@ -76,6 +77,14 @@ public class RuleStore {
 
     public void setCurrentRule(String currentRule) {
         this.currentRule = currentRule;
+    }
+
+    public Map<String, String> getHomeRule() {
+        return homeRule;
+    }
+
+    public void setHomeRule(Map<String, String> homeRule) {
+        this.homeRule = homeRule;
     }
 
     public Map<String,List<Category>> getTypeRule() {
@@ -149,7 +158,8 @@ public class RuleStore {
                 " , detailsRule:" + detailsRule.size() +
                 " , searchRule:" + searchRule.size() +
                 " , detailsChapterRule:" + detailsChapterRule.size() +
-                " , readRule:" + readRule.size());
+                " , readRule:" + readRule.size()+
+                " , homeRule:" + homeRule);
 
     }
 }

@@ -4,6 +4,9 @@ package ljw.comicviewer.http;
 
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 
 import org.jsoup.Jsoup;
@@ -13,6 +16,7 @@ import org.jsoup.select.Elements;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -23,6 +27,7 @@ import ljw.comicviewer.bean.CallBackData;
 import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.bean.ManhuaguiComicInfo;
+import ljw.comicviewer.bean.Section;
 import ljw.comicviewer.rule.RuleFetcher;
 import ljw.comicviewer.store.RuleStore;
 
@@ -39,6 +44,77 @@ public class ComicFetcher {
 
     private static RuleFetcher getRuleFetcher(){
         return RuleFetcher.get();
+    }
+
+    //首页解析
+    public static CallBackData getHome(String html){
+        Map<String,String> map = getRuleStore().getHomeRule();
+        List<Section> sections = new ArrayList<>();
+        //防止因为真实网页分页显示而导致同名标题产生多个板块
+        Map<String,List<Comic>> parseMap = new HashMap<>();
+        //板块顺序
+        List<String> order = new ArrayList<>();
+        Document doc = Jsoup.parse(html);
+        if(map!=null && map.size()>0) {
+            JSONArray titlesJ = JSON.parseArray(map.get("titles"));
+            JSONArray titleJ = JSON.parseArray(map.get("title"));
+            JSONArray itemsListJ = JSON.parseArray(map.get("items-list"));
+            JSONArray itemsJ = JSON.parseArray(map.get("items"));
+            if(titlesJ!=null && itemsListJ !=null && itemsJ != null){
+                int len = titlesJ.size();
+                for(int i = 0 ;i < len ; i++){
+                    Elements itemsList = (Elements) getRuleFetcher().parser(doc , (String) itemsListJ.get(i));
+                    Elements titles = (Elements) getRuleFetcher().parser(doc, (String) titlesJ.get(i));
+                    for(int j = 0 ; j< itemsList.size() ;j++){
+                        List<Comic> comics = new ArrayList<>();
+                        Elements items = (Elements) getRuleFetcher().parser(itemsList.get(j), (String) itemsJ.get(i));
+                        for(Element item : items) {
+                            Comic comic = new Comic();
+                            comic.setComicId((String) getRuleFetcher().parser(item,map.get("comic-id")));
+                            comic.setName((String) getRuleFetcher().parser(item,map.get("comic-name")));
+                            comic.setImageUrl((String) getRuleFetcher().parser(item,map.get("comic-image-url")));
+                            comic.setUpdateStatus((String) getRuleFetcher().parser(item,map.get("comic-update-status")));
+                            comics.add(comic);
+                        }
+
+                        String title = "";
+                        if(titles.size()==0){
+                            title = "其他漫画";
+                        }else if(j>=titles.size()){
+                            //如果没有标题则使用最后一个标题
+                            title = (String) getRuleFetcher().parser(titles.last(), (String) titleJ.get(i));
+                        }else{
+                            title = (String) getRuleFetcher().parser(titles.get(j), (String) titleJ.get(i));
+                            order.add(title);
+                        }
+
+                        if(parseMap.containsKey(title)){
+                            //如果包含该标题则追加
+                            parseMap.get(title).addAll(comics);
+                        }else{
+                            //如果不包含则新建并添加
+                            List<Comic> cs = new ArrayList<>();
+                            cs.addAll(comics);
+                            parseMap.put(title,cs);
+                        }
+
+                    }
+                }
+                //从分析完的map中获取数据
+                for (String title : order){
+                    Section section = new Section();
+                    section.setTitle(title);
+                    section.setComics(parseMap.get(title));
+                    sections.add(section);
+                }
+            }else{
+                throw new RuntimeException("首页解析错误");
+            }
+
+        }
+        CallBackData backData = new CallBackData();
+        backData.setObj(sections);
+        return backData;
     }
 
     //获取列表页信息(规则版)

@@ -84,7 +84,7 @@ public class NewAddFragment extends BaseFragment
 
     @Override
     public void initView() {
-        //禁用上拉下拉
+        //只能下拉刷新
         RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
         //设置主题色
         refreshLayout.setPrimaryColorsId(R.color.colorPrimary);

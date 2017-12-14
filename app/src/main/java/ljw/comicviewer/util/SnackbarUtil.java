@@ -61,7 +61,7 @@ public class SnackbarUtil {
         View snackbarView = snackbar.getView();
         TextView msgView = ((TextView) snackbarView.findViewById(R.id.snackbar_text));
         Snackbar.SnackbarLayout snackbarLayout =(Snackbar.SnackbarLayout)snackbarView;
-        View add_view = LayoutInflater.from(snackbarView.getContext()).inflate(R.layout.snackbar_addview,null);
+        View add_view = LayoutInflater.from(snackbarView.getContext()).inflate(R.layout.addview_snackbar,null);
         ImageView imgView = (ImageView) add_view.findViewById(R.id.snackbar_image);
         imgView.setImageResource(resId);
         msgView.setPadding(imgView.getMaxWidth()+10,msgView.getPaddingTop(),msgView.getRight(),msgView.getPaddingBottom());

@@ -3,6 +3,21 @@
 	"imghost":"http://i.hamreus.com:8080",
 	"domain":".manhuagui.com",
 	"cookie":"country=US",
+	"home":{
+		"url":"/",
+		"cssQuery":{
+			"comic-id":"$('a.bcover').attr('href').match('/(\\d+)/')[1]",
+			"comic-name":"$('p.ell a').text()",
+			"comic-image-url":"$('a.bcover img').attr('src').match('http[s]?:.+.(?:jpg|jpeg|png|gif|bmp)')[0]",
+			"comic-update-status":"$('a.bcover span.tt').text()"
+		},
+		"items":{
+			"titles":["$('.update-title h2')","$('#cmt-tab ul li')"],
+			"title":["$('h2').text()","$('li').text()"],
+			"items-list":["$('#updateWrap ul li')","$('#cmt-cont ul')"],
+			"items":["$('li')","$('li')"]
+		}
+	},
 	"list":{
 		"url":"/list/{type:}index_p{page:}.html",
 		"cssQuery":{

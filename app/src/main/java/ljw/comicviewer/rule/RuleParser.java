@@ -54,8 +54,10 @@ public class RuleParser {
 
     public void parseAll(){
         parseHost();
+        parseCookie();
         parseDomain();
         parseImgHost();
+        parseHomePage();
         parseListPage();
         parseLatestPage();
         parseDetailsPage();
@@ -89,6 +91,12 @@ public class RuleParser {
     private void parseCookie(){
         Object cookie = jsonObject.get("cookie");
         ruleStore.setCookie(cookie==null ? null : cookie.toString());
+    }
+
+    private void parseHomePage(){
+        if(ruleStr == null)
+            throw new NullPointerException("规则没有定义！");
+        ruleStore.setHomeRule(parsePage("home"));
     }
 
     private void parseListPage(){
@@ -145,6 +153,12 @@ public class RuleParser {
         }
         if(list.get("cssQuery")!=null) {
             JSONObject cssQuery = list.getJSONObject("cssQuery");
+            for (Object k : cssQuery.keySet()) {
+                map.put(k.toString(), cssQuery.get(k).toString());
+            }
+        }
+        if(list.get("items")!=null){
+            JSONObject cssQuery = list.getJSONObject("items");
             for (Object k : cssQuery.keySet()) {
                 map.put(k.toString(), cssQuery.get(k).toString());
             }
