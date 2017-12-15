@@ -142,7 +142,7 @@ public class UpdateFragment extends NewAddFragment {
                     btn_toTop.setVisibility(View.VISIBLE);
                     clearAndLoadImage();
                 }else{
-                    netErrorTo();
+                    onError(getString(R.string.data_load_fail),TAG);
                 }
                 break;
         }

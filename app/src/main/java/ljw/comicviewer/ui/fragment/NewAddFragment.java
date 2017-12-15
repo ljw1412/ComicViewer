@@ -150,7 +150,6 @@ public class NewAddFragment extends BaseFragment
 
     //获得漫画列表对象并存入comicList
     public void getListItems(int page){
-        btn_toTop.setVisibility(View.GONE);
         ComicService.get().getHTML(this, Global.REQUEST_COMIC_NEWADD,
                 ruleStore.getListRule().get("url"),page);
     }
@@ -248,10 +247,10 @@ public class NewAddFragment extends BaseFragment
                         RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Both);
                     }
                     clearAndLoadImage();
-                    isLoadingNext = false;
                 }else{
-                    netErrorTo();
+                    onError(getString(R.string.data_load_fail),TAG);
                 }
+                isLoadingNext = false;
                 break;
         }
     }
@@ -273,32 +272,23 @@ public class NewAddFragment extends BaseFragment
             case Global.REQUEST_COMICS_UPDATE:
             case Global.REQUEST_COMIC_NEWADD:
                 RefreshLayoutUtil.onFinish(refreshLayout);
+                SnackbarUtil.newAddImageColorfulSnackar(
+                        coordinatorLayout, getString(R.string.data_load_fail),
+                        R.drawable.icon_error,
+                        ContextCompat.getColor(context,R.color.star_yellow)).show();
                 if(isLoadingNext) {
-                    SnackbarUtil.newAddImageColorfulSnackar(
-                            coordinatorLayout, getString(R.string.gird_tips_loading_next_page_fail),
-                            R.drawable.icon_error,
-                            ContextCompat.getColor(context,R.color.star_yellow)).show();
                     curPage--;
                 }else{
-                    netErrorTo();
+                    RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
+                    txt_netError.setVisibility(View.VISIBLE);
+                    btn_toTop.setVisibility(View.GONE);
                 }
+                isLoadingNext = false;
                 break;
         }
         Log.e(TAG,what + " Error: " + msg);
     }
 
-    public void netErrorTo(){
-        RefreshLayoutUtil.onFinish(refreshLayout);
-        SnackbarUtil.newAddImageColorfulSnackar(
-                coordinatorLayout, getString(R.string.data_load_fail),
-                R.drawable.icon_error,
-                ContextCompat.getColor(context,R.color.star_yellow)).show();
-        if (!isLoadingNext){
-            RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
-            txt_netError.setVisibility(View.VISIBLE);
-        }
-        isLoadingNext = false;
-    }
 
     //-------------------
 

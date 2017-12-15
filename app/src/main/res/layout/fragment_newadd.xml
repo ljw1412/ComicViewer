@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/comic_grid_coordinatorLayout">
     <include
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,8 +20,7 @@
         android:layout_marginRight="5dp"
         android:clickable="true"
         app:backgroundTint="@color/holo_red_light"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
+        android:layout_gravity="right|bottom"
         android:layout_marginBottom="5dp"
         android:visibility="gone"/>
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

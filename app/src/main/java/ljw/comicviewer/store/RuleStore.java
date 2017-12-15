@@ -159,7 +159,7 @@ public class RuleStore {
                 " , searchRule:" + searchRule.size() +
                 " , detailsChapterRule:" + detailsChapterRule.size() +
                 " , readRule:" + readRule.size()+
-                " , homeRule:" + homeRule);
+                " , homeRule:" + homeRule.size());
 
     }
 }
