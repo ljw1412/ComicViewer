@@ -8,6 +8,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,6 +105,9 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
     }
 
     private void addSectionView(String title,List<Comic> comics){
+//        根据屏幕宽度设置列数
+        int columns = DisplayUtil.getGridNumColumns(context,115);
+
         View sectionView = LayoutInflater.from(context).inflate(R.layout.addview_section_grid,null);
         SectionHolder sectionHolder = new SectionHolder(sectionView);
         LinearLayout linearLayout = new LinearLayout(context);
@@ -128,15 +132,32 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
                 }
             });
             LinearLayout.LayoutParams itemLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            itemLp.width = (int) DisplayUtil.dpToPx(context,120f);
+            itemLp.width = (int) DisplayUtil.dpToPx(context,115f);
             itemView.setLayoutParams(itemLp);
-            linearLayout.addView(itemView);
-            //当加载一半后换行
-            if(i + 1 == comics.size()/2 || i == comics.size()-1){
+            //将itemView嵌套到一个新的linearLayout 为了让每个漫画界面可以居中 从而实现有间隔
+            LinearLayout linearLayoutA = new LinearLayout(context);
+            LinearLayout.LayoutParams lpA = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lpA.weight = 1;
+            linearLayoutA.setGravity(Gravity.CENTER);
+            linearLayoutA.setLayoutParams(lpA);
+            //itemView添加到linearLayoutA，之后linearLayoutA添加到linearLayout
+            linearLayoutA.addView(itemView);
+            linearLayout.addView(linearLayoutA);
+
+            //如果达到一行要求的数量或是最后一个元素则添加view并新建新一行的view
+            if((i+1)%columns==0 || i==comics.size()-1){
                 sectionHolder.content.addView(linearLayout);
                 linearLayout = new LinearLayout(context);
                 linearLayout.setLayoutParams(lp);
             }
+            //如果有columns-columns*2部显示1行 columns*2部以上只显示2行
+            if (comics.size()>=columns*2 && i+1 == columns*2){
+                break;
+            }else if(comics.size()>columns && comics.size()<columns*2 && i + 1==columns){
+                break;
+            }
+
+
 
         }
         sectionHolder.title.setText(title);
@@ -167,6 +188,8 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
                             addSectionView(section.getTitle(),section.getComics());
                     }
                     refreshLayout.finishRefresh();
+                }else{
+                    onError("网络异常，未添加板块",TAG);
                 }
                 break;
         }
