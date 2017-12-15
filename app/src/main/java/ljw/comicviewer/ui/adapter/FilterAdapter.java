@@ -61,7 +61,7 @@ public class FilterAdapter extends BaseAdapter {
             filterViewHolder = (FilterViewHolder) view.getTag();
         }
         filterViewHolder.text.setText(categories.get(position).getName());
-
+        filterViewHolder.text.setSelected(categories.get(position).isSelected());
         return view;
     }
 

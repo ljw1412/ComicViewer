@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
+import ljw.comicviewer.ui.FilterActivity;
 import ljw.comicviewer.ui.SearchActivity;
 import ljw.comicviewer.ui.adapter.MyFragmentPagerAdapter;
 
@@ -34,6 +35,8 @@ public class HomeFragment extends BaseFragment{
     ViewPager viewPager;
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
+    @BindView(R.id.nav_btn_filter)
+    ImageView btn_filter;
     @BindView(R.id.nav_btn_search)
     ImageView btn_search;
 
@@ -89,6 +92,13 @@ public class HomeFragment extends BaseFragment{
     }
 
     public void addListener(){
+        btn_filter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, FilterActivity.class);
+                startActivity(intent);
+            }
+        });
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

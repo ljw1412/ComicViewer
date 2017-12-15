@@ -29,25 +29,19 @@
                 android:textSize="18sp"
                 android:layout_centerHorizontal="false"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:gravity="center" />
+                android:gravity="center"
+                android:layout_marginLeft="10dp" />
         </RelativeLayout>
-
-        <HorizontalScrollView
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/section_content"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
-            android:scrollbarStyle="outsideOverlay">
+            >
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/section_content">
-
-            </LinearLayout>
-        </HorizontalScrollView>
+        </LinearLayout>
 
     </LinearLayout>
 

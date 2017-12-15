@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -18,20 +19,26 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Category;
+import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.store.FilterStore;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.FilterAdapter;
+import retrofit2.Call;
 
-public class FilterActivity extends AppCompatActivity {
+public class FilterActivity extends AppCompatActivity implements ComicService.RequestCallback {
     private String TAG = this.getClass().getSimpleName()+"----";
     private Context context;
     private FilterAdapter filterAdapter;
+    private int curPage = 1;
+    private int maxPage = -1;
     FilterStore filterStore = FilterStore.get();
     RuleStore ruleStore = RuleStore.get();
     List<Category> categories = new ArrayList<>();
     List<TextView> textViews = new ArrayList<>();
+    Call call_filter;
     @BindView(R.id.nav_child_title)
     TextView title;
     @BindView(R.id.filter_type_box)
@@ -59,9 +66,37 @@ public class FilterActivity extends AppCompatActivity {
         addListener();
     }
 
+    private void getData(){
+        call_filter = ComicService.get().getHTML(this, Global.REQUEST_COMIC_FILTER,
+                ruleStore.getListRule().get("url"),curPage);
+    }
+
     private void initGridView(){
         filterAdapter = new FilterAdapter(context,categories);
         gridView.setAdapter(filterAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Category category = categories.get(position);
+                //重设选择项，并设置当前的为选择
+                resetCategoriesSelected();
+                category.setSelected(true);
+                filterAdapter.notifyDataSetChanged();
+                //修改储存的状态
+                filterStore.setFilterStatus(category.getParentName(),category.getValue());
+                //打印状态
+                filterStore.printStore();
+                for(TextView textView : textViews){
+                    if((boolean)textView.getTag()){
+                        textView.setText(category.getName());
+                        if(category.getName().equals("全部")){
+                            textView.setText(category.getParentName());
+                        }
+                    }
+                }
+                resetTextStatus();
+            }
+        });
     }
 
     private void addListener(){
@@ -112,7 +147,6 @@ public class FilterActivity extends AppCompatActivity {
                         }else{
                             //如果是当前选中的父类型再点击将隐藏子类型网格，并重置状态
                             resetTextStatus();
-                            view_types.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -130,10 +164,38 @@ public class FilterActivity extends AppCompatActivity {
             //选中状态为false
             textView.setTag(false);
         }
+        view_types.setVisibility(View.GONE);
+    }
+
+    //重置选择状态
+    private void resetCategoriesSelected(){
+        for(Category category:categories){
+            category.setSelected(false);
+        }
+    }
+
+    @Override
+    public void onFinish(Object data, String what) {
+
+    }
+
+    @Override
+    public void onError(String msg, String what) {
+
     }
 
     //按标题栏返回按钮
     public void onBack(View view) {
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        filterStore.filterStatusReset();
+        if(call_filter !=null && !call_filter.isCanceled()){
+            call_filter.cancel();
+            Log.d(TAG, "onDestroy: "+"取消网络请求！");
+        }
     }
 }

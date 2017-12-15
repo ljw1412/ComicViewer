@@ -8,6 +8,7 @@ public class Category {
     private String parentName;//父类型名
     private String name;//子类型名
     private String value;//子类型值
+    private boolean selected = false;
 
     public String getParentName() {
         return parentName;
@@ -31,5 +32,13 @@ public class Category {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

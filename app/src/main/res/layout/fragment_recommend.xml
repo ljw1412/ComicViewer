@@ -27,50 +27,11 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:id="@+id/recommend_btns"
-                    android:layout_height="48dp"
-                    android:elevation="1dp"
-                    android:layout_below="@+id/recommend_top"
-                    android:background="@color/white">
-
-                    <TextView
-                        android:text="@string/btn_new_comic"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/textView2"
-                        android:textSize="20sp"
-                        android:background="@drawable/selector_bg_null_to_black_pressed"
-                        android:gravity="center"
-                        android:layout_weight="1" />
-                    <TextView
-                        android:text="@string/btn_update_comic"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/textView3"
-                        android:textSize="20sp"
-                        android:background="@drawable/selector_bg_null_to_black_pressed"
-                        android:gravity="center"
-                        android:layout_weight="1" />
-                    <TextView
-                        android:text="@string/btn_all_comics"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/recommend_btn_all_comics"
-                        android:textSize="20sp"
-                        android:background="@drawable/selector_bg_null_to_black_pressed"
-                        android:gravity="center"
-                        android:layout_weight="1" />
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/recommend_container"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@+id/recommend_btns"
-                    android:layout_marginBottom="10dp">
+                    android:layout_below="@+id/recommend_top">
 
                 </LinearLayout>
             </RelativeLayout>

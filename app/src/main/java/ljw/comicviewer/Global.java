@@ -8,6 +8,7 @@ public class Global {
     //请求标识
     public static final String REQUEST_COMICS_LIST = "GET_COMICS_LIST";//获得漫画列表
     public static final String REQUEST_HOME = "REQUEST_HOME";//获得主页
+    public static final String REQUEST_COMIC_FILTER = "REQUEST_COMIC_FILTER";
     public static final String REQUEST_COMIC_NEWADD = "REQUEST_COMIC_NEWADD";//获得新上架漫画
     public static final String REQUEST_COMICS_UPDATE = "REQUEST_COMICS_UPDATE";//获得最新漫画
     public static final String REQUEST_COMICS_INFO = "REQUEST_COMICS_INFO";//获得漫画信息

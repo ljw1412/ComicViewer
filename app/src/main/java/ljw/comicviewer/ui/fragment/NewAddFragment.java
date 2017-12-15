@@ -50,7 +50,7 @@ public class NewAddFragment extends BaseFragment
     protected PictureGridAdapter pictureGridAdapter;
     List<Comic> comicList = new ArrayList<>();
     private File myCache;
-    private int loadedPage = 1;
+    private int curPage = 1;
     private int maxPage = -1;
     private boolean isLoadingNext = false;
     RuleStore ruleStore = RuleStore.get();
@@ -107,19 +107,19 @@ public class NewAddFragment extends BaseFragment
             public void onLoadmore(RefreshLayout refreshlayout) {
                 //上拉加载
                 isLoadingNext = true;
-                getListItems(++loadedPage);
-                Log.d(TAG,"load next page; currentLoadingPage = "+loadedPage);
+                getListItems(++curPage);
+                Log.d(TAG,"load next page; currentLoadingPage = "+ curPage);
             }
 
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 //下拉刷新
-                loadedPage = 1;
+                curPage = 1;
                 maxPage = -1;
                 comicList.clear();
                 pictureGridAdapter.notifyDataSetChanged();
                 // 获取对象，重新获取当前目录对象
-                getListItems(loadedPage);
+                getListItems(curPage);
             }
         });
 
@@ -242,7 +242,7 @@ public class NewAddFragment extends BaseFragment
                     btn_toTop.setVisibility(View.VISIBLE);
                     //结束刷新或加载状态
                     RefreshLayoutUtil.onFinish(refreshLayout);
-                    if(loadedPage >= maxPage){
+                    if(curPage >= maxPage){
                         RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
                     }else{
                         RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Both);
@@ -278,6 +278,7 @@ public class NewAddFragment extends BaseFragment
                             coordinatorLayout, getString(R.string.gird_tips_loading_next_page_fail),
                             R.drawable.icon_error,
                             ContextCompat.getColor(context,R.color.star_yellow)).show();
+                    curPage--;
                 }else{
                     netErrorTo();
                 }

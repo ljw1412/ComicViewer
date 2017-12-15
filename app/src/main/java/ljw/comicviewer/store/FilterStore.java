@@ -72,7 +72,9 @@ public class FilterStore {
                     if(category!=null && category.getName()!=null
                             && category.getName().equals("全部")){
                         setFilterStatus(key,category.getValue());
-                        break;
+                        category.setSelected(true);
+                    }else{
+                        category.setSelected(false);
                     }
                 }
             }

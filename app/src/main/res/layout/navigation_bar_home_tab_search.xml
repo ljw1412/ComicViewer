@@ -13,39 +13,36 @@
         app:tabSelectedTextColor="@color/green"
         app:tabTextColor="@color/white"
         app:tabIndicatorColor="@color/green"
+        app:tabIndicatorHeight="0dp"
         android:layout_height="48dp"
         android:layout_marginRight="90dp"
-        app:tabTextAppearance="@style/home_bar_tab_text_font">
+        app:tabTextAppearance="@style/home_bar_tab_text_font"
+        android:layout_marginLeft="90dp"
+        android:layout_centerVertical="true">
     </android.support.design.widget.TabLayout>
-    <RelativeLayout
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_weight="1"
-        android:layout_toLeftOf="@id/nav_btn_search">
 
-        <TextView
-            android:text="换源"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/option4"
-            android:textColor="@color/blue_A1E0F4"
-            android:textSize="@dimen/toolbar_font_size"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
+    <ImageView
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        app:srcCompat="@drawable/ico_filter"
+        android:layout_centerVertical="true"
+        android:id="@+id/nav_btn_filter"
+        android:adjustViewBounds="false"
+        android:background="@drawable/selector_btn_circle_bg"
+        android:padding="5dp"
+        android:layout_marginLeft="2dp" />
 
     <ImageView
         android:gravity="center_vertical"
         android:id="@+id/nav_btn_search"
         android:clickable="true"
         android:layout_centerVertical="true"
-        android:elevation="1dp"
         app:srcCompat="@drawable/ico_search"
-        android:layout_alignParentEnd="false"
         android:layout_alignParentRight="true"
+        android:layout_height="34dp"
+        android:background="@drawable/selector_btn_circle_bg"
+        android:layout_width="34dp"
         android:padding="5dp"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_margin="5dp"
-        android:background="?attr/actionBarItemBackground" />
+        android:layout_marginRight="2dp" />
 
 </RelativeLayout>

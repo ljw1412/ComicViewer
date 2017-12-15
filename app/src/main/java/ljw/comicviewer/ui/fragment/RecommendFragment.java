@@ -48,8 +48,6 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
     List<Section> sections = new ArrayList<>();
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
-    @BindView(R.id.recommend_btn_all_comics)
-    TextView view_btn_all_comics;
     @BindView(R.id.recommend_container)
     LinearLayout container;
     @BindView(R.id.recommend_coordinatorLayout)
@@ -90,13 +88,6 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
     }
 
     private void addListener(){
-        view_btn_all_comics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, FilterActivity.class);
-                startActivity(intent);
-            }
-        });
         refreshLayout.setOnRefreshLoadmoreListener(new OnRefreshLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
