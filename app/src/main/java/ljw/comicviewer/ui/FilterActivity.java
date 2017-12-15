@@ -1,6 +1,7 @@
 package ljw.comicviewer.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -206,6 +207,16 @@ public class FilterActivity extends AppCompatActivity
             @Override
             public void onScroll(AbsListView absListView, int i, int i1, int i2) {
 
+            }
+        });
+
+        gridView_comics.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Comic comic = comics.get(position);
+                Intent intent = new Intent(context, DetailsActivity.class);
+                intent.putExtra("id",comic.getComicId());
+                startActivity(intent);
             }
         });
         //悬浮回到顶部按钮
