@@ -21,9 +21,14 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"
                     android:layout_height="150dp"
-                    android:elevation="1dp"
-                    android:background="@color/green">
-
+                    android:elevation="1dp">
+                    <com.youth.banner.Banner
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/banner"
+                        app:image_scale_type="center_crop"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    </com.youth.banner.Banner>
                 </RelativeLayout>
 
                 <LinearLayout

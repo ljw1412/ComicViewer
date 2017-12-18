@@ -19,8 +19,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,6 +35,7 @@ import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.bean.Section;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
+import ljw.comicviewer.others.GlideImageLoader;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.FilterActivity;
@@ -53,6 +57,8 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
     LinearLayout container;
     @BindView(R.id.recommend_coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.banner)
+    Banner banner;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,12 +81,31 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
         refreshLayout.setEnableAutoLoadmore(false);
         //不在加载更多完成之后滚动内容显示新数据
         refreshLayout.setEnableScrollContentWhenLoaded(false);
+        initBanner();
         addListener();
     }
 
     @Override
     public void initLoad() {
         refreshLayout.autoRefresh();
+    }
+
+    private void initBanner(){
+        //暂时为本地图片加载
+        List<Integer> images =new ArrayList<>(Arrays.asList(
+                R.drawable.banner_01,R.drawable.banner_02,R.drawable.banner_03));
+        //设置图片加载器
+        banner.setImageLoader(new GlideImageLoader());
+        //设置图片集合
+        banner.setImages(images);
+        //设置自动轮播，默认为true
+        banner.isAutoPlay(true);
+        //设置轮播时间
+        banner.setDelayTime(3000);
+        //设置指示器位置（当banner模式中有指示器时）
+        banner.setIndicatorGravity(BannerConfig.CENTER);
+        //banner设置方法全部调用完毕时最后调用,点击事件请放到start()前
+        banner.start();
     }
 
     private void getData(){
@@ -104,9 +129,7 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
         });
     }
 
-    private void addSectionView(String title,List<Comic> comics){
-//        根据屏幕宽度设置列数
-        int columns = DisplayUtil.getGridNumColumns(context,115);
+    private void addSectionView(String title,List<Comic> comics,int columns,float imageWidth){
 
         View sectionView = LayoutInflater.from(context).inflate(R.layout.addview_section_grid,null);
         SectionHolder sectionHolder = new SectionHolder(sectionView);
@@ -132,7 +155,7 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
                 }
             });
             LinearLayout.LayoutParams itemLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            itemLp.width = (int) DisplayUtil.dpToPx(context,115f);
+            itemLp.width = (int) DisplayUtil.dpToPx(context,imageWidth);
             itemView.setLayoutParams(itemLp);
             //将itemView嵌套到一个新的linearLayout 为了让每个漫画界面可以居中 从而实现有间隔
             LinearLayout linearLayoutA = new LinearLayout(context);
@@ -184,8 +207,11 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
             case Global.REQUEST_HOME:
                 if (resultObj!=null && (Integer)resultObj > 0) {
                     for(Section section : sections){
-                        if(section.getComics() != null && section.getComics().size()>0)
-                            addSectionView(section.getTitle(),section.getComics());
+                        if(section.getComics() != null && section.getComics().size()>0) {
+                            //根据屏幕宽度设置列数
+                            int columns = DisplayUtil.getGridNumColumns(context,115);
+                            addSectionView(section.getTitle(), section.getComics(),columns,115f);
+                        }
                     }
                     refreshLayout.finishRefresh();
                 }else{

@@ -234,7 +234,12 @@ public class SearchActivity extends AppCompatActivity
     @Override
     public void onError(String msg, String what) {
         Log.e(TAG, what+" Error: " + msg);
+        SnackbarUtil.newAddImageColorfulSnackar(
+                coordinatorLayout, getString(R.string.error_network_connections),
+                R.drawable.icon_error,
+                ContextCompat.getColor(context,R.color.holo_red_light)).show();
         refreshLayout.finishRefresh(false);
+        loading = false;
     }
 
     @Override
