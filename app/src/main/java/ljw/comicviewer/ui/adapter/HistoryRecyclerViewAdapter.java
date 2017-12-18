@@ -49,7 +49,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryItem
 
     @Override
     public void onBindViewHolder(HistoryItemViewHolder holder, final int position) {
-        Log.d("----", "onBindViewHolder: "+getItemCount());
         if (getItemCount()<=0) return;
         if(list.get(position) instanceof History){
             final History history = (History) list.get(position);

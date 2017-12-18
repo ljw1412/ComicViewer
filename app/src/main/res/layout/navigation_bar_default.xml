@@ -24,17 +24,4 @@
         android:layout_marginRight="48dp"
         android:textColor="@color/white" />
 
-    <ImageView
-        android:gravity="center_vertical"
-        android:id="@+id/nav_btn_search"
-        android:clickable="true"
-        android:layout_centerVertical="true"
-        app:srcCompat="@drawable/ico_search"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentRight="true"
-        android:layout_height="34dp"
-        android:background="@drawable/selector_btn_circle_bg"
-        android:layout_width="34dp"
-        android:padding="5dp" />
-
 </RelativeLayout>

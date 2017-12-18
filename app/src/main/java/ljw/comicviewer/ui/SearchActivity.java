@@ -38,6 +38,7 @@ import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.SearchListAdapter;
+import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.StringUtil;
@@ -180,8 +181,8 @@ public class SearchActivity extends AppCompatActivity
 
             tipsView.setVisibility(View.GONE);
             txt_searchById.setVisibility(View.GONE);
-
-            HideKeyboard(view);
+            //隐藏虚拟键盘
+            DisplayUtil.hideKeyboard(view);
 
             ((ClassicsHeader)refreshHeader).REFRESH_HEADER_REFRESHING =
                     String.format(getString(R.string.alert_search_loading_tips),keyword);
@@ -205,15 +206,6 @@ public class SearchActivity extends AppCompatActivity
         searchCall = ComicService.get().getHTML(this,Global.REQUEST_COMICS_SEARCH,
                 ruleStore.getSearchRule().get("url"),keyword,curPage);
         loading = true;
-    }
-
-    //隐藏虚拟键盘
-    public static void HideKeyboard(View v)
-    {
-        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService( Context.INPUT_METHOD_SERVICE );
-        if ( imm.isActive() ) {
-            imm.hideSoftInputFromWindow( v.getApplicationWindowToken() , 0 );
-        }
     }
 
 

@@ -88,7 +88,7 @@ public class ComicService {
                 typeStr = StringUtil.join(filterStore.getOrder(),filterStore.getFilterStatus(), filterStore.getSeparate());
                 if(filterStore.getEndStr()!=null && !typeStr.equals(""))
                     typeStr += filterStore.getEndStr();
-                Log.d(TAG, "getHTML: " + typeStr);
+                Log.d(TAG, "类型对应网页字符串: " + typeStr);
             }
             path = path.replaceAll("\\{type:.*?\\}",typeStr);
         }

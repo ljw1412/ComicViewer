@@ -82,7 +82,7 @@ public class HistoryHolder {
     public synchronized List<History> getHistories(){
         List<History> list = new ArrayList<>();
         Cursor cursor = dbHelper.query("select * from "+tableName);
-        Log.d(TAG, "getHistories: "+cursor.getCount());
+        Log.d(TAG, "getHistories: Histories数量"+cursor.getCount());
         while (cursor.moveToNext()){
             History history = new History();
             history.setComicId(cursor.getString(cursor.getColumnIndex("comicId")));
@@ -101,7 +101,7 @@ public class HistoryHolder {
     public synchronized List<History> getHistories(int limit){
         List<History> list = new ArrayList<>();
         Cursor cursor = dbHelper.query("select * from "+tableName+" order by readTime desc limit "+limit);
-        Log.d(TAG, "getHistories: "+cursor.getCount());
+        Log.d(TAG, "getHistories: Histories数量"+cursor.getCount());
         while (cursor.moveToNext()){
             History history = new History();
             history.setComicId(cursor.getString(cursor.getColumnIndex("comicId")));

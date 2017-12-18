@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_navibar"
+    android:layout_width="fill_parent"
+    android:layout_height="48dp"
+    android:background="@color/holo_red_light"
+    android:elevation="1dp">
+
+    <ImageView
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/img_back_white"
+        android:id="@+id/search_back"
+        android:layout_width="40dp"
+        android:padding="6dp"
+        android:onClick="onBack" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentStart="false"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/shape_border"
+        android:padding="1dp"
+        android:layout_alignParentRight="true">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:ems="10"
+            android:id="@+id/search_edit"
+            android:inputType="text"
+            android:hint="@string/tips_search"
+            android:textColor="@color/black"
+            android:textColorLink="@color/black"
+            android:background="@color/white"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="2dp"
+            android:layout_weight="1"
+            android:paddingRight="2dp"
+            android:imeOptions="actionDone" />
+
+        <FrameLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/black">
+
+        </FrameLayout>
+
+        <Button
+            android:text="@string/txt_search"
+            android:id="@+id/search_button"
+            android:background="@drawable/selector_search_btn_bg"
+            android:layout_gravity="center_vertical"
+            android:layout_height="30dp"
+            android:layout_width="60dp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

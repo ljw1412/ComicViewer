@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.bumptech.glide.Glide;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
@@ -33,6 +35,7 @@ import ljw.comicviewer.R;
 import ljw.comicviewer.bean.CallBackData;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.bean.Section;
+import ljw.comicviewer.db.SectionDBHolder;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.others.GlideImageLoader;
@@ -87,6 +90,7 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
 
     @Override
     public void initLoad() {
+        getDataFromDB();
         refreshLayout.autoRefresh();
     }
 
@@ -107,7 +111,16 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
         //banner设置方法全部调用完毕时最后调用,点击事件请放到start()前
         banner.start();
     }
-
+    //从数据库取出上次的请求数据，用于开始显示
+    private void getDataFromDB(){
+        SectionDBHolder sectionHolder = new SectionDBHolder(context);
+        List<Section> dbSections = sectionHolder.getSectionsByHost(ruleStore.getComeFrom());
+        if (dbSections!=null && dbSections.size()>0) {
+            sections.addAll(dbSections);
+            addSectionViews();
+        }
+    }
+    //网络请求数据
     private void getData(){
         ComicService.get().getHTML(this, Global.REQUEST_HOME,
                 ruleStore.getHomeRule().get("url"));
@@ -122,15 +135,22 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
 
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                container.removeAllViews();
-                sections.clear();
                 getData();
             }
         });
     }
 
-    private void addSectionView(String title,List<Comic> comics,int columns,float imageWidth){
+    private void addSectionViews(){
+        //根据屏幕宽度设置列数
+        int columns = DisplayUtil.getGridNumColumns(context,115);
+        for(Section section : sections){
+            if(section.getComics() != null && section.getComics().size()>0) {
+                addSectionView(section.getTitle(), section.getComics(),columns,115f);
+            }
+        }
+    }
 
+    private void addSectionView(String title,List<Comic> comics,int columns,float imageWidth){
         View sectionView = LayoutInflater.from(context).inflate(R.layout.addview_section_grid,null);
         SectionHolder sectionHolder = new SectionHolder(sectionView);
         LinearLayout linearLayout = new LinearLayout(context);
@@ -184,38 +204,42 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
 
         }
         sectionHolder.title.setText(title);
-
         container.addView(sectionView);
-
     }
 
     @Override
-    public Object myDoInBackground(String TAG, Object data) {
-        switch (TAG){
+    public Object myDoInBackground(String what, Object data) {
+        switch (what){
             case Global.REQUEST_HOME:
                 CallBackData callBackData = ComicFetcher.getHome(data.toString());
-                sections.addAll((List<Section>) callBackData.getObj());
-                Log.d(TAG, "onFinish: 添加板块数"+sections.size());
-                return sections.size();
+                List<Section> tempList = (List<Section>) callBackData.getObj();
+                if (tempList!=null && tempList.size()>0) {
+                    sections.clear();
+                    sections.addAll(tempList);
+                    Log.d(TAG, "onFinish: 添加板块数"+sections.size());
+                    return sections.size();
+                }
+                return 0;
         }
         return null;
     }
 
     @Override
-    public void myOnPostExecute(String TAG, Object resultObj) {
-        switch (TAG){
+    public void myOnPostExecute(String what, Object resultObj) {
+        switch (what){
             case Global.REQUEST_HOME:
                 if (resultObj!=null && (Integer)resultObj > 0) {
-                    for(Section section : sections){
-                        if(section.getComics() != null && section.getComics().size()>0) {
-                            //根据屏幕宽度设置列数
-                            int columns = DisplayUtil.getGridNumColumns(context,115);
-                            addSectionView(section.getTitle(), section.getComics(),columns,115f);
-                        }
+                    //请求成功删除旧的界面
+                    container.removeAllViews();
+                    //并将此次请求保存入数据库
+                    if(sections != null && sections.size()>0) {
+                        SectionDBHolder sectionHolder = new SectionDBHolder(context);
+                        sectionHolder.addOrUpdateSection(ruleStore.getComeFrom(), sections);
                     }
+                    addSectionViews();
                     refreshLayout.finishRefresh();
                 }else{
-                    onError("网络异常，未添加板块",TAG);
+                    onError("网络异常，未添加板块",what);
                 }
                 break;
         }

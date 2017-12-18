@@ -24,21 +24,48 @@ public class CollectionHolder {
         dbHelper.open(context);
     }
 
+    public synchronized long addOrUpdateCollection(Comic comic){
+        if (comic == null) return -1;
+        ContentValues cv = new ContentValues();
+        cv.put("comicId",comic.getComicId());
+        cv.put("name",comic.getName());
+        cv.put("imageUrl",comic.getImageUrl());
+        cv.put("score",comic.getScore());
+        cv.put("updateDate",comic.getUpdate());
+        cv.put("updateStatus",comic.getUpdateStatus());
+        cv.put("isEnd",comic.isEnd()?1:0);
+        cv.put("comeFrom",comic.getComeFrom());
+        cv.put("tag",comic.getTag());
+        long res;
+        if (hasComic(comic.getComicId())){
+            res = dbHelper.update(tableName,cv,"comicId = ?",comic.getComicId());
+        }else{
+            res = addCollection(cv);
+        }
+        Log.d(TAG, "addSection: "+(res==-1?"更新插入失败":"更新插入成功"));
+        return res;
+    }
+
+    public synchronized long addCollection(ContentValues cv) {
+        long res = dbHelper.insert(tableName,cv);
+        return res;
+    }
+
     public synchronized long addCollection(Comic comic){
         if (comic == null) return -1;
         if (hasComic(comic.getComicId())) return -1;
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("comicId",comic.getComicId());
-        contentValues.put("name",comic.getName());
-        contentValues.put("imageUrl",comic.getImageUrl());
-        contentValues.put("score",comic.getScore());
-        contentValues.put("updateDate",comic.getUpdate());
-        contentValues.put("updateStatus",comic.getUpdateStatus());
-        contentValues.put("isEnd",comic.isEnd()?1:0);
-        contentValues.put("comeFrom",comic.getComeFrom());
-        contentValues.put("tag",comic.getTag());
+        ContentValues cv = new ContentValues();
+        cv.put("comicId",comic.getComicId());
+        cv.put("name",comic.getName());
+        cv.put("imageUrl",comic.getImageUrl());
+        cv.put("score",comic.getScore());
+        cv.put("updateDate",comic.getUpdate());
+        cv.put("updateStatus",comic.getUpdateStatus());
+        cv.put("isEnd",comic.isEnd()?1:0);
+        cv.put("comeFrom",comic.getComeFrom());
+        cv.put("tag",comic.getTag());
         try {
-            long res = dbHelper.insert(tableName,contentValues);
+            long res = dbHelper.insert(tableName,cv);
             Log.d(TAG, "addCollection: "+(res==-1?"插入失败":"插入成功"));
             return res;
         } catch (Exception e) {

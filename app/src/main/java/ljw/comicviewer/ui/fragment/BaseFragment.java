@@ -14,29 +14,29 @@ public class BaseFragment extends Fragment{
     public void initView() {}
 
     //界面异步更新
-    public Object myDoInBackground(String TAG,Object obj){return null;}
+    public Object myDoInBackground(String what,Object obj){return null;}
 
-    public void myOnPostExecute(String TAG,Object resultObj){}
+    public void myOnPostExecute(String what,Object resultObj){}
 
     public class UIUpdateTask extends AsyncTask<Void,Void,Object>{
-        private String tag;
+        private String what;
         private Object obj;
 
-        public UIUpdateTask(String tag, Object obj) {
-            this.tag = tag;
+        public UIUpdateTask(String what, Object obj) {
+            this.what = what;
             this.obj = obj;
         }
 
 
         @Override
         protected Object doInBackground(Void... voids) {
-            return myDoInBackground(tag,obj);
+            return myDoInBackground(what,obj);
         }
 
         @Override
         protected void onPostExecute(Object obj) {
             super.onPostExecute(obj);
-            myOnPostExecute(tag,obj);
+            myOnPostExecute(what,obj);
         }
     }
 

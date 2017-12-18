@@ -468,6 +468,11 @@ public class DetailsActivity extends AppCompatActivity
                 txtError.setVisibility(View.GONE);
                 Log.d(TAG, "onResponse: "+comic.toString());
                 details_container.setRefreshing(false);
+                //如果收藏的漫画，则更新收藏信息
+                if(isLike()) {
+                    CollectionHolder collectionHolder = new CollectionHolder(this);
+                    collectionHolder.addOrUpdateCollection(comic);
+                }
                 if (comic.isBan()){
                     final BottomDialog bottomDialog = DialogUtil.showBottomDialog(context);
                     bottomDialog.setClickOK(new View.OnClickListener() {

@@ -108,9 +108,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         hideAllFragment(ft);
         ft.show(fragment).commit();
         currentFragment = fragment;
-        if(currentFragment instanceof CollectionFragment){
-            if (((CollectionFragment) currentFragment).isLoading())
-                ((CollectionFragment) currentFragment).initLoad();
+        if(currentFragment == collectionFragment && collectionFragment.isLoading()){
+            collectionFragment.initLoad();
         }
     }
 
@@ -168,6 +167,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private boolean confirmed = false;//返回2次退出程序标志
     @Override
     public void onBackPressed() {
+        if(currentFragment == collectionFragment && collectionFragment.isSearching()){
+            collectionFragment.changeNormalMode();
+            return;
+        }
+
         exitSnackBar = Snackbar.make(coordinatorLayout,getString(R.string.alert_confirm_exit), Global.SNACKBAR_DURATION)
             .addCallback(new Snackbar.Callback(){
                 @Override

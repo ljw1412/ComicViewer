@@ -38,8 +38,6 @@ public class MineFragment extends BaseFragment {
     RelativeLayout btn_about;
     @BindView(R.id.title)
     TextView nav_title;
-    @BindView(R.id.nav_btn_search)
-    ImageView nav_btn_search;
 
     public MineFragment() {
     }
@@ -58,8 +56,6 @@ public class MineFragment extends BaseFragment {
 
     @Override
     public void initView() {
-        //隐藏搜索按钮
-        nav_btn_search.setVisibility(View.GONE);
         if(getActivity() instanceof HomeActivity)
             ((HomeActivity) getActivity()).setTitle(nav_title,R.string.txt_mine);
     }

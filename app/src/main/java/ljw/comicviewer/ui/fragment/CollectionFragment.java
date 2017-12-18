@@ -6,18 +6,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 
@@ -33,6 +37,7 @@ import ljw.comicviewer.db.CollectionHolder;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.HomeActivity;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
+import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 
 /**
@@ -43,10 +48,13 @@ public class CollectionFragment extends BaseFragment
     private String TAG = NewAddFragment.class.getSimpleName()+"----";
     private Context context;
     private List<Comic> comics = new ArrayList<>();
+    private List<Comic> searchComics = new ArrayList<>();
     private List<Comic> allComics;
     private int currentPage = 1;
     private PictureGridAdapter pictureGridAdapter;
-    private boolean isLoading = false;
+    private PictureGridAdapter searchGridAdapter,normalGridAdapter;
+    private boolean loading = false;
+    private boolean searching = false;
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
     @BindView(R.id.grid_view)
@@ -55,11 +63,23 @@ public class CollectionFragment extends BaseFragment
     TextView txt_netError;
     @BindView(R.id.title)
     TextView nav_title;
+    @BindView(R.id.nav_btn_search)
+    ImageView btn_search;
+    @BindView(R.id.nav_search_view)
+    RelativeLayout view_search;//搜索界面
+    @BindView(R.id.nav_btn_cancel)
+    ImageView btn_cancel;//取消按钮
+    @BindView(R.id.nav_search_edit)
+    EditText edit_search;//输入框
 
     public CollectionFragment() {}
 
     public boolean isLoading() {
-        return isLoading;
+        return loading;
+    }
+
+    public boolean isSearching() {
+        return searching;
     }
 
     @Override
@@ -90,6 +110,16 @@ public class CollectionFragment extends BaseFragment
         addListener();
     }
 
+    public void initGridView() {
+        searchGridAdapter = new PictureGridAdapter(context, searchComics);//搜索用适配器
+        normalGridAdapter = new PictureGridAdapter(context,comics);//平时用适配器
+        pictureGridAdapter = normalGridAdapter;//设置当前适配器为正常
+        gridView.setAdapter(pictureGridAdapter);
+        gridView.setOnScrollListener(this);
+        gridView.setOnItemClickListener(new ItemClickListener());
+        pictureGridAdapter.notifyDataSetChanged();
+    }
+
     public void addListener() {
         // 设置监听器，这个监听器是可以监听双向滑动的，这样可以触发不同的事件
         refreshLayout.setOnRefreshLoadmoreListener(new OnRefreshLoadmoreListener() {
@@ -105,28 +135,101 @@ public class CollectionFragment extends BaseFragment
                 //下拉
                 currentPage = 1;
                 comics.clear();
-                pictureGridAdapter.notifyDataSetChanged();
+                searchComics.clear();
                 //重新获取当前目录对象
                 getDataFromDB();
             }
         });
-    }
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeSearchMode();
+            }
+        });
+        //取消搜索按钮点击事件
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeNormalMode();
+            }
+        });
+        edit_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                //按下回车键
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    //隐藏虚拟键盘
+                    DisplayUtil.hideKeyboard(edit_search);
+                }
+                return true;
+            }
+        });
+        edit_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-    public void initGridView() {
-        pictureGridAdapter = new PictureGridAdapter(context,comics);
-        gridView.setAdapter(pictureGridAdapter);
-        gridView.setOnScrollListener(this);
-        gridView.setOnItemClickListener(new ItemClickListener());
-        pictureGridAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Log.d(TAG, "beforeTextChanged: "+charSequence);
+                if(charSequence.length()>0){
+                    pictureGridAdapter = searchGridAdapter;
+                }else{
+                    pictureGridAdapter = normalGridAdapter;
+                }
+                gridView.setAdapter(pictureGridAdapter);
+
+                search(charSequence.toString());
+                clearAndLoadImage();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
     }
 
     @Override
     public void initLoad() {
-        //执行自动刷新
-        refreshLayout.autoRefresh();
-        isLoading = true;
+        //取消搜索状态,恢复正常模式
+        if(searching) {
+            changeNormalMode();
+        }
+        loading = true;
+        //执行自动刷新,此处不采用动画自动加载
+//        refreshLayout.autoRefresh();
+        currentPage = 1;
+        comics.clear();
+        searchComics.clear();
+        getDataFromDB();
+
+
+    }
+    //切换为搜索模式
+    private void changeSearchMode(){
+        RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Only_LoadMore);
+        view_search.setVisibility(View.VISIBLE);
+        edit_search.requestFocus();
+        //显示虚拟键盘
+        DisplayUtil.showKeyboard(edit_search);
+        searching = true;
+    }
+    //切换为正常模式
+    public void changeNormalMode(){
+        RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Both);
+        view_search.setVisibility(View.GONE);
+        edit_search.setText(null);
+        //隐藏虚拟键盘
+        DisplayUtil.hideKeyboard(edit_search);
+        pictureGridAdapter = normalGridAdapter;
+        gridView.setAdapter(pictureGridAdapter);
+        searching = false;
     }
 
+    //从数据库获得的数据
     public void getDataFromDB(){
         //数据库处理，获取对象
         CollectionHolder collectionHolder = new CollectionHolder(context);
@@ -206,7 +309,7 @@ public class CollectionFragment extends BaseFragment
                     EndTag.setImageResource(0);
                 }else{
                     //Log.d(TAG, "loadImage: "+i);
-                    pictureGridAdapter.loadCover(i,view);
+                    pictureGridAdapter.loadCover(i, view);
                 }
             }
         }
@@ -214,11 +317,27 @@ public class CollectionFragment extends BaseFragment
         pictureGridAdapter.notifyDataSetChanged();
     }
 
+    //搜索事件
+    private void search(String keyword){
+        searchComics.clear();
+        for(Comic comic:comics){
+            if(comic.getName().contains(keyword)||
+                    (comic.getAuthor()!=null && comic.getAuthor().contains(keyword))){
+                searchComics.add(comic);
+            }
+        }
+    }
+
+
+
     //网格对象点击事件
     class  ItemClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Comic comic = comics.get(position);
+            if(searching){
+                comic = searchComics.get(position);
+            }
             Intent intent = new Intent(context, DetailsActivity.class);
             intent.putExtra("id",comic.getComicId());
             intent.putExtra("score",comic.getScore());

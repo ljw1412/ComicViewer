@@ -97,7 +97,7 @@ public class PictureGridAdapter extends BaseAdapter {
         if(viewHolder != null){
             final WeakReference<ImageView> imageViewWeakReference = new WeakReference<>(viewHolder.image);
             final ImageView target = imageViewWeakReference.get();
-            if (target != null) {
+            if (target != null && comics.size()>0) {
                 Glide.with(context)
                         .asBitmap()
                         .load(comics.get(position).getImageUrl())

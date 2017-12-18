@@ -218,8 +218,8 @@ public class NewAddFragment extends BaseFragment
     }
 
     @Override
-    public Object myDoInBackground(String TAG,Object data) {
-        switch (TAG) {
+    public Object myDoInBackground(String what,Object data) {
+        switch (what) {
             case Global.REQUEST_COMIC_NEWADD:
                 CallBackData callBackData = ComicFetcher.getComicList(data.toString());
                 List<Comic> tempList = (List<Comic>) callBackData.getObj();
@@ -233,8 +233,8 @@ public class NewAddFragment extends BaseFragment
     }
 
     @Override
-    public void myOnPostExecute(String TAG,Object resultObj) {
-        switch (TAG){
+    public void myOnPostExecute(String what,Object resultObj) {
+        switch (what){
             case Global.REQUEST_COMIC_NEWADD:
                 if (resultObj!=null && (Integer)resultObj > 0){
                     txt_netError.setVisibility(View.GONE);
@@ -248,7 +248,7 @@ public class NewAddFragment extends BaseFragment
                     }
                     clearAndLoadImage();
                 }else{
-                    onError(getString(R.string.data_load_fail),TAG);
+                    onError(getString(R.string.data_load_fail),what);
                 }
                 isLoadingNext = false;
                 break;

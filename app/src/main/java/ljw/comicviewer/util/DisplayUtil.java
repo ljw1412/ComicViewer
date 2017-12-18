@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,11 +102,21 @@ public class DisplayUtil {
         return sb.toString();
     }
 
-    public static double random(double min, double max){
-        return (Math.random()*(max-min)+min);
+    //隐藏虚拟键盘
+    public static void hideKeyboard(View v)
+    {
+        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService( Context.INPUT_METHOD_SERVICE );
+        if ( imm.isActive() ) {
+            imm.hideSoftInputFromWindow( v.getApplicationWindowToken() , 0 );
+        }
     }
 
-    public static int randomInt(double min, double max){
-        return (int) random(min, max);
+    //显示虚拟键盘
+    public static void showKeyboard(View v)
+    {
+        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService( Context.INPUT_METHOD_SERVICE );
+        if ( imm.isActive() ) {
+            imm.toggleSoftInput(0,InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 }

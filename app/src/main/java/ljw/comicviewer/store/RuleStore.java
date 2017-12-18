@@ -15,6 +15,7 @@ import ljw.comicviewer.bean.Category;
 public class RuleStore {
     private final String TAG = this.getClass().getSimpleName()+"----";
     private static RuleStore ruleStore = null;
+    private String comeFrom;
     private String host;
     private String domain;
     private String cookie;
@@ -37,6 +38,14 @@ public class RuleStore {
             ruleStore = new RuleStore();
         }
         return ruleStore;
+    }
+
+    public String getComeFrom() {
+        return comeFrom;
+    }
+
+    public void setComeFrom(String comeFrom) {
+        this.comeFrom = comeFrom;
     }
 
     public String getHost() {

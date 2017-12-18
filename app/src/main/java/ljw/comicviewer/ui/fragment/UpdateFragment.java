@@ -117,8 +117,8 @@ public class UpdateFragment extends NewAddFragment {
     }
 
     @Override
-    public Object myDoInBackground(String TAG, Object data) {
-        switch (TAG) {
+    public Object myDoInBackground(String what, Object data) {
+        switch (what) {
             case Global.REQUEST_COMICS_UPDATE:
                 List<Comic> tempList = ComicFetcher.getLatestList(data.toString());
                 if(tempList.size()>0) allList.addAll(tempList);
@@ -128,8 +128,8 @@ public class UpdateFragment extends NewAddFragment {
     }
 
     @Override
-    public void myOnPostExecute(String TAG,Object resultObj) {
-        switch (TAG) {
+    public void myOnPostExecute(String what, Object resultObj) {
+        switch (what) {
             case Global.REQUEST_COMICS_UPDATE:
                 if (resultObj!=null && (Integer)resultObj > 0) {
                     maxPage = allList.size() % 30 > 0 ? (allList.size() / 30 + 1) : allList.size() / 30;
@@ -142,7 +142,7 @@ public class UpdateFragment extends NewAddFragment {
                     btn_toTop.setVisibility(View.VISIBLE);
                     clearAndLoadImage();
                 }else{
-                    onError(getString(R.string.data_load_fail),TAG);
+                    onError(getString(R.string.data_load_fail), what);
                 }
                 break;
         }

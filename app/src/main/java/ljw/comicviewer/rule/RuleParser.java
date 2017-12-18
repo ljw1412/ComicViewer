@@ -53,10 +53,7 @@ public class RuleParser {
     }
 
     public void parseAll(){
-        parseHost();
-        parseCookie();
-        parseDomain();
-        parseImgHost();
+        parseRuleInfo();
         parseHomePage();
         parseListPage();
         parseLatestPage();
@@ -73,24 +70,20 @@ public class RuleParser {
         }
     }
 
-    private void parseHost(){
+    private void parseRuleInfo(){
         String host = jsonObject.get("host").toString();
+        if (host==null){
+            throw new RuntimeException("规则host存在严重问题！");
+        }
         ruleStore.setHost(host);
-    }
-
-    private void parseDomain(){
         Object domain = jsonObject.get("domain");
         ruleStore.setDomain(domain==null ? null : domain.toString());
-    }
-
-    private void parseImgHost(){
         Object imghost = jsonObject.get("imghost");
         ruleStore.setImgHost(imghost==null ? null : imghost.toString());
-    }
-
-    private void parseCookie(){
         Object cookie = jsonObject.get("cookie");
         ruleStore.setCookie(cookie==null ? null : cookie.toString());
+        Object comeFrom = jsonObject.get("comeFrom");
+        ruleStore.setComeFrom(comeFrom==null ? null : comeFrom.toString());
     }
 
     private void parseHomePage(){
