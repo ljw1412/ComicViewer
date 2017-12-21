@@ -1,7 +1,6 @@
 package ljw.comicviewer.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Category;
-import ljw.comicviewer.util.DisplayUtil;
 
 /**
  * Created by ljw on 2017-12-12 012.

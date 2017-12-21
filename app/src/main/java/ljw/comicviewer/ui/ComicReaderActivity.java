@@ -130,6 +130,13 @@ public class ComicReaderActivity extends AppCompatActivity {
         addListener();
     }
 
+    private String parseUrl(){
+        return ruleStore.getHost() +
+                ruleStore.getReadRule().get("url")
+                        .replaceAll("\\{comic:.*?\\}",comic_id)
+                        .replaceAll("\\{chapter:.*?\\}",chapter_id);
+    }
+
     private void initWebView(){
         //破解屏蔽
         if (ruleStore.getCookie()!=null) {
@@ -140,8 +147,7 @@ public class ComicReaderActivity extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setUserAgentString(
                 "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
-        webView.loadUrl(ruleStore.getHost() +
-                ruleStore.getReadRule().get("url").replaceAll("\\{comic:.*?\\}",comic_id).replaceAll("\\{chapter:.*?\\}",chapter_id));
+        webView.loadUrl(parseUrl());
         webView.setWebViewClient(new MyWebView());
         getInfo();
     }
@@ -478,7 +484,7 @@ public class ComicReaderActivity extends AppCompatActivity {
 
     private void loadChapter(){
         view_loading.setVisibility(View.VISIBLE);
-        webView.loadUrl(RuleStore.get().getHost()+ruleStore.getDetailsRule().get("url")+comic_id+"/"+chapter_id+"/");
+        webView.loadUrl(parseUrl());
         imgUrls.clear();
         currPos = 0;
         getInfo();

@@ -8,8 +8,6 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import ljw.comicviewer.bean.Chapter;
-import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.bean.History;
 
 /**

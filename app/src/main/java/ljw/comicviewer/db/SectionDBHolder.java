@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 
 import java.util.List;
 

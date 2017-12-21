@@ -1,7 +1,5 @@
 package ljw.comicviewer.bean;
 
-import android.graphics.Bitmap;
-
 import java.util.List;
 
 /**

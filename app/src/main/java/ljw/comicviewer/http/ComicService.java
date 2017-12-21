@@ -21,7 +21,7 @@ public class ComicService {
     private static final String TAG ="ComicService----";
     private static ComicService comicService;
     private static FilterStore filterStore;
-    private static String host ;;
+    private static String host;
 
     private ComicService(){}
 
@@ -135,7 +135,6 @@ public class ComicService {
     public interface RequestCallback<T>{
         //data为返回的数据，what是什么请求，用于分辨是谁的请求结果用于有多个请求同时时的处理。
         void onFinish(T data,String what);
-
         void onError(String msg,String what);
     }
 
