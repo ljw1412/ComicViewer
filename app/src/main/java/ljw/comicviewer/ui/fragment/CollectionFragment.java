@@ -239,7 +239,7 @@ public class CollectionFragment extends BaseFragment
         maxPage = allComics.size() % 20 > 0 ? (allComics.size() / 20 + 1) : allComics.size() / 20;
         add20(currentPage);
         delayedFlushAdapter();
-        RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Both);
+
     }
 
     private int maxPage;
@@ -251,8 +251,10 @@ public class CollectionFragment extends BaseFragment
         comics.addAll(comicList);
         pictureGridAdapter.notifyDataSetChanged();
         RefreshLayoutUtil.onFinish(refreshLayout);
-        if(currentPage == maxPage || maxPage == 0)
+        if(currentPage >= maxPage || maxPage == 0)
             RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Only_Refresh);
+        else
+            RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Both);
     }
 
     @Override

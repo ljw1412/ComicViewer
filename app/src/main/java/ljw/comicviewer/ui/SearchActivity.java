@@ -187,9 +187,6 @@ public class SearchActivity extends AppCompatActivity
                     String.format(getString(R.string.alert_search_loading_tips),keyword);
             ((ClassicsHeader)refreshHeader).REFRESH_HEADER_PULLDOWN =
                     String.format(getString(R.string.alert_search_loading_tips),keyword);
-            if(loading){
-
-            }
 
             RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
             refreshLayout.autoRefresh(100);
