@@ -4,6 +4,7 @@ import android.content.Context;
 
 import ljw.comicviewer.R;
 import ljw.comicviewer.rule.RuleParser;
+import ljw.comicviewer.store.AppStatusStore;
 import ljw.comicviewer.store.RuleStore;
 
 /**
@@ -25,6 +26,9 @@ public class StoreUtil {
     public static void initRuleStore(Context context,int resId){
         String rule = FileUtil.readJson(context,resId);
         RuleStore.get().setCurrentRule(rule.equals("fail") ? null : rule);
+        if(AppStatusStore.get().getCurrentSource()==null){
+            AppStatusStore.get().setCurrentSource(RuleStore.get().getComeFrom());
+        }
         if(RuleStore.get().getCurrentRule()!=null){
             RuleParser.get().parseAll();
         }else{

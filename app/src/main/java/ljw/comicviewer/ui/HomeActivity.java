@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
+import ljw.comicviewer.store.AppStatusStore;
 import ljw.comicviewer.ui.fragment.CollectionFragment;
 import ljw.comicviewer.ui.fragment.HomeFragment;
 import ljw.comicviewer.ui.fragment.MineFragment;
@@ -68,7 +69,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         img_comic.setSelected(true);
 
         //初始化ruleStore
-        StoreUtil.initRuleStore(context,R.raw.manhuatai);
+        StoreUtil.initRuleStore(context,R.raw.manhuagui);
     }
 
 
@@ -97,6 +98,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         currentFragment = fragment;
         if(currentFragment == collectionFragment && collectionFragment.isLoading()){
             collectionFragment.initLoad();
+        }
+        if(currentFragment == homeFragment && AppStatusStore.get().isSourceReplace()){
+            homeFragment.reload();
+            AppStatusStore.get().setSourceReplace(false);
         }
     }
 

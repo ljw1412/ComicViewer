@@ -46,6 +46,15 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
         loaded.add(false);
     }
 
+    public void removeFragment(BaseFragment fragment){
+        int index = fragments.indexOf(fragment);
+        if(index!=-1){
+            fragments.remove(index);
+            pageTitles.remove(index);
+            loaded.remove(index);
+        }
+    }
+
     public void loadFragment(int position,BaseFragment fragment){
         fragment.initLoad();
         loaded.set(position,true);

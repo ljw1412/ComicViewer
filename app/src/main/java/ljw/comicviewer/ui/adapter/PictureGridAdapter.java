@@ -74,8 +74,16 @@ public class PictureGridAdapter extends BaseAdapter {
             pictureGridViewHolder = (PictureGridViewHolder) convertView.getTag();
         }
         pictureGridViewHolder.name.setText(comics.get(position).getName());
-        pictureGridViewHolder.score.setText(comics.get(position).getScore());
-        pictureGridViewHolder.update.setText(comics.get(position).getUpdate());
+        if(comics.get(position).getScore()!=null) {
+            pictureGridViewHolder.score.setText(comics.get(position).getScore());
+        }else{
+            pictureGridViewHolder.score.setVisibility(View.GONE);
+        }
+        if(comics.get(position).getUpdate()!=null) {
+            pictureGridViewHolder.update.setText(comics.get(position).getUpdate());
+        }else{
+            pictureGridViewHolder.update.setVisibility(View.GONE);
+        }
         pictureGridViewHolder.updateStatus.setText(comics.get(position).getUpdateStatus());
         //图片加载代码移动到ComicGridFragment
 //        loadCover(position,pictureGridViewHolder.image);

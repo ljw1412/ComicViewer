@@ -64,9 +64,40 @@ public class HomeFragment extends BaseFragment{
 
     @Override
     public void initView() {
+        if(RuleStore.get().getSearchRule()==null){
+            btn_search.setVisibility(View.GONE);
+        }
         initViewPager();
         //tab标题栏绑定viewpager
         tabLayout.setupWithViewPager(viewPager);
+    }
+    //重新加载
+    public void reload(){
+        if(RuleStore.get().getSearchRule()==null){
+            btn_search.setVisibility(View.GONE);
+        }else{
+            btn_search.setVisibility(View.VISIBLE);
+        }
+        if(myFragmentPagerAdapter!=null){
+            viewPager.setCurrentItem(0);
+            if(recommendFragment!=null){
+                recommendFragment.reload();
+            }
+            String hasAddNew = RuleStore.get().getListRule().get("hasAddNew");
+            if(hasAddNew!=null && hasAddNew.equals("false")){
+                myFragmentPagerAdapter.removeFragment(newAddFragment);
+            }else{
+                newAddFragment = new NewAddFragment();
+                myFragmentPagerAdapter.addFragment(newAddFragment,getString(R.string.opt_new));
+            }
+            if(RuleStore.get().getLatestRule()==null) {
+                myFragmentPagerAdapter.removeFragment(updateFragment);
+            }else{
+                updateFragment = new UpdateFragment();
+                myFragmentPagerAdapter.addFragment(updateFragment, getString(R.string.opt_update));
+            }
+            myFragmentPagerAdapter.notifyDataSetChanged();
+        }
     }
 
     //采用了当界面处于当前页时加载并缓存页面
@@ -87,6 +118,7 @@ public class HomeFragment extends BaseFragment{
             updateFragment = new UpdateFragment();
             myFragmentPagerAdapter.addFragment(updateFragment, getString(R.string.opt_update));
         }
+
 
         currentFragment = myFragmentPagerAdapter.getItem(0);
         //第一个加载必须在那个fragment中执行，这里仅修改数组加载状态

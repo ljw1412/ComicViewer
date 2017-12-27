@@ -37,7 +37,7 @@ public class GlideCache extends AppGlideModule {
         if (!glideCacheDir.exists()) {
             glideCacheDir.mkdirs();
         }
-        Log.d("----","GlideCache缓存文件夹:"+glideCacheDir.getAbsolutePath());
+        Log.d("GlideCache","GlideCache缓存文件夹:"+glideCacheDir.getAbsolutePath());
         int cacheSize = 200 * 1024 * 1024;
         builder.setDiskCache(new DiskLruCacheFactory(glideCacheDir.getAbsolutePath(),cacheSize));
         builder.setMemoryCache(new LruResourceCache(20 * 1024 * 1024));

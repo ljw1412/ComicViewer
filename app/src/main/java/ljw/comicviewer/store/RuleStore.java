@@ -160,14 +160,14 @@ public class RuleStore {
     }
 
     public void printRules(){
-        Log.d(TAG, "RuleStore情况:typeRule:" + typeRule.size() +
-                " , listRule:" + listRule.size() +
-                " , latestRule:" + latestRule==null?"null":"exits" +
-                " , detailsRule:" + detailsRule.size() +
-                " , searchRule:" + searchRule.size() +
-                " , detailsChapterRule:" + detailsChapterRule.size() +
-                " , readRule:" + readRule.size()+
-                " , homeRule:" + homeRule.size());
+        Log.d(TAG, "RuleStore情况:typeRule:" + (typeRule==null?"null":"exits") +
+                " , listRule:" + (listRule==null?"null":"exits") +
+                " , latestRule:" + (latestRule==null?"null":"exits") +
+                " , detailsRule:" + (detailsRule==null?"null":"exits") +
+                " , searchRule:" + (searchRule==null?"null":"exits") +
+                " , detailsChapterRule:" + (detailsChapterRule==null?"null":"exits") +
+                " , readRule:" + (readRule==null?"null":"exits")+
+                " , homeRule:" + (homeRule==null?"null":"exits"));
 
     }
 }

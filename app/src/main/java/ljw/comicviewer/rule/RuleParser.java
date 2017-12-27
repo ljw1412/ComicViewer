@@ -140,7 +140,6 @@ public class RuleParser {
         Map<String,String> map = new HashMap<>();
         JSONObject list = jsonObject.getJSONObject(key);
         if(list==null) return null;
-        Log.d(TAG, "parsePage: "+key);
         if(list.get("url")!=null)
             map.put("url",list.get("url").toString());
         if(list.get("wv-js")!=null){

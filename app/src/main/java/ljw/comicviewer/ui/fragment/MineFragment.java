@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,10 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
+import ljw.comicviewer.store.AppStatusStore;
+import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.AboutActivity;
 import ljw.comicviewer.ui.HistoryActivity;
 import ljw.comicviewer.ui.HomeActivity;
@@ -72,7 +76,7 @@ public class MineFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, SettingsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, Global.HomeToSetting);
             }
         });
         btn_about.setOnClickListener(new View.OnClickListener() {
@@ -85,4 +89,18 @@ public class MineFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode:"+requestCode + "resultCode:"+resultCode);
+        switch (requestCode){
+            case Global.HomeToSetting:
+                if(!RuleStore.get().getComeFrom().equals(AppStatusStore.get().getCurrentSource())){
+                    AppStatusStore.get().setSourceReplace(true);
+                    AppStatusStore.get().setCurrentSource(RuleStore.get().getComeFrom());
+                    Log.d(TAG, "onActivityResult: 切换成功");
+                }
+                break;
+        }
+    }
 }

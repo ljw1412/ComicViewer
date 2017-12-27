@@ -4,6 +4,7 @@ package ljw.comicviewer.ui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -88,6 +90,14 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
 
     @Override
     public void initLoad() {
+        getDataFromDB();
+        refreshLayout.autoRefresh();
+    }
+
+    public void reload(){
+        //清除所有板块
+        container.removeAllViews();
+        sections.clear();
         getDataFromDB();
         refreshLayout.autoRefresh();
     }

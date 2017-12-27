@@ -50,23 +50,6 @@
 			]
 		}
 	},
-	"search_page":{
-		"url":"/s/{keyword:}_p{page:}.html",
-		"cssQuery":{
-			"items":"",
-			"comic-id":"",
-			"comic-name":"",
-			"comic-image-url":"",
-			"comic-score":"",
-			"comic-update":"",
-			"comic-update-status":"",
-			"comic-end":"",
-			"comic-author":"",
-			"comic-tag":"",
-			"comic-info":"",
-			"max-page":""
-		}
-	},
 	"details_page":{
 		"url":"/{comic:}/",
 		"wv-js":"document.getElementsByTagName('html')[0].outerHTML;",
