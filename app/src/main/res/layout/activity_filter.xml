@@ -49,7 +49,7 @@
             android:numColumns="auto_fit"
             android:horizontalSpacing="3dp"
             android:verticalSpacing="3dp"
-            android:columnWidth="60dp"
+            android:columnWidth="80dp"
             android:background="@color/white"
             android:stretchMode="columnWidth"
             android:padding="3dp"

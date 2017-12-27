@@ -1,0 +1,98 @@
+{
+	"comeFrom":"manhuatai",
+	"host":"http://www.manhuatai.com",
+	"imghost":"mhpic.manhualang.com",
+	"domain":".manhualang.com",
+	"home":{
+		"url":"/",
+		"cssQuery":{
+			"comic-id":"$('a').attr('href').match('/(\\w+)/')[1]",
+			"comic-name":"$('a .title').text()",
+			"comic-image-url":"$('a img').attr('data-url')",
+			"comic-update-status":"$('a .a').text()"
+		},
+		"items":{
+			"titles":["$('.rhot .mhlisthead .nvi')"],
+			"title":["$('.nvi').text()"],
+			"items-list":["$('.rhot .ulbox ul')"],
+			"items":["$('li')"]
+		}
+	},
+	"list":{
+		"url":"/{type:}_p{page:}.html",
+		"cssQuery":{
+			"items":"$('.mhlist2 a.sdiv')",
+			"comic-id":"$('a.sdiv').attr('href').match('/(\\w+)/')[1]",
+			"comic-name":"$('.wrapright ul li.title').text()",
+			"comic-image-url":"$('.wrapleft img').attr('data-url')",
+			"comic-score":"",
+			"comic-update":"",
+			"comic-update-status":"$('.wrapleft span.a').text()",
+			"comic-end":"$('.wrapright li.status').text().indexOf('完结')!=-1",
+			"max-page":"$('.pages .page').last().prev().text()",
+			"hasAddNew":false
+		},
+		"type":{
+			"order":[
+				{"name":"separate","value":""},
+				{"name":"endStr","value":""},
+				{"name":0,"value":"类型"}
+			],
+			"类型":[
+				{"name":"全部漫画","value":"all"},
+				{"name":"知音漫客","value":"zhiyinmanke"},
+				{"name":"神漫","value":"shenman"},
+				{"name":"风炫漫画","value":"fengxuanmanhua"},
+				{"name":"漫画周刊","value":"manhuazhoukan"},
+				{"name":"飒漫乐画","value":"samanlehua"},
+				{"name":"飒漫画","value":"samanhua"},
+				{"name":"漫画世界","value":"manhuashijie"}
+			]
+		}
+	},
+	"search_page":{
+		"url":"/s/{keyword:}_p{page:}.html",
+		"cssQuery":{
+			"items":"",
+			"comic-id":"",
+			"comic-name":"",
+			"comic-image-url":"",
+			"comic-score":"",
+			"comic-update":"",
+			"comic-update-status":"",
+			"comic-end":"",
+			"comic-author":"",
+			"comic-tag":"",
+			"comic-info":"",
+			"max-page":""
+		}
+	},
+	"details_page":{
+		"url":"/{comic:}/",
+		"wv-js":"document.getElementsByTagName('html')[0].outerHTML;",
+		"cssQuery":{
+			"comic-name":"$('.mhjsbody .jshtml ul li').eq(0).text().replace('名称：','')",
+			"comic-image-url":"$('.mhjsbody .comic-cover img').attr('src')",
+			"comic-tag":"$('.mhjsbody .jshtml ul li').eq(3).text().replace('类型：','')",
+			"comic-author":"$('.mhjsbody .jshtml ul li').eq(2).text().replace('作者：','')",
+			"comic-update":"$('.mhjsbody .jshtml ul li').eq(4).text().replace('更新：','')",
+			"comic-update-status":"$('.mhjsbody .jshtml ul li').eq(1).text().replace('状态：连载至','')",
+			"comic-end":"$('meta[property=\"og:novel:status\"]').attr('content').indexOf('完结')!=-1",
+			"comic-info":"$('.mhjsbody .jshtml .wz').text().replace('更多>>','')",
+			"comic-is-ban":"$('.mhlistbody').size()==0"
+		}
+	},
+	"details_page_chapter":{
+		"cssQuery":{
+			"chapter-lists":"$('.mhlistbody ul')",
+			"chapter-list":"$('ul')",
+			"chapter-items":"$('li')",
+			"chapter-id":"$('a').attr('href')",
+			"chapter-name":"$('a').attr('title')"
+		}
+	},
+	"read_page":{
+		"url":"/{comic:}/{chapter:}",
+		"wv-js":"var res = [];for(var i = 1;i<=mh_info.totalimg;i++){res.push(__cr.getPicUrl(i));}res;"
+	}
+}

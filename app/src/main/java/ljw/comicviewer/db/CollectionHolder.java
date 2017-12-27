@@ -95,6 +95,29 @@ public class CollectionHolder {
         return comics;
     }
 
+    public synchronized List<Comic> getComics(String comeFrom){
+        List<Comic> comics = new ArrayList<>();
+
+        Cursor cursor = dbHelper.query("select * from "+tableName+" where comeFrom = \""+comeFrom+"\"");
+        Log.d(TAG, "getComics: "+cursor.getCount());
+        while (cursor.moveToNext()){
+            Comic comic = new Comic();
+            comic.setComicId(cursor.getString(cursor.getColumnIndex("comicId")));
+            comic.setName(cursor.getString(cursor.getColumnIndex("name")));
+            comic.setImageUrl(cursor.getString(cursor.getColumnIndex("imageUrl")));
+            comic.setScore(cursor.getString(cursor.getColumnIndex("score")));
+            comic.setUpdate(cursor.getString(cursor.getColumnIndex("updateDate")));
+            comic.setUpdateStatus(cursor.getString(cursor.getColumnIndex("updateStatus")));
+            comic.setEnd(cursor.getInt(cursor.getColumnIndex("isEnd"))>0);
+            comic.setComeFrom(cursor.getString(cursor.getColumnIndex("comeFrom")));
+            comic.setTag(cursor.getString(cursor.getColumnIndex("tag")));
+            comics.add(comic);
+        }
+        return comics;
+    }
+
+
+
     public synchronized boolean hasComic(String comicId){
         String findQuery = "select * from " + tableName + " where comicId = ?";
         return dbHelper.query(findQuery,comicId).getCount()>0;

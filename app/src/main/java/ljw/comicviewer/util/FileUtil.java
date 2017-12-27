@@ -32,9 +32,9 @@ public class FileUtil {
         }
     }
 
-    public static String readJson(Context context){
+    public static String readJson(Context context,int resId){
         String content = "fail";
-        InputStream in = context.getResources().openRawResource(R.raw.manhuagui);
+        InputStream in = context.getResources().openRawResource(resId);
         try {
             byte buffer[]=new byte[in.available()];
             in.read(buffer);

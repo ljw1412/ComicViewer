@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 import com.youth.banner.Banner;
@@ -162,7 +163,15 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
             itemViewHolder.updateStatus.setText(comic.getUpdateStatus());
             itemViewHolder.score.setVisibility(View.GONE);
             itemViewHolder.update.setVisibility(View.GONE);
-            Glide.with(context).asBitmap().load(comic.getImageUrl()).into(itemViewHolder.image);
+            //图片网络
+            RequestOptions options = new RequestOptions();
+            options.skipMemoryCache(true).centerCrop().override(300,400);
+            Glide.with(context)
+                    .asBitmap()
+                    .apply(options)
+                    .load(comic.getImageUrl())
+                    .into(itemViewHolder.image);
+
             itemViewHolder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

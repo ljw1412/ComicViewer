@@ -173,6 +173,7 @@ public class DetailsActivity extends AppCompatActivity
         String score = (String) getIntent().getExtras().get("score");
         comic.setComicId(comic_id);
         comic.setScore(score);
+        comic.setComeFrom(ruleStore.getComeFrom());
 
         //加载数据
         loadComicInformation();
@@ -546,7 +547,8 @@ public class DetailsActivity extends AppCompatActivity
                 history.setEnd(comic.isEnd());
                 history.setPage(data.getIntExtra("page",1));
                 history.setReadTime(System.currentTimeMillis());
-                Log.d(TAG, "onActivityResult: "+history.toString());
+                history.setComeFrom(RuleStore.get().getComeFrom());
+//                Log.d(TAG, "onActivityResult: "+history.toString());
                 HistoryHolder historyHolder = new HistoryHolder(context);
                 historyHolder.updateOrAddHistory(history);
                 //刷新章节界面

@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
+import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.FilterActivity;
 import ljw.comicviewer.ui.SearchActivity;
 import ljw.comicviewer.ui.adapter.MyFragmentPagerAdapter;
@@ -76,13 +77,16 @@ public class HomeFragment extends BaseFragment{
         viewPager.setOffscreenPageLimit(3);
 
         recommendFragment = new RecommendFragment();
-        newAddFragment = new NewAddFragment();
-        updateFragment = new UpdateFragment();
-
         myFragmentPagerAdapter.addFragment(recommendFragment,getString(R.string.opt_recommend));
-        myFragmentPagerAdapter.addFragment(newAddFragment,getString(R.string.opt_new));
-        myFragmentPagerAdapter.addFragment(updateFragment,getString(R.string.opt_update));
-
+        String hasAddNew = RuleStore.get().getListRule().get("hasAddNew");
+        if(hasAddNew==null || hasAddNew.equals("true")){
+            newAddFragment = new NewAddFragment();
+            myFragmentPagerAdapter.addFragment(newAddFragment,getString(R.string.opt_new));
+        }
+        if(RuleStore.get().getLatestRule()!=null) {
+            updateFragment = new UpdateFragment();
+            myFragmentPagerAdapter.addFragment(updateFragment, getString(R.string.opt_update));
+        }
 
         currentFragment = myFragmentPagerAdapter.getItem(0);
         //第一个加载必须在那个fragment中执行，这里仅修改数组加载状态

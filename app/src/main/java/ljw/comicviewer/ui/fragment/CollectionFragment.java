@@ -34,6 +34,7 @@ import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.db.CollectionHolder;
+import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.HomeActivity;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
@@ -233,7 +234,7 @@ public class CollectionFragment extends BaseFragment
     public void getDataFromDB(){
         //数据库处理，获取对象
         CollectionHolder collectionHolder = new CollectionHolder(context);
-        allComics = collectionHolder.getComics();
+        allComics = collectionHolder.getComics(RuleStore.get().getComeFrom());
         if (getActivity() instanceof HomeActivity)
             ((HomeActivity) getActivity()).setTitle(nav_title,getString(R.string.txt_collection)+"("+allComics.size()+")");
         maxPage = allComics.size() % 20 > 0 ? (allComics.size() / 20 + 1) : allComics.size() / 20;

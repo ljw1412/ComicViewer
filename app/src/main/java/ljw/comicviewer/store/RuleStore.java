@@ -162,7 +162,7 @@ public class RuleStore {
     public void printRules(){
         Log.d(TAG, "RuleStore情况:typeRule:" + typeRule.size() +
                 " , listRule:" + listRule.size() +
-                " , latestRule:" + latestRule.size() +
+                " , latestRule:" + latestRule==null?"null":"exits" +
                 " , detailsRule:" + detailsRule.size() +
                 " , searchRule:" + searchRule.size() +
                 " , detailsChapterRule:" + detailsChapterRule.size() +

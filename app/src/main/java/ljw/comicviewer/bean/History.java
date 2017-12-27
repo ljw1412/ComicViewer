@@ -13,6 +13,7 @@ public class History {
     private boolean isEnd;
 	private int page;
     private long readTime;
+    private String comeFrom;
 
     public String getComicId() {
         return comicId;
@@ -78,6 +79,14 @@ public class History {
         this.readTime = readTime;
     }
 
+    public String getComeFrom() {
+        return comeFrom;
+    }
+
+    public void setComeFrom(String comeFrom) {
+        this.comeFrom = comeFrom;
+    }
+
     @Override
     public String toString() {
         return "History{" +
@@ -89,6 +98,7 @@ public class History {
                 ", isEnd=" + isEnd +
                 ", page=" + page +
                 ", readTime=" + readTime +
+                ", comeFrom='" + comeFrom + '\'' +
                 '}';
     }
 }

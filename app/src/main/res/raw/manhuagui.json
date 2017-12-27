@@ -211,7 +211,7 @@
 	},
 	"read_page":{
 		"url":"/comic/{comic:}/{chapter:}/",
-		"wv-js":"document.getElementsByTagName('html')[0].outerHTML;"
+		"wv-js":"cInfo;"
 	},
 	"author_page":{
 		"url":"{author:}index_p{page:}.html",

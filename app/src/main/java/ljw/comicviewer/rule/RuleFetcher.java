@@ -56,6 +56,7 @@ public class RuleFetcher {
 
     //解析
     public Object parser(Object element,String rule){
+        if (rule.equals("")) return null;
         if(!(element instanceof Document) && !(element instanceof Element) && !(element instanceof Elements)){
             throw new RuntimeException("第一个参数的类型错误：只能是Document或Element或Elements");
         }
@@ -81,7 +82,8 @@ public class RuleFetcher {
                 "indexOf\\('(.*)'\\)",
                 "length",
                 "size\\(\\)",
-                "join\\('(.*)'\\)"
+                "join\\('(.*)'\\)",
+                "prev\\(\\)"
         };
 
         Object currentObj = element;
@@ -224,10 +226,16 @@ public class RuleFetcher {
                                     error = false;
                                 }
                                 break;
-                            case 18:
+                            case 18://join()
                                 cssQuery = StringUtil.getPattern(regexps[i], ss, 1);
                                 if(currentObj instanceof String[]){
                                     currentObj = StringUtil.join((String[]) currentObj,cssQuery);
+                                    error = false;
+                                }
+                                break;
+                            case 19://prev()
+                                if(currentObj instanceof Element){
+                                    currentObj = ((Element)currentObj).previousElementSibling();
                                     error = false;
                                 }
                                 break;

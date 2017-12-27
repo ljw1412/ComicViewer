@@ -69,7 +69,7 @@ public class FilterStore {
             for(String key:order) {
                 for (Category category:map.get(key)){
                     if(category!=null && category.getName()!=null
-                            && category.getName().equals("全部")){
+                            && category.getName().contains("全部")){
                         setFilterStatus(key,category.getValue());
                         category.setSelected(true);
                     }else{

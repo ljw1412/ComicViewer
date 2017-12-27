@@ -2,6 +2,7 @@ package ljw.comicviewer.util;
 
 import android.content.Context;
 
+import ljw.comicviewer.R;
 import ljw.comicviewer.rule.RuleParser;
 import ljw.comicviewer.store.RuleStore;
 
@@ -11,7 +12,18 @@ import ljw.comicviewer.store.RuleStore;
 
 public class StoreUtil {
     public static void initRuleStore(Context context){
-        String rule = FileUtil.readJson(context);
+        String rule = FileUtil.readJson(context, R.raw.manhuagui);
+        RuleStore.get().setCurrentRule(rule.equals("fail") ? null : rule);
+        if(RuleStore.get().getCurrentRule()!=null){
+            RuleParser.get().parseAll();
+        }else{
+            throw new RuntimeException("初始化失败");
+        }
+        RuleStore.get().printRules();
+    }
+
+    public static void initRuleStore(Context context,int resId){
+        String rule = FileUtil.readJson(context,resId);
         RuleStore.get().setCurrentRule(rule.equals("fail") ? null : rule);
         if(RuleStore.get().getCurrentRule()!=null){
             RuleParser.get().parseAll();

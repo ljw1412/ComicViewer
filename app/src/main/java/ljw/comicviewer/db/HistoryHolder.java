@@ -35,6 +35,8 @@ public class HistoryHolder {
         cv.put("isEnd",history.isEnd()?1:0);
         cv.put("page",history.getPage());
         cv.put("readTime",history.getReadTime());
+        cv.put("comeFrom",history.getComeFrom());
+        Log.d(TAG, "updateOrAddHistory: "+history.toString());
         if (hasData(history.getComicId())){
             long res = dbHelper.update(tableName,cv,"comicId = ?",new String[]{history.getComicId()});
             Log.d(TAG, "updateOrAddHistory: "+(res== -1 ? "更新失败" : "更新成功"));
@@ -67,6 +69,7 @@ public class HistoryHolder {
         cv.put("isEnd",history.isEnd()?1:0);
         cv.put("page",history.getPage());
         cv.put("readTime",history.getReadTime());
+        cv.put("comeFrom",history.getComeFrom());
         try {
             long res = dbHelper.insert(tableName,cv);
             Log.d(TAG, "addHistory: "+(res==-1?"插入失败":"插入成功"));
@@ -96,9 +99,11 @@ public class HistoryHolder {
         return list;
     }
 
-    public synchronized List<History> getHistories(int limit){
+    public synchronized List<History> getHistories(int limit,String comeFrom){
         List<History> list = new ArrayList<>();
-        Cursor cursor = dbHelper.query("select * from "+tableName+" order by readTime desc limit "+limit);
+        String sql = "select * from "+tableName+" where comeFrom = \""+comeFrom+"\" order by readTime desc limit "+limit;
+        Log.d(TAG, "getHistories: "+sql);
+        Cursor cursor = dbHelper.query(sql);
         Log.d(TAG, "getHistories: Histories数量"+cursor.getCount());
         while (cursor.moveToNext()){
             History history = new History();
@@ -110,6 +115,7 @@ public class HistoryHolder {
             history.setEnd(cursor.getInt(cursor.getColumnIndex("isEnd"))==0?false:true);
             history.setReadTime(cursor.getLong(cursor.getColumnIndex("readTime")));
             history.setPage(cursor.getInt(cursor.getColumnIndex("page")));
+            history.setComeFrom(cursor.getString(cursor.getColumnIndex("comeFrom")));
             list.add(history);
         }
         return list;

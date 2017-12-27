@@ -24,6 +24,8 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
@@ -49,6 +51,7 @@ import ljw.comicviewer.ui.adapter.PicturePagerAdapter;
 import ljw.comicviewer.ui.listeners.OnItemLongClickListener;
 import ljw.comicviewer.util.AnimationUtil;
 import ljw.comicviewer.util.AreaClickHelper;
+import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.WebViewUtil;
 import uk.co.senab.photoview.PhotoView;
@@ -325,9 +328,9 @@ public class ComicReaderActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                String js = RuleStore.get().getReadRule().get("wv-js");
+                final String js = RuleStore.get().getReadRule().get("wv-js");
                 if(js!=null) {
-                    webView.evaluateJavascript("cInfo;", new ValueCallback<String>() {
+                    webView.evaluateJavascript(js, new ValueCallback<String>() {
                         @Override
                         public void onReceiveValue(String s) {
                             Log.d(TAG, "debug!!=" + s);
@@ -342,9 +345,16 @@ public class ComicReaderActivity extends AppCompatActivity {
                                     getInfo();
                                 }
                             } else {
-                                ManhuaguiComicInfo info = ComicFetcher.parseCurrentChapter(s);
-                                for (int i = 0; i < info.getFiles().size(); i++) {
-                                    imgUrls.add(RuleStore.get().getImgHost() + info.getPath() + info.getFiles().get(i));
+                                if(ruleStore.getComeFrom().equals("manhuagui")) {
+                                    ManhuaguiComicInfo info = ComicFetcher.parseCurrentChapter(s);
+                                    for (int i = 0; i < info.getFiles().size(); i++) {
+                                        imgUrls.add(RuleStore.get().getImgHost() + info.getPath() + info.getFiles().get(i));
+                                    }
+                                }else{
+                                    JSONArray jsonArray = JSON.parseArray(s);
+                                    for(Object obj:jsonArray){
+                                        imgUrls.add(obj.toString());
+                                    }
                                 }
                                 webView.loadUrl("about:blank");
                                 initView();

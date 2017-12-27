@@ -237,22 +237,23 @@ public class ComicFetcher {
 
         String authorStr = (String) getRuleFetcher().parser(doc,map.get("comic-author"));
         String[] authors = authorStr.split(" ");
-        String hrefStr = (String) getRuleFetcher().parser(doc,map.get("comic-author-href"));
-        String[] hrefs = hrefStr.split(" ");
-        List<Author> authorList = new ArrayList<>();
-        for(int i = 0 ; i < authors.length ; i++){
-            Author author = new Author();
-            try {
-                author.setName(authors[i]);
-                author.setMark(hrefs[i]);
-            } catch (Exception e) {
-                Log.e("----", "getComicDetails: "+"作者相关数组越界");
+        if(map.get("comic-author-href")!=null) {
+            String hrefStr = (String) getRuleFetcher().parser(doc, map.get("comic-author-href"));
+            String[] hrefs = hrefStr.split(" ");
+
+            List<Author> authorList = new ArrayList<>();
+            for(int i = 0 ; i < authors.length ; i++){
+                Author author = new Author();
+                try {
+                    author.setName(authors[i]);
+                    author.setMark(hrefs[i]);
+                } catch (Exception e) {
+                    Log.e("----", "getComicDetails: "+"作者相关数组越界");
+                }
+                authorList.add(author);
             }
-            authorList.add(author);
+            comic.setAuthors(authorList);
         }
-
-        comic.setAuthors(authorList);
-
         comic.setUpdateStatus("更新至"+(String) getRuleFetcher().parser(doc,map.get("comic-update-status")));
         comic.setUpdate((String) getRuleFetcher().parser(doc,map.get("comic-update")));
         comic.setEnd((Boolean) getRuleFetcher().parser(doc,map.get("comic-end")));
@@ -277,14 +278,19 @@ public class ComicFetcher {
 
         List<Chapter> chapters = new ArrayList<>();
         Document doc = Jsoup.parse(html);
-        Elements chapterType = (Elements) getRuleFetcher().parser(doc,map.get("chapter-type"));
+        Elements chapterType = null;
+        if(map.get("chapter-type") != null) {
+            chapterType = (Elements) getRuleFetcher().parser(doc, map.get("chapter-type"));
+        }
         Elements chapterLists = (Elements) getRuleFetcher().parser(doc,map.get("chapter-lists"));
         for(int i = 0 ; i < chapterLists.size() ; i++){
             int type = 2;
-            if (chapterType.get(i).text().contains("单行本")){
-                type = 0;
-            }else if (chapterType.get(i).text().contains("单话")){
-                type = 1;
+            if(chapterType!=null) {
+                if (chapterType.get(i).text().contains("单行本")) {
+                    type = 0;
+                } else if (chapterType.get(i).text().contains("单话")) {
+                    type = 1;
+                }
             }
             Elements chapterList = (Elements) getRuleFetcher().parser(chapterLists.get(i),map.get("chapter-list"));
             for(int j = 0 ; j < chapterList.size() ; j++){
@@ -309,7 +315,7 @@ public class ComicFetcher {
     //获取最新（规则版）
     public static List<Comic> getLatestList(String html){
         Map<String,String> map = getRuleStore().getLatestRule();
-
+        if (map==null) return null;
         List<Comic> comics = new ArrayList<>();
         Document doc = Jsoup.parse(html);
         Elements latestList = (Elements) getRuleFetcher().parser(doc,map.get("latest-list"));

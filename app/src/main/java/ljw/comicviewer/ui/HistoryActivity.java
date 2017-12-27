@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.History;
 import ljw.comicviewer.db.HistoryHolder;
+import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.HistoryRecyclerViewAdapter;
 
 public class HistoryActivity extends AppCompatActivity {
@@ -53,7 +54,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     private void getHistoriesByDB(){
         HistoryHolder historyHolder = new HistoryHolder(context);
-        histories = historyHolder.getHistories(100);
+        histories = historyHolder.getHistories(100, RuleStore.get().getComeFrom());
     }
 
     //按标题栏返回按钮

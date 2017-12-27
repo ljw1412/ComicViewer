@@ -91,6 +91,7 @@ public class PicturePagerAdapter extends PagerAdapter {
     private Map<Integer,PhotoViewAttacher> PVAMap = new HashMap<>();
     @Override
     public Object instantiateItem(final ViewGroup container, final int position) {
+        if(imgUrls.size()<=0) return null;
         View view = LayoutInflater.from(context).inflate(R.layout.item_read_viewer, null);
         final PictureViewHolder viewHolder = new PictureViewHolder(view);
         if (imgUrls != null && position < imgUrls.size()) {
