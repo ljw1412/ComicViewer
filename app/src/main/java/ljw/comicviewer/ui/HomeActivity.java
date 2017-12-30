@@ -89,9 +89,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     //设置当前要显示的fragment
     private void setCurrentFragment(Fragment fragment){
         if(currentFragment == fragment) return;
-        FragmentTransaction ft=fragmentManager.beginTransaction();
-        if(!fragment.isAdded()){
-            ft.add(R.id.content_home,fragment);
+        if(fragment == homeFragment && AppStatusStore.get().isSourceReplace()){
+            //如果换源新建Home页，并移除旧的
+            homeFragment = new HomeFragment();
+            fragmentManager.beginTransaction().remove(fragment).commit();
+            fragment = homeFragment;
+            AppStatusStore.get().setSourceReplace(false);
+        }
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        if (!fragment.isAdded()) {
+            ft.add(R.id.content_home, fragment);
         }
         hideAllFragment(ft);
         ft.show(fragment).commit();
@@ -99,10 +106,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         if(currentFragment == collectionFragment && collectionFragment.isLoading()){
             collectionFragment.initLoad();
         }
-        if(currentFragment == homeFragment && AppStatusStore.get().isSourceReplace()){
-            homeFragment.reload();
-            AppStatusStore.get().setSourceReplace(false);
-        }
+
     }
 
     //让所有底部导航栏为未选中状态

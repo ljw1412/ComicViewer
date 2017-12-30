@@ -90,17 +90,13 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
 
     @Override
     public void initLoad() {
-        getDataFromDB();
-        refreshLayout.autoRefresh();
-    }
-
-    public void reload(){
         //清除所有板块
         container.removeAllViews();
         sections.clear();
         getDataFromDB();
         refreshLayout.autoRefresh();
     }
+
 
     private void initBanner(){
         //暂时为本地图片加载

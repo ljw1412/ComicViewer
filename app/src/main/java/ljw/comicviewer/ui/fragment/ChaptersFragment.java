@@ -37,10 +37,6 @@ public class ChaptersFragment extends Fragment  {
     private List<Chapter> chapters;
     private String comicName;
 
-    public void setComicName(String comicName) {
-        this.comicName = comicName;
-    }
-
     public ChaptersFragment(String comicName, List<Chapter> chapters) {
         this.comicName = comicName;
         this.chapters = chapters;
