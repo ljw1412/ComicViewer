@@ -52,6 +52,11 @@ public class PicturePagerAdapter extends PagerAdapter {
         areaClickHelper.setAreaClickListener(onAreaClickListener);
     }
 
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+    }
+
     public PictureViewHolder getViewHolderAt(int position) {
         if (position >= 0 && position < viewHolders.size())
             return viewHolders.get(position);
@@ -61,7 +66,10 @@ public class PicturePagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return (imgUrls == null || imgUrls.size() == 0 ? 1 : imgUrls.size());
+        for (int i = 0; i < imgUrls.size(); i++){
+            if(i >= viewHolders.size()) viewHolders.add(null);
+        }
+        return (imgUrls == null || imgUrls.size() == 0 ? 0 : imgUrls.size());
     }
 
     @Override
@@ -84,14 +92,14 @@ public class PicturePagerAdapter extends PagerAdapter {
             }
             viewHolders.set(position, null);
         }
-        Log.d("----","close " + position);
+//        Log.d("----","close " + position);
 //        System.gc();
     }
 
     private Map<Integer,PhotoViewAttacher> PVAMap = new HashMap<>();
     @Override
     public Object instantiateItem(final ViewGroup container, final int position) {
-        if(imgUrls.size()<=0) return null;
+        if(imgUrls.size()<=0 || imgUrls.size()<=position) return null;
         View view = LayoutInflater.from(context).inflate(R.layout.item_read_viewer, null);
         final PictureViewHolder viewHolder = new PictureViewHolder(view);
         if (imgUrls != null && position < imgUrls.size()) {

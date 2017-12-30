@@ -41,17 +41,13 @@ import butterknife.ButterKnife;
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Chapter;
-import ljw.comicviewer.bean.ManhuaguiComicInfo;
-import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.others.MyViewPager;
 import ljw.comicviewer.others.MyWebView;
 import ljw.comicviewer.store.ComicReadStore;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.PicturePagerAdapter;
-import ljw.comicviewer.ui.listeners.OnItemLongClickListener;
 import ljw.comicviewer.util.AnimationUtil;
 import ljw.comicviewer.util.AreaClickHelper;
-import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.WebViewUtil;
 import uk.co.senab.photoview.PhotoView;
@@ -60,7 +56,6 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class ComicReaderActivity extends AppCompatActivity {
     private String TAG = getClass().getSimpleName()+"----";
     private Context context;
-    private MyOnItemLongClickListener onItemLongClickListener;
     private PicturePagerAdapter picturePagerAdapter;
     private String comic_id,comic_name,chapter_id,chapter_name;
     private int tryTime = 0, currPos;
@@ -127,7 +122,7 @@ public class ComicReaderActivity extends AppCompatActivity {
         //store数据打印
         ComicReadStore.get().printList();
         ruleStore = RuleStore.get();
-        view_loading.setOnClickListener(null);
+        initView();
         initWebView();
         setTime();
         addListener();
@@ -155,17 +150,32 @@ public class ComicReaderActivity extends AppCompatActivity {
         getInfo();
     }
 
-    //getInfo() 获取到数据后 执行这个
-    private void initView(){
+    private void initData(){
+        picturePagerAdapter = new PicturePagerAdapter(this, imgUrls);
+        viewPager.setAdapter(picturePagerAdapter);
+        viewPager.setCurrentItem(currPos);//跳页
+
         txtComicName.setText(comic_name);
         txtComicChapterName.setText(chapter_name);
         txtChapterName.setText(chapter_name);
+
+        mySeekBar.setMax(imgUrls.size() - 1);
+        mySeekBar.setProgress(currPos);
+        mySeekBar.setSecondaryProgress(0);
+        txtSeekBarTips.setText((currPos+1) + "/" + imgUrls.size());
         setPageText((currPos+1)+"",""+imgUrls.size());
+    }
+
+    private void initView(){
         viewPager.setVisibility(View.VISIBLE);
         rvPicture.setVisibility(View.GONE);
-        picturePagerAdapter = new PicturePagerAdapter(this, imgUrls);
-        onItemLongClickListener = new MyOnItemLongClickListener();
-        picturePagerAdapter.setOnItemLongClickListener(onItemLongClickListener);
+        viewPager.setOffscreenPageLimit(2);//TODO:之后改为可以设置的
+    }
+
+    private void addListener(){
+        view_loading.setOnClickListener(null);
+        viewMask.setOnClickListener(null);
+        viewNotClick.setOnClickListener(null);
         viewPager.setAreaClickListener(new AreaClickHelper.OnLeftRightClickListener() {
             @Override
             public void left() {
@@ -197,28 +207,13 @@ public class ComicReaderActivity extends AppCompatActivity {
                 }
             }
         });
-        viewPager.setAdapter(picturePagerAdapter);
-        viewPager.setOffscreenPageLimit(2);//TODO:之后改为可以设置的
-        viewPager.setCurrentItem(currPos);//跳页
-        initSeekBar();
-    }
-
-    public void initSeekBar() {
-        mySeekBar.setMax(imgUrls.size() - 1);
-        mySeekBar.setProgress(currPos);
-        mySeekBar.setSecondaryProgress(currPos);
-        txtSeekBarTips.setText((currPos+1) + "/" + imgUrls.size());
-    }
-
-    private void addListener(){
-        viewMask.setOnClickListener(null);
-        viewNotClick.setOnClickListener(null);
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 layout_load_fail.setVisibility(View.GONE);
                 layout_loading.setVisibility(View.VISIBLE);
                 tryTime = 0;
+                webView.reload();
                 getInfo();
             }
         });
@@ -302,8 +297,8 @@ public class ComicReaderActivity extends AppCompatActivity {
                     case ViewPager.SCROLL_STATE_IDLE:
                         //（0）滑动动画做完的状态。
                         viewMask.setVisibility(View.GONE);
-                        Log.d(TAG, "onPageScrollStateChanged: prePage=" + prePage + ",currPos:" + currPos);
-                        Log.d(TAG, "onPageScrollStateChanged: "+viewPager.getMoveStatus());
+//                        Log.d(TAG, "onPageScrollStateChanged: prePage=" + prePage + ",currPos:" + currPos);
+//                        Log.d(TAG, "onPageScrollStateChanged: "+viewPager.getMoveStatus());
                         if(currPos == prePage){
                             if (currPos == 0 && viewPager.getMoveStatus() == MyViewPager.MOVE_LEFT) {
                                 gotoLoading(false);
@@ -345,19 +340,14 @@ public class ComicReaderActivity extends AppCompatActivity {
                                     getInfo();
                                 }
                             } else {
-                                if(ruleStore.getComeFrom().equals("manhuagui")) {
-                                    ManhuaguiComicInfo info = ComicFetcher.parseCurrentChapter(s);
-                                    for (int i = 0; i < info.getFiles().size(); i++) {
-                                        imgUrls.add(RuleStore.get().getImgHost() + info.getPath() + info.getFiles().get(i));
-                                    }
-                                }else{
-                                    JSONArray jsonArray = JSON.parseArray(s);
-                                    for(Object obj:jsonArray){
-                                        imgUrls.add(obj.toString());
-                                    }
+                                tryTime = 0;
+                                imgUrls.clear();
+                                JSONArray jsonArray = JSON.parseArray(s);
+                                for(Object obj:jsonArray){
+                                    imgUrls.add(obj.toString());
                                 }
                                 webView.loadUrl("about:blank");
-                                initView();
+                                initData();
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
@@ -459,6 +449,7 @@ public class ComicReaderActivity extends AppCompatActivity {
         else gotoLoading(true);
     }
 
+    //进行加载 isAdd是下一章为true，上一章为false
     private void gotoLoading(boolean isAdd){
         ComicReadStore comicReadStore = ComicReadStore.get();
         int index = comicReadStore.getCurrentIndex();
@@ -478,6 +469,7 @@ public class ComicReaderActivity extends AppCompatActivity {
                     ContextCompat.getColor(context, R.color.circular_blue),
                     ContextCompat.getColor(context, R.color.white)).show();
         }else{
+            view_loading.setVisibility(View.VISIBLE);
             if (isAdd){
                 index++;
             }else{
@@ -493,10 +485,8 @@ public class ComicReaderActivity extends AppCompatActivity {
     }
 
     private void loadChapter(){
-        view_loading.setVisibility(View.VISIBLE);
-        webView.loadUrl(parseUrl());
-        imgUrls.clear();
         currPos = 0;
+        webView.loadUrl(parseUrl());
         getInfo();
     }
 
@@ -511,6 +501,7 @@ public class ComicReaderActivity extends AppCompatActivity {
         Log.d(TAG, "updateSeekBar: "+progress);
     }
 
+    //显示工具栏
     private void showOrHideTools(){
         if(!isScroll){
             if (!isShowTools){
@@ -534,13 +525,6 @@ public class ComicReaderActivity extends AppCompatActivity {
         }
     }
 
-    private class MyOnItemLongClickListener implements OnItemLongClickListener {
-
-        @Override
-        public boolean onItemLongClick(View view, int position) {
-            return false;
-        }
-    }
 
 
     //1秒刷新一次时间

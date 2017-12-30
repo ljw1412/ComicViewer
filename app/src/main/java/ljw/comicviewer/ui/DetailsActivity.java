@@ -276,8 +276,12 @@ public class DetailsActivity extends AppCompatActivity
 
     //加载数据
     public void loadComicInformation(){
-        call_loadComicInformation = ComicService.get().getHTML(this,Global.REQUEST_COMICS_INFO,
-                ruleStore.getDetailsRule().get("url"),comic_id);//18X id:"8788");"16058"
+        try {
+            call_loadComicInformation = ComicService.get().getHTML(this,Global.REQUEST_COMICS_INFO,
+                    ruleStore.getDetailsRule().get("url"),comic_id);//18X id:"8788");"16058"
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //加载封面

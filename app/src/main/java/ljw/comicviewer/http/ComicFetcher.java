@@ -6,8 +6,6 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.google.gson.Gson;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,14 +17,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import ljw.comicviewer.bean.Author;
 import ljw.comicviewer.bean.CallBackData;
 import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.bean.Comic;
-import ljw.comicviewer.bean.ManhuaguiComicInfo;
 import ljw.comicviewer.bean.Section;
 import ljw.comicviewer.rule.RuleFetcher;
 import ljw.comicviewer.store.RuleStore;
@@ -336,11 +331,4 @@ public class ComicFetcher {
         return comics;
     }
 
-
-    //获得解析当前章节(漫画柜用)
-    public static ManhuaguiComicInfo parseCurrentChapter(String s){
-        Gson gson = new Gson();
-        ManhuaguiComicInfo info = gson.fromJson(s,ManhuaguiComicInfo.class);
-        return info;
-    }
 }
