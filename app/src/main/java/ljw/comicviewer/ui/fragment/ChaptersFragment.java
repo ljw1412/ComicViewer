@@ -34,11 +34,16 @@ public class ChaptersFragment extends Fragment  {
     private Context context;
     private MyGridView grid_chapters_list;
     private ChaptersAdapter chaptersAdapter;
-    private List<Chapter> chapters = new ArrayList<>();
+    private List<Chapter> chapters;
     private String comicName;
 
     public void setComicName(String comicName) {
         this.comicName = comicName;
+    }
+
+    public ChaptersFragment(String comicName, List<Chapter> chapters) {
+        this.comicName = comicName;
+        this.chapters = chapters;
     }
 
     public ChaptersFragment() {
@@ -54,10 +59,11 @@ public class ChaptersFragment extends Fragment  {
 //        //根据屏幕宽度设置列数
         int columns = DisplayUtil.getGridNumColumns(context,80);
         grid_chapters_list.setNumColumns(columns);
+        if (chapters == null) chapters = new ArrayList<>();
         chaptersAdapter = new ChaptersAdapter(context,chapters);
         grid_chapters_list.setAdapter(chaptersAdapter);
         grid_chapters_list.setOnItemClickListener(new ItemClickListener());
-
+        updateChapters();
         return rootView;
     }
 
@@ -84,21 +90,12 @@ public class ChaptersFragment extends Fragment  {
     public void continueReadingClick(int position){
         HashMap<Integer, View> map = chaptersAdapter.getViewMap();
         if(map.size()>0){
-//            View view = map.get(position);
-//            if(view!=null){
             try {
                 grid_chapters_list.performItemClick(null,position,0);
             } catch (Exception e) {
                 Log.e(TAG, "continueReadingClick: 模拟点击事件异常");
             }
-//            }
         }
-    }
-
-    public void addChapters(List<Chapter> chapters) {
-        this.chapters.addAll(chapters);
-        Log.d(TAG, "addChapters: add:"+chaptersAdapter.getCount());
-        chaptersAdapter.notifyDataSetChanged();
     }
 
     public void clearChapters() {
@@ -122,7 +119,7 @@ public class ChaptersFragment extends Fragment  {
                     chapter.setPage(1);
                 }
             }
-            chaptersAdapter.notifyDataSetChanged();
         }
+        chaptersAdapter.notifyDataSetChanged();
     }
 }

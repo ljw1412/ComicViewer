@@ -149,7 +149,7 @@ public class DetailsActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         initViewAndData();
-        initChapterFragment();
+//        initChapterFragment();
         initListener();
     }
 
@@ -261,18 +261,18 @@ public class DetailsActivity extends AppCompatActivity
         });
     }
 
-    private void initChapterFragment(){
-        for (int i = 0 ; i < TYPE_MAX ; i++){
-            ChaptersFragment chaptersFragment = new ChaptersFragment();
-            chaptersFragment_map.put(i,chaptersFragment);
-        }
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        for (int i = 0 ; i<TYPE_MAX ; i++){
-            fragmentManager.beginTransaction()
-                    .replace(fragmentId[i], chaptersFragment_map.get(i)).commit();
-        }
-    }
+//    private void initChapterFragment(){
+//        for (int i = 0 ; i < TYPE_MAX ; i++){
+//            ChaptersFragment chaptersFragment = new ChaptersFragment();
+//            chaptersFragment_map.put(i,chaptersFragment);
+//        }
+//
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        for (int i = 0 ; i<TYPE_MAX ; i++){
+//            fragmentManager.beginTransaction()
+//                    .replace(fragmentId[i], chaptersFragment_map.get(i)).commit();
+//        }
+//    }
 
     //加载数据
     public void loadComicInformation(){
@@ -427,15 +427,17 @@ public class DetailsActivity extends AppCompatActivity
         History history = getHistory();
         if(history != null){
             for(int i=0 ; i< TYPE_MAX ; i++){
-                for(int j = 0;j < chapterTypeMap.get(i).size();j++){
-                    if(chapterTypeMap.get(i).get(j).getChapterId().equals(history.getChapterId())){
-                        chaptersFragment_map.get(i).continueReadingClick(j);
+                if(chaptersFragment_map.get(i)!=null) {
+                    for (int j = 0; j < chapterTypeMap.get(i).size(); j++) {
+                        if (chapterTypeMap.get(i).get(j).getChapterId().equals(history.getChapterId())) {
+                            chaptersFragment_map.get(i).continueReadingClick(j);
+                        }
                     }
                 }
             }
         }else{
             for(int i=0 ; i< TYPE_MAX ; i++){
-                if(chapterTypeMap.get(i).size()>0){
+                if(chapterTypeMap.get(i)!=null && chapterTypeMap.get(i).size()>0){
                     chaptersFragment_map.get(i).continueReadingClick(0);
                 }
             }
@@ -518,7 +520,7 @@ public class DetailsActivity extends AppCompatActivity
         txtError.setVisibility(View.GONE);
         for(int i = 0 ; i<TYPE_MAX ;i++){
             findViewById(typeTextId[i]).setVisibility(View.GONE);
-            chaptersFragment_map.get(i).clearChapters();
+            if(chaptersFragment_map.get(i)!=null) chaptersFragment_map.get(i).clearChapters();
         }
         details_container.setRefreshing(true);
         // 获取对象，重新获取当前目录对象
@@ -557,7 +559,7 @@ public class DetailsActivity extends AppCompatActivity
                 historyHolder.updateOrAddHistory(history);
                 //刷新章节界面
                 for(int i = 0 ; i<TYPE_MAX ;i++){
-                    chaptersFragment_map.get(i).updateChapters();
+                    if(chaptersFragment_map.get(i)!=null) chaptersFragment_map.get(i).updateChapters();
                 }
                 updateReadStatus();
                 break;
@@ -575,6 +577,7 @@ public class DetailsActivity extends AppCompatActivity
 
         @Override
         protected Map<Integer,List<Chapter>> doInBackground(Void... voids) {
+            if(list.size()==0 && !comic.isBan()) return null;
             Map<Integer,List<Chapter>> map = new HashMap<>();
             for(int i=0 ; i< TYPE_MAX ; i++){
                 List<Chapter> cList = new ArrayList<>();
@@ -584,25 +587,27 @@ public class DetailsActivity extends AppCompatActivity
                 int type = chapter.getType();
                 map.get(type).add(chapter);
             }
+            chapterTypeMap = map;
             return map;
         }
 
         @Override
         protected void onPostExecute(Map<Integer,List<Chapter>> map) {
             super.onPostExecute(map);
-            if (list.size()==0 && !comic.isBan()){
+            if (map==null){
                 txtError.setVisibility(View.VISIBLE);
                 txtError.setText(R.string.error_comic_chapter_load_fail);
             }else{
-                chapterTypeMap = map;
                 for(int i = 0 ; i<TYPE_MAX ;i++){
-                    chaptersFragment_map.get(i).addChapters(map.get(i));
-                    chaptersFragment_map.get(i).setComicName(comic.getName());
                     if(map.get(i).size()>0){
                         //显示章节类型文字
                         findViewById(typeTextId[i]).setVisibility(View.VISIBLE);
+                        //替换章节fragment
+                        ChaptersFragment chaptersFragment = new ChaptersFragment(comic.getName(),map.get(i));
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(fragmentId[i], chaptersFragment).commit();
+                        chaptersFragment_map.put(i,chaptersFragment);
                     }
-                    chaptersFragment_map.get(i).updateChapters();
                 }
             }
         }
