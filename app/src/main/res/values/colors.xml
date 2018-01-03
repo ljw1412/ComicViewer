@@ -18,4 +18,5 @@
     <color name="smmcl_green">#99cc33</color>
     <color name="green">#6CE26C</color>
     <color name="purple">#cc55f6</color>
+    <color name="transparent">#00000000</color>
 </resources>

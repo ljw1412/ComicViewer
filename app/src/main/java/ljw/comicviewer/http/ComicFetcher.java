@@ -300,12 +300,53 @@ public class ComicFetcher {
                 }
             }
         }
-        for (Chapter chapter : chapters) {
-            Log.d("----====", "getComicChapters: "+chapter.toString());
-        }
+//        for (Chapter chapter : chapters) {
+//            Log.d("----====", "getComicChapters: "+chapter.toString());
+//        }
         comic.setChapters(chapters);
         return comic;
     }
+
+    //获得漫画章节
+    public static List<Chapter> getComicChapterList(String html,Comic comic) {
+        Map<String,String> map = getRuleStore().getDetailsChapterRule();
+
+        List<Chapter> chapters = new ArrayList<>();
+        Document doc = Jsoup.parse(html);
+        Elements chapterType = null;
+        if(map.get("chapter-type") != null) {
+            chapterType = (Elements) getRuleFetcher().parser(doc, map.get("chapter-type"));
+        }
+        Elements chapterLists = (Elements) getRuleFetcher().parser(doc,map.get("chapter-lists"));
+        for(int i = 0 ; i < chapterLists.size() ; i++){
+            int type = 2;
+            if(chapterType!=null) {
+                if (chapterType.get(i).text().contains("单行本")) {
+                    type = 0;
+                } else if (chapterType.get(i).text().contains("单话")) {
+                    type = 1;
+                }
+            }
+            Elements chapterList = (Elements) getRuleFetcher().parser(chapterLists.get(i),map.get("chapter-list"));
+            for(int j = 0 ; j < chapterList.size() ; j++){
+                Elements chapterItems = (Elements) getRuleFetcher().parser(chapterList.get(j),map.get("chapter-items"));
+                for (int k = chapterItems.size()-1 ; k >= 0 ; k--){
+                    Chapter chapter = new Chapter();
+                    chapter.setComicId(comic.getComicId());
+                    chapter.setChapterId((String) getRuleFetcher().parser(chapterItems.get(k),map.get("chapter-id")));
+                    chapter.setChapterName((String) getRuleFetcher().parser(chapterItems.get(k),map.get("chapter-name")));
+                    chapter.setType(type);
+                    chapters.add(chapter);
+                }
+            }
+        }
+//        for (Chapter chapter : chapters) {
+//            Log.d("----====", "getComicChapters: "+chapter.toString());
+//        }
+        comic.setChapters(chapters);
+        return chapters;
+    }
+
 
     //获取最新（规则版）
     public static List<Comic> getLatestList(String html){

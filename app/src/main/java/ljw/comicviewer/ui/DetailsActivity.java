@@ -134,6 +134,9 @@ public class DetailsActivity extends AppCompatActivity
     CoordinatorLayout coordinatorLayout;
     @BindView(R.id.details_authors_view)
     LinearLayout view_authors;
+    @BindView(R.id.details_chapters_loading)
+    LinearLayout view_loading;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -261,19 +264,6 @@ public class DetailsActivity extends AppCompatActivity
         });
     }
 
-//    private void initChapterFragment(){
-//        for (int i = 0 ; i < TYPE_MAX ; i++){
-//            ChaptersFragment chaptersFragment = new ChaptersFragment();
-//            chaptersFragment_map.put(i,chaptersFragment);
-//        }
-//
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        for (int i = 0 ; i<TYPE_MAX ; i++){
-//            fragmentManager.beginTransaction()
-//                    .replace(fragmentId[i], chaptersFragment_map.get(i)).commit();
-//        }
-//    }
-
     //加载数据
     public void loadComicInformation(){
         try {
@@ -293,9 +283,9 @@ public class DetailsActivity extends AppCompatActivity
     }
 
     private int tryTime = 0;
-    //获得章节信息
+    //获得章节信息(webView方式)
     public void getChapters(){
-        details_container.setRefreshing(true);
+//        details_container.setRefreshing(true);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -318,8 +308,7 @@ public class DetailsActivity extends AppCompatActivity
                                 s = DisplayUtil.unicodeDecode(s).replace("\\\"", "\"");
                                 Log.d(TAG, "onReceiveValue: " + s);
                                 details_container.setRefreshing(false);
-                                ComicFetcher.getComicChapters(s, comic);
-                                new ChaptersDistributeTask(comic.getChapters()).execute();
+                                new ChaptersDistributeTask(s).execute();
                                 return;
                             }
                         }
@@ -446,57 +435,16 @@ public class DetailsActivity extends AppCompatActivity
 
     //网络请求，更新UI
     @Override
-    public void onFinish(Object data, String what) {
+    public void onFinish(final Object data, String what) {
         switch (what){
             case Global.REQUEST_COMICS_INFO:
                 try {
-                    ComicFetcher.getComicDetails(data.toString(),comic);
-                    ComicFetcher.getComicChapters(data.toString(),comic);
+                    new GetDetails(data).execute();
+                    new ChaptersDistributeTask(data).execute();
                 } catch (Exception e) {
                     e.printStackTrace();
                     onError("未知异常",what);
                     return;
-                }
-                getCover();
-                setInfoText(null,txt_title,comic.getName());
-                setInfoText(view_score,txt_score,comic.getScore());
-                setInfoText(view_author,txt_author,comic.getAuthor());
-                setInfoText(view_tag,txt_tag,comic.getTag());
-                setInfoText(view_updateDate,txt_updateDate,"更新于"+comic.getUpdate());
-                setInfoText(view_updateStatus,txt_updateStatus,comic.getUpdateStatus());
-                setInfoText(view_status,txt_status,comic.isEnd()?"已完结":"连载中");
-                setInfoText(instruction,txt_info,comic.getInfo());
-                setAuthor(comic.getAuthors());
-                new ChaptersDistributeTask(comic.getChapters()).execute();
-                //显示详细界面
-                viewMain.setVisibility(View.VISIBLE);
-                txtError.setVisibility(View.GONE);
-                Log.d(TAG, "onResponse: "+comic.toString());
-                details_container.setRefreshing(false);
-                //如果收藏的漫画，则更新收藏信息
-                if(isLike()) {
-                    CollectionHolder collectionHolder = new CollectionHolder(this);
-                    collectionHolder.addOrUpdateCollection(comic);
-                }
-                if (comic.isBan()){
-                    final BottomDialog bottomDialog = DialogUtil.showBottomDialog(context);
-                    bottomDialog.setClickOK(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (ruleStore.getCookie()!=null) {
-                                //设置cookie
-                                Log.d(TAG, "onCreate: " + WebViewUtil.syncCookie(context, RuleStore.get().getDomain(), ruleStore.getCookie()));
-                            }
-                            webview.getSettings().setJavaScriptEnabled(true);
-                            webview.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
-                            webview.loadUrl(ruleStore.getHost() +
-                                    ruleStore.getDetailsRule().get("url").replaceAll("\\{comic:.*?\\}",comic_id));
-                            webview.setWebViewClient(new MyWebView());
-                            getChapters();
-                            bottomDialog.dismiss();
-                        }
-                    });
-                    bottomDialog.show();
                 }
                 break;
         }
@@ -516,6 +464,7 @@ public class DetailsActivity extends AppCompatActivity
 
     @Override
     public void onRefresh() {
+        view_loading.setVisibility(View.VISIBLE);
         viewMain.setVisibility(View.GONE);
         txtError.setVisibility(View.GONE);
         for(int i = 0 ; i<TYPE_MAX ;i++){
@@ -569,15 +518,17 @@ public class DetailsActivity extends AppCompatActivity
 
     //根据类型分发章节
     class ChaptersDistributeTask extends AsyncTask<Void,Void,Map<Integer,List<Chapter>>>{
-        private List<Chapter> list;
+        private Object data;
 
-        public ChaptersDistributeTask(List<Chapter> list) {
-            this.list = list;
+        public ChaptersDistributeTask(Object data) {
+            this.data = data;
         }
 
         @Override
         protected Map<Integer,List<Chapter>> doInBackground(Void... voids) {
-            if(list.size()==0 && !comic.isBan()) return null;
+            //获得章节列表
+            List<Chapter> list = ComicFetcher.getComicChapterList(data.toString(),comic);
+            if(list.size()<=0 && !comic.isBan()) return null;
             Map<Integer,List<Chapter>> map = new HashMap<>();
             for(int i=0 ; i< TYPE_MAX ; i++){
                 List<Chapter> cList = new ArrayList<>();
@@ -609,8 +560,68 @@ public class DetailsActivity extends AppCompatActivity
                         chaptersFragment_map.put(i,chaptersFragment);
                     }
                 }
+                view_loading.setVisibility(View.GONE);
             }
         }
     }
 
+    class GetDetails extends AsyncTask<Void,Void,Comic>{
+        private Object data;
+
+        public GetDetails(Object data) {
+            this.data = data;
+        }
+
+        @Override
+        protected Comic doInBackground(Void... voids) {
+            return ComicFetcher.getComicDetails(data.toString(),comic);
+        }
+
+        @Override
+        protected void onPostExecute(Comic comic) {
+            super.onPostExecute(comic);
+            getCover();
+            setInfoText(null,txt_title,comic.getName());
+            setInfoText(view_score,txt_score,comic.getScore());
+            setInfoText(view_author,txt_author,comic.getAuthor());
+            setInfoText(view_tag,txt_tag,comic.getTag());
+            setInfoText(view_updateDate,txt_updateDate,"更新于"+comic.getUpdate());
+            setInfoText(view_updateStatus,txt_updateStatus,comic.getUpdateStatus());
+            setInfoText(view_status,txt_status,comic.isEnd()?"已完结":"连载中");
+            setInfoText(instruction,txt_info,comic.getInfo());
+            setAuthor(comic.getAuthors());
+
+            //显示详细界面
+            viewMain.setVisibility(View.VISIBLE);
+            txtError.setVisibility(View.GONE);
+            Log.d(TAG, "onResponse: "+comic.toString());
+            details_container.setRefreshing(false);
+            //如果收藏的漫画，则更新收藏信息
+            if(isLike()) {
+                CollectionHolder collectionHolder = new CollectionHolder(context);
+                collectionHolder.addOrUpdateCollection(comic);
+            }
+            if (comic.isBan()){
+                final BottomDialog bottomDialog = DialogUtil.showBottomDialog(context);
+                bottomDialog.setClickOK(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        view_loading.setVisibility(View.VISIBLE);
+                        if (ruleStore.getCookie()!=null) {
+                            //设置cookie
+                            Log.d(TAG, "onCreate: " + WebViewUtil.syncCookie(context, RuleStore.get().getDomain(), ruleStore.getCookie()));
+                        }
+                        webview.getSettings().setJavaScriptEnabled(true);
+                        webview.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
+                        webview.loadUrl(ruleStore.getHost() +
+                                ruleStore.getDetailsRule().get("url").replaceAll("\\{comic:.*?\\}",comic_id));
+                        webview.setWebViewClient(new MyWebView());
+                        getChapters();
+                        bottomDialog.dismiss();
+                    }
+                });
+                bottomDialog.show();
+            }
+        }
+    }
 }

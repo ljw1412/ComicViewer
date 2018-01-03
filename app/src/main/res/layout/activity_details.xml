@@ -336,6 +336,31 @@
                     android:paddingRight="5dp">
 
 
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/details_chapters_loading"
+                        android:layout_marginTop="5dp">
+
+                        <ProgressBar
+                            style="?android:attr/progressBarStyle"
+                            android:indeterminateDrawable="@drawable/progress"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:id="@+id/progressBar"
+                            android:layout_gravity="center" />
+
+                        <TextView
+                            android:text="@string/data_loading"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/details_chapters_loading_text"
+                            android:layout_weight="1"
+                            android:gravity="center" />
+                    </LinearLayout>
+
                     <TextView
                         android:text="@string/chapter_type0"
                         android:layout_width="wrap_content"

@@ -1,7 +1,9 @@
 package ljw.comicviewer.ui.fragment;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -190,8 +192,46 @@ public class CollectionFragment extends BaseFragment
 
             }
         });
-
+        //设置网格元素长按事件
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Comic comic = comics.get(position);
+                if(searching){
+                    comic = searchComics.get(position);
+                }
+                showItemDialog(comic);
+                Log.d(TAG, "onItemLongClick: "+comic.getName());
+                return true;
+            }
+        });
     }
+
+    private void showItemDialog(final Comic comic){
+        if (comic==null) return;
+        String[] items = {"查看详情","删除收藏"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(comic.getName());
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                switch (i){
+                    case 0:
+                        //查看详情
+                        goToDetails(comic);
+                        break;
+                    case 1:
+                        //删除收藏
+                        CollectionHolder collectionHolder = new CollectionHolder(context);
+                        collectionHolder.deleteComic(comic.getComicId());
+                        initLoad();
+                        break;
+                }
+            }
+        });
+        builder.show();
+    }
+
 
     @Override
     public void initLoad() {
@@ -206,9 +246,8 @@ public class CollectionFragment extends BaseFragment
         comics.clear();
         searchComics.clear();
         getDataFromDB();
-
-
     }
+
     //切换为搜索模式
     private void changeSearchMode(){
         RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Only_LoadMore);
@@ -218,6 +257,7 @@ public class CollectionFragment extends BaseFragment
         DisplayUtil.showKeyboard(edit_search);
         searching = true;
     }
+
     //切换为正常模式
     public void changeNormalMode(){
         RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Both);
@@ -331,21 +371,24 @@ public class CollectionFragment extends BaseFragment
         }
     }
 
+    private void goToDetails(Comic comic){
+        if(comic!=null && comic.getComicId().length()>0){
+            Intent intent = new Intent(context, DetailsActivity.class);
+            intent.putExtra("id",comic.getComicId());
+            intent.putExtra("score",comic.getScore());
+            intent.putExtra("title",comic.getName());
+            startActivityForResult(intent, Global.CollectionToDetails);
+        }
+    }
+
 
 
     //网格对象点击事件
     class  ItemClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Comic comic = comics.get(position);
-            if(searching){
-                comic = searchComics.get(position);
-            }
-            Intent intent = new Intent(context, DetailsActivity.class);
-            intent.putExtra("id",comic.getComicId());
-            intent.putExtra("score",comic.getScore());
-            intent.putExtra("title",comic.getName());
-            startActivityForResult(intent, Global.CollectionToDetails);
+            Comic comic = searching ? searchComics.get(position) : comics.get(position);
+            goToDetails(comic);
         }
     }
 
