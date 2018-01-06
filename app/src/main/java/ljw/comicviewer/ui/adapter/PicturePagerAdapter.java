@@ -104,10 +104,11 @@ public class PicturePagerAdapter extends PagerAdapter {
         final PictureViewHolder viewHolder = new PictureViewHolder(view);
         if (imgUrls != null && position < imgUrls.size()) {
             final String url = imgUrls.get(position);
-            context.loadImage(url,viewHolder,position);
+            context.loadImage(url,viewHolder,position,true);
             viewHolder.btnRefresh.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {context.loadImage(url,viewHolder,position);
+                public void onClick(View view) {
+                    context.loadImage(url,viewHolder,position,true);
                 }
             });
             viewHolder.ivPicture.setOnLongClickListener(new View.OnLongClickListener() {

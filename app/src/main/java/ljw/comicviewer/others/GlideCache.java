@@ -46,9 +46,9 @@ public class GlideCache extends AppGlideModule {
     @Override
     public void registerComponents(Context context, Glide glide, Registry registry) {
         OkHttpClient.Builder client = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS);
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS);
 
 
         OkHttpUrlLoader.Factory factory=new OkHttpUrlLoader.Factory(client.build());

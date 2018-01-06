@@ -43,6 +43,7 @@ import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.others.MyViewPager;
 import ljw.comicviewer.others.MyWebView;
+import ljw.comicviewer.store.AppStatusStore;
 import ljw.comicviewer.store.ComicReadStore;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.PicturePagerAdapter;
@@ -367,7 +368,15 @@ public class ComicReaderActivity extends AppCompatActivity {
         }, 1500);
     }
 
-    public void loadImage(final String url, final Object viewHolder, int position){
+    //再次请求，如果有备用图片host修改url
+    public void loadImageAgain(String url, Object viewHolder, int position){
+        if(ruleStore.getComeFrom().equals("manhuagui")) {
+            url = url.replaceAll(ruleStore.getReadRule().get("imghost"), ruleStore.getImgHost());
+        }
+        loadImage(url, viewHolder, position,false);
+    }
+
+    public void loadImage(final String url, final Object viewHolder,final int position, final boolean first){
         final PhotoView pic = ((PicturePagerAdapter.PictureViewHolder) viewHolder).ivPicture;
         final PhotoViewAttacher mAttacher = new PhotoViewAttacher(pic);
         //记录下标与PhotoViewAttacher的关系用于回收资源
@@ -417,9 +426,13 @@ public class ComicReaderActivity extends AppCompatActivity {
             public void onLoadFailed(@Nullable Drawable errorDrawable) {
                 super.onLoadFailed(errorDrawable);
                 Log.e(TAG, "onLoadFailed: "+url+"加载失败！");
-                PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
-                pictureViewHolder.progressBar.setVisibility(View.GONE);
-                pictureViewHolder.btnRefresh.setVisibility(View.VISIBLE);
+                if (!first) {
+                    PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
+                    pictureViewHolder.progressBar.setVisibility(View.GONE);
+                    pictureViewHolder.btnRefresh.setVisibility(View.VISIBLE);
+                }else {
+                    loadImageAgain(url, viewHolder, position);
+                }
             }
         });
     }
