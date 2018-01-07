@@ -167,7 +167,11 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
             ItemViewHolder itemViewHolder = new ItemViewHolder(itemView);
             itemViewHolder.name.setText(comic.getName());
             itemViewHolder.updateStatus.setText(comic.getUpdateStatus());
-            itemViewHolder.score.setVisibility(View.GONE);
+            if (comic.getScore()!=null){
+                itemViewHolder.score.setText(comic.getScore());
+            }else{
+                itemViewHolder.score.setVisibility(View.GONE);
+            }
             itemViewHolder.update.setVisibility(View.GONE);
             //图片网络
             RequestOptions options = new RequestOptions();

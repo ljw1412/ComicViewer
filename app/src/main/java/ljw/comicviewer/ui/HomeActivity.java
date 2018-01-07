@@ -69,7 +69,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         img_comic.setSelected(true);
 
         //初始化ruleStore
-        StoreUtil.initRuleStore(context,R.raw.manhuagui);
+        StoreUtil.initRuleStore(context,R.raw.zymk);
     }
 
 

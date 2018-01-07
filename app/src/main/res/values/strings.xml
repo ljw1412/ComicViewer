@@ -31,7 +31,9 @@
     <string name="gird_tips_loading_next_page_fail">加载失败</string>
     <string name="reader_data_load_success">数据加载成功,\n等待图片加载。</string>
     <string name="error_network_connections">网络连接失败，请检查网络状态。</string>
-    <string name="error_comic_chapter_load_fail">章节加载失败了\n请检查网络状态\n或尝试下拉刷新！</string>
+    <string name="error_comic_chapter_load_fail">章节加载失败了,请检查网络状态。</string>
+    <string name="refresh">刷新</string>
+    <string name="cancel">取消</string>
     <string name="tips_search_not_found">没有找到你想要的漫画</string>
     <string name="tips_is_first">前面没有了…</string>
     <string name="tips_is_last">后面没有了…</string>

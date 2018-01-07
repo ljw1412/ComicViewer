@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -73,7 +74,8 @@ public class DetailsActivity extends AppCompatActivity
     private int TYPE_MAX = 3;
     private boolean like = false;
     Call call_loadComicInformation;
-    private RuleStore ruleStore = RuleStore.get();;
+    private RuleStore ruleStore = RuleStore.get();
+    private Snackbar netErrorSnackbar;
     @BindView(R.id.details_scroll_container)
     SwipeRefreshLayout details_container;
     @BindView(R.id.details_cover)
@@ -100,8 +102,6 @@ public class DetailsActivity extends AppCompatActivity
     LinearLayout details_chapters;
     @BindView(R.id.details_instruction)
     LinearLayout instruction;
-    @BindView(R.id.detail_error)
-    TextView txtError;
     @BindView(R.id.details_main)
     ScrollView viewMain;
     @BindView(R.id.webview_details)
@@ -178,11 +178,29 @@ public class DetailsActivity extends AppCompatActivity
         comic.setScore(score);
         comic.setComeFrom(ruleStore.getComeFrom());
 
+        //错误提示
+        addErrorBar();
+
         //加载数据
         loadComicInformation();
         updateLikeStatus();
         updateReadStatus();
 
+    }
+
+    private void addErrorBar(){
+        netErrorSnackbar = SnackbarUtil.newColorfulSnackbar(coordinatorLayout,
+                getString(R.string.error_comic_chapter_load_fail),
+                ContextCompat.getColor(context,R.color.holo_red_light),
+                ContextCompat.getColor(context,R.color.white))
+                .setDuration(Snackbar.LENGTH_INDEFINITE)
+                .setActionTextColor(ContextCompat.getColor(context,R.color.blue_A1E0F4))
+                .setAction(getString(R.string.refresh), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onRefresh();
+                    }
+                });
     }
 
     private void initListener(){
@@ -298,7 +316,7 @@ public class DetailsActivity extends AppCompatActivity
                                 //加载失败
                                 if (tryTime >= 5) {
                                     details_container.setRefreshing(false);
-                                    txtError.setVisibility(View.VISIBLE);
+                                    netErrorSnackbar.show();
                                     Log.d(TAG, "debug:第" + tryTime + "重连");
                                 } else {
                                     tryTime++;
@@ -459,14 +477,15 @@ public class DetailsActivity extends AppCompatActivity
     public void onError(String msg,String what) {
         Log.e(TAG, "Error: " + msg);
         details_container.setRefreshing(false);
-        txtError.setVisibility(View.VISIBLE);
+        netErrorSnackbar.show();
     }
 
     @Override
     public void onRefresh() {
+        netErrorSnackbar.dismiss();
+        addErrorBar();
         view_loading.setVisibility(View.VISIBLE);
         viewMain.setVisibility(View.GONE);
-        txtError.setVisibility(View.GONE);
         for(int i = 0 ; i<TYPE_MAX ;i++){
             findViewById(typeTextId[i]).setVisibility(View.GONE);
             if(chaptersFragment_map.get(i)!=null) chaptersFragment_map.get(i).clearChapters();
@@ -528,7 +547,7 @@ public class DetailsActivity extends AppCompatActivity
         protected Map<Integer,List<Chapter>> doInBackground(Void... voids) {
             //获得章节列表
             List<Chapter> list = ComicFetcher.getComicChapterList(data.toString(),comic);
-            if(list.size()<=0 && !comic.isBan()) return null;
+            if(list==null || (list.size()<=0 && !comic.isBan())) return null;
             Map<Integer,List<Chapter>> map = new HashMap<>();
             for(int i=0 ; i< TYPE_MAX ; i++){
                 List<Chapter> cList = new ArrayList<>();
@@ -546,8 +565,8 @@ public class DetailsActivity extends AppCompatActivity
         protected void onPostExecute(Map<Integer,List<Chapter>> map) {
             super.onPostExecute(map);
             if (map==null){
-                txtError.setVisibility(View.VISIBLE);
-                txtError.setText(R.string.error_comic_chapter_load_fail);
+                view_loading.setVisibility(View.GONE);
+                netErrorSnackbar.show();
             }else{
                 for(int i = 0 ; i<TYPE_MAX ;i++){
                     if(map.get(i).size()>0){
@@ -593,7 +612,6 @@ public class DetailsActivity extends AppCompatActivity
 
             //显示详细界面
             viewMain.setVisibility(View.VISIBLE);
-            txtError.setVisibility(View.GONE);
             Log.d(TAG, "onResponse: "+comic.toString());
             details_container.setRefreshing(false);
             //如果收藏的漫画，则更新收藏信息

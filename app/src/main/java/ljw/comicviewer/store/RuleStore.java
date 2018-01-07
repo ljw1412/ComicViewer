@@ -20,6 +20,7 @@ public class RuleStore {
     private String cookie;
     private String imgHost;
     private String currentRule;
+    private Map<String,String> configRule = homeRule=listRule=latestRule=detailsRule=searchRule=detailsChapterRule=readRule=authorRule = null;
     private Map<String,List<Category>> typeRule;
     private Map<String,String> homeRule;
     private Map<String,String> listRule;
@@ -85,6 +86,14 @@ public class RuleStore {
 
     public void setCurrentRule(String currentRule) {
         this.currentRule = currentRule;
+    }
+
+    public Map<String, String> getConfigRule() {
+        return configRule;
+    }
+
+    public void setConfigRule(Map<String, String> configRule) {
+        this.configRule = configRule;
     }
 
     public Map<String, String> getHomeRule() {
@@ -157,6 +166,13 @@ public class RuleStore {
 
     public void setAuthorRule(Map<String, String> authorRule) {
         this.authorRule = authorRule;
+    }
+
+    public void clearAll(){
+        comeFrom = host = domain = cookie = imgHost
+                = null;
+        typeRule = null;
+        configRule=homeRule=listRule=latestRule=detailsRule=searchRule=detailsChapterRule=readRule=authorRule = null;
     }
 
     public void printRules(){

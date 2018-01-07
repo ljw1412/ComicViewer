@@ -55,8 +55,9 @@ public class ComicFetcher {
             JSONArray titleJ = JSON.parseArray(map.get("title"));
             JSONArray itemsListJ = JSON.parseArray(map.get("items-list"));
             JSONArray itemsJ = JSON.parseArray(map.get("items"));
-            if(titlesJ!=null && itemsListJ !=null && itemsJ != null){
-                int len = titlesJ.size();
+            if(titlesJ!=null && titleJ!=null && itemsListJ !=null && itemsJ != null){
+//                int len = titlesJ.size();
+                int len = titlesJ.size() > itemsListJ.size() ? itemsListJ.size() : titlesJ.size();
                 for(int i = 0 ;i < len ; i++){
                     Elements itemsList = (Elements) getRuleFetcher().parser(doc , (String) itemsListJ.get(i));
                     Elements titles = (Elements) getRuleFetcher().parser(doc, (String) titlesJ.get(i));
@@ -69,6 +70,7 @@ public class ComicFetcher {
                             comic.setName((String) getRuleFetcher().parser(item,map.get("comic-name")));
                             comic.setImageUrl((String) getRuleFetcher().parser(item,map.get("comic-image-url")));
                             comic.setUpdateStatus((String) getRuleFetcher().parser(item,map.get("comic-update-status")));
+                            comic.setScore((String) getRuleFetcher().parser(item,map.get("comic-score")));
                             comics.add(comic);
                         }
 
@@ -310,7 +312,7 @@ public class ComicFetcher {
     //获得漫画章节
     public static List<Chapter> getComicChapterList(String html,Comic comic) {
         Map<String,String> map = getRuleStore().getDetailsChapterRule();
-
+        if(map==null) return null;
         List<Chapter> chapters = new ArrayList<>();
         Document doc = Jsoup.parse(html);
         Elements chapterType = null;

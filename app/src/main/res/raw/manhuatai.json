@@ -3,6 +3,9 @@
 	"host":"http://www.manhuatai.com",
 	"imghost":"mhpic.manhualang.com",
 	"domain":".manhualang.com",
+	"config":{
+		"hasAddNew":false
+	},
 	"home":{
 		"url":"/",
 		"cssQuery":{

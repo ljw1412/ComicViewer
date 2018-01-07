@@ -6,6 +6,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Path;
+import retrofit2.http.Url;
 
 /**
  * Created by ljw on 2017-08-23 023.
@@ -14,7 +15,7 @@ import retrofit2.http.Path;
 public class HttpInterface {
     public interface ComicRequestServices{
         @Headers("Cookie: country=HK")
-        @GET("{path}")
-        Call<String> getHTML(@Path(value="path",encoded=true) String path);
+        @GET
+        Call<String> getHTML(@Url String url);
     }
 }

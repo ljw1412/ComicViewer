@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ValueCallback;
+import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -36,12 +38,15 @@ import ljw.comicviewer.bean.Category;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
+import ljw.comicviewer.others.MyWebView;
 import ljw.comicviewer.store.FilterStore;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.FilterAdapter;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
+import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.SnackbarUtil;
+import ljw.comicviewer.util.StringUtil;
 import retrofit2.Call;
 
 public class FilterActivity extends AppCompatActivity
@@ -54,6 +59,8 @@ public class FilterActivity extends AppCompatActivity
     private boolean loading = false;
     private int curPage = 1;
     private int maxPage = -1;
+    private String use = "html";//使用请求方式
+    private WebView webView;
     FilterStore filterStore = FilterStore.get();
     RuleStore ruleStore = RuleStore.get();
     List<Comic> comics = new ArrayList<>();
@@ -110,10 +117,59 @@ public class FilterActivity extends AppCompatActivity
     }
 
     private void getData(){
-        call_filter = ComicService.get().getHTML(this, Global.REQUEST_COMIC_FILTER,
-                ruleStore.getListRule().get("url"),curPage);
+        String listUse = ruleStore.getListRule().get("use");
+        if(listUse!=null) use = listUse;
+        switch (use){
+            case "html":
+                call_filter = ComicService.get().getHTML(this, Global.REQUEST_COMIC_FILTER,
+                        ruleStore.getListRule().get("url"), curPage);
+                break;
+            case "webview":
+                useWebView();
+                break;
+
+        }
         loading = true;
     }
+
+    private String parseUrl(){
+        String typeStr = StringUtil.join(filterStore.getOrder(),filterStore.getFilterStatus(), filterStore.getSeparate());
+        if(filterStore.getEndStr()!=null && !typeStr.equals(""))
+            typeStr += filterStore.getEndStr();
+        Log.d(TAG, "类型对应网页字符串: " + typeStr);
+        return ruleStore.getHost() +
+                ruleStore.getListRule().get("url")
+                        .replaceAll("\\{type:.*?\\}",typeStr)
+                        .replaceAll("\\{page:.*?\\}",curPage+"");
+    }
+
+    private void useWebView(){
+        webView = new WebView(this);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setUserAgentString(
+                "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
+        webView.setWebViewClient(new MyWebView(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                Log.d(TAG, "onPageFinished: "+url);
+                webView.evaluateJavascript("document.getElementsByTagName('html')[0].outerHTML;",new ValueCallback<String>(){
+                    @Override
+                    public void onReceiveValue(String s) {
+                        if(s!=null){
+                            s = DisplayUtil.unicodeDecode(s).replace("\\\"", "\"");
+                            Log.d(TAG, "onReceiveValue: "+s);
+                            LoadDataTask loadDataTask = new LoadDataTask(Global.REQUEST_COMIC_FILTER,s);
+                            loadDataTask.execute();
+                        }
+                    }
+                });
+            }
+        });
+        webView.loadUrl(parseUrl());
+    }
+
+
 
     private void initGridView(){
         filterAdapter = new FilterAdapter(context,categories);
@@ -394,7 +450,7 @@ public class FilterActivity extends AppCompatActivity
     public void onError(String msg, String what) {
         switch (what){
             case Global.REQUEST_COMIC_FILTER:
-                if(!call_filter.isCanceled()){
+                if(call_filter==null || !call_filter.isCanceled()){
                     RefreshLayoutUtil.onFinish(refreshLayout);
                     SnackbarUtil.newAddImageColorfulSnackar(
                             coordinatorLayout, getString(R.string.data_load_fail),
@@ -411,7 +467,7 @@ public class FilterActivity extends AppCompatActivity
                 break;
         }
         loading = false;
-        Log.e(TAG,what + " Error: " + (call_filter.isCanceled()?"取消请求":msg));
+        Log.e(TAG,what + " Error: " + (call_filter!=null && call_filter.isCanceled()?"取消请求":msg));
     }
 
 

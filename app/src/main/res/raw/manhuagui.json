@@ -1,7 +1,7 @@
 {
 	"comeFrom":"manhuagui",
 	"host":"http://www.manhuagui.com",
-	"imghost":"http://lt.hamreus.com:8080",
+	"imghost":"http://dx.hamreus.com:8080",
 	"domain":".manhuagui.com",
 	"cookie":"country=US",
 	"home":{
@@ -211,10 +211,10 @@
 	},
 	"read_page":{
 		"url":"/comic/{comic:}/{chapter:}/",
-		"wv-js":"var res = [];var path='http://i.hamreus.com:8080'+cInfo.path;for(var i = 0;i<cInfo.files.length;i++){res.push(path+cInfo.files[i]);}res;"
+		"wv-js":"var res = [];var path='http://lt.hamreus.com:8080'+cInfo.path;for(var i = 0;i<cInfo.files.length;i++){res.push(path+cInfo.files[i]);}res;"
 		,
 		"items":{
-			"imghost":"http://i.hamreus.com:8080"
+			"imghost":"http://lt.hamreus.com:8080"
 		}
 	},
 	"author_page":{

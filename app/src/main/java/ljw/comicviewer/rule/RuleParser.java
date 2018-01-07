@@ -53,6 +53,7 @@ public class RuleParser {
     }
 
     public void parseAll(){
+        parseConfig();
         parseRuleInfo();
         parseHomePage();
         parseListPage();
@@ -67,6 +68,17 @@ public class RuleParser {
         }catch (Exception e){
             Log.e(TAG, "parseAll: typeRuleError");
             Log.e(TAG, "parseAll: ", e);
+        }
+    }
+
+    private void parseConfig(){
+        JSONObject config = jsonObject.getJSONObject("config");
+        if (config!=null){
+            Map<String,String> map = new HashMap<>();
+            for (Object k : config.keySet()) {
+                map.put(k.toString(), config.get(k).toString());
+            }
+            ruleStore.setConfigRule(map);
         }
     }
 
@@ -162,10 +174,11 @@ public class RuleParser {
 
     //解析type的json，一般type是list的子对象;
     private void parseType(){
-        Map<String,List<Category>> map = new HashMap<>();
         JSONObject list = jsonObject.getJSONObject("list");
+        if(list==null) return;
         JSONObject type = list.getJSONObject("type");
         if (type!=null){
+            Map<String,List<Category>> map = new HashMap<>();
             for(Object key: type.keySet()){
                 JSONArray array = JSON.parseArray(type.get(key.toString()).toString());
                 List<Category> categories = new ArrayList<>();

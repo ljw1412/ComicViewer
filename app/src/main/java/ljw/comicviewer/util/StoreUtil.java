@@ -30,6 +30,7 @@ public class StoreUtil {
             AppStatusStore.get().setCurrentSource(RuleStore.get().getComeFrom());
         }
         if(RuleStore.get().getCurrentRule()!=null){
+            RuleStore.get().clearAll();
             RuleParser.get().parseAll();
         }else{
             throw new RuntimeException("初始化失败");

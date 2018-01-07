@@ -22,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Comic;
+import ljw.comicviewer.store.RuleStore;
 
 /**
  * Created by ljw on 2017-09-10 010.
@@ -109,9 +110,17 @@ public class PictureGridAdapter extends BaseAdapter {
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                                 target.setImageBitmap(resource);
-                                viewHolder.isEnd.setImageResource(
-                                        comics.get(position).isEnd() ?
-                                                R.drawable.state_finish : R.drawable.state_serialise);
+                                String no_end_info = "false";
+                                try {
+                                    no_end_info = RuleStore.get().getConfigRule().get("no-end-info");
+                                } catch (Exception e) {}
+                                if(no_end_info.equals("false")) {
+                                    viewHolder.isEnd.setImageResource(
+                                            comics.get(position).isEnd() ?
+                                                    R.drawable.state_finish : R.drawable.state_serialise);
+                                }else{
+                                    viewHolder.isEnd.setImageResource(0);
+                                }
                             }
                         });
             }

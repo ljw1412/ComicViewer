@@ -413,18 +413,6 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
 
-    <TextView
-        android:text="@string/error_comic_chapter_load_fail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/detail_error"
-        android:layout_weight="1"
-        android:paddingTop="5dp"
-        android:gravity="center_vertical|center_horizontal"
-        android:textSize="16sp"
-        android:visibility="gone"
-        android:layout_centerInParent="true" />
-
     <WebView
         android:id="@+id/webview_details"
         android:layout_width="match_parent"

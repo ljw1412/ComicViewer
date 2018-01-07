@@ -32,6 +32,7 @@ public class HomeFragment extends BaseFragment{
     RecommendFragment recommendFragment;
     BaseFragment currentFragment;
     MyFragmentPagerAdapter myFragmentPagerAdapter;
+    RuleStore ruleStore = RuleStore.get();
     @BindView(R.id.home_fragment_viewPager)
     ViewPager viewPager;
     @BindView(R.id.tabLayout)
@@ -80,14 +81,21 @@ public class HomeFragment extends BaseFragment{
         viewPager.setAdapter(myFragmentPagerAdapter);
         viewPager.setOffscreenPageLimit(3);
 
-        recommendFragment = new RecommendFragment();
-        myFragmentPagerAdapter.addFragment(recommendFragment,getString(R.string.opt_recommend));
-        String hasAddNew = RuleStore.get().getListRule().get("hasAddNew");
-        if(hasAddNew==null || hasAddNew.equals("true")){
-            newAddFragment = new NewAddFragment();
-            myFragmentPagerAdapter.addFragment(newAddFragment,getString(R.string.opt_new));
+        if(ruleStore.getHomeRule()!=null) {
+            recommendFragment = new RecommendFragment();
+            myFragmentPagerAdapter.addFragment(recommendFragment, getString(R.string.opt_recommend));
         }
-        if(RuleStore.get().getLatestRule()!=null) {
+        if(ruleStore.getListRule()!=null){
+            String hasAddNew = null;
+            if(ruleStore.getConfigRule()!=null) {
+                hasAddNew = ruleStore.getConfigRule().get("hasAddNew");
+            }
+            if(hasAddNew==null || hasAddNew.equals("true")) {
+                newAddFragment = new NewAddFragment();
+                myFragmentPagerAdapter.addFragment(newAddFragment, getString(R.string.opt_new));
+            }
+        }
+        if(ruleStore.getLatestRule()!=null) {
             updateFragment = new UpdateFragment();
             myFragmentPagerAdapter.addFragment(updateFragment, getString(R.string.opt_update));
         }

@@ -56,7 +56,7 @@ public class RuleFetcher {
 
     //解析
     public Object parser(Object element,String rule){
-        if (rule.equals("")) return null;
+        if (rule==null || rule.equals("")) return null;
         if(!(element instanceof Document) && !(element instanceof Element) && !(element instanceof Elements)){
             throw new RuntimeException("第一个参数的类型错误：只能是Document或Element或Elements");
         }

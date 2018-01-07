@@ -59,14 +59,24 @@ public class SettingsActivity extends AppCompatActivity
                 StoreUtil.initRuleStore(context,R.raw.manhuatai);
             }
         });
+        Button button3 = new Button(context);
+        button3.setText("知音漫客");
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StoreUtil.initRuleStore(context,R.raw.zymk);
+            }
+        });
         LinearLayout.LayoutParams params = new
                 LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
         button1.setLayoutParams(params);
         button2.setLayoutParams(params);
+        button3.setLayoutParams(params);
         layout.addView(button1);
         layout.addView(button2);
+        layout.addView(button3);
         content.addView(layout);
     }
 

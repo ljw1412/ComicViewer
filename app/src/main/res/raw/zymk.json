@@ -1,0 +1,134 @@
+{
+	"comeFrom":"zymk",
+	"host":"http://m.zymk.cn",
+	"imghost":"mhpic.xiaomingtaiji.net",
+	"domain":".zymkcdn.com",
+	"config":{
+		"no-end-info":true,
+		"hasAddNew":false
+	},
+	"home":{
+		"url":"/",
+		"cssQuery":{
+			"comic-id":"$('.thumbnail a').attr('href').match('/(\\d+)/')[1]",
+			"comic-name":"$('.comic-item .title').text()",
+			"comic-image-url":"$('.thumbnail a img').attr('data-src').match('http[s]?:.+.(?:jpg|jpeg|png|gif|bmp)-{0,}[0-9x]*')[0]",
+			"comic-update-status":"$('.thumbnail a .chapter').text()",
+			"comic-score":"$('.thumbnail a .score').text()"
+		},
+		"items":{
+			"titles":["$('.hd h2.title')"],
+			"title":["$('h2').text()"],
+			"items-list":["$('.mk-floor ul.swiper-wrapper')"],
+			"items":["$('li')"]
+		}
+	},
+	"list":{
+		"url":"/sort/{type:}_p{page:}.html",
+		"cssQuery":{
+			"items":"$('.comic-sort li')",
+			"comic-id":"$('.thumbnail a').attr('href').match('/(\\d+)/')[1]",
+			"comic-name":"$('.comic-item .title').text()",
+			"comic-image-url":"$('.thumbnail a img').attr('data-src').match('http[s]?:.+.(?:jpg|jpeg|png|gif|bmp)-{0,}[0-9x]*')[0]",
+			"comic-score":"$('.thumbnail a .score').text()",
+			"comic-update":"",
+			"comic-update-status":"$('.thumbnail a .chapter').text()",
+			"comic-end":"$('.comic-sort').size()!=-1",
+			"max-page":"$('.comic-sort').attr('data-total')"
+		},
+		"type":{
+			"order":[
+				{"name":"separate","value":""},
+				{"name":"endStr","value":""},
+				{"name":0,"value":"类型"}
+			],
+			"类型":[
+				{"name":"全部","value":"all"},
+				{"name":"热血","value":"5"},
+				{"name":"搞笑","value":"6"},
+				{"name":"玄幻","value":"7"},
+				{"name":"生活","value":"8"},
+				{"name":"恋爱","value":"9"},
+				{"name":"动作","value":"10"},
+				{"name":"科幻","value":"11"},
+				{"name":"战争","value":"12"},
+				{"name":"悬疑","value":"13"},
+				{"name":"恐怖","value":"14"},
+				{"name":"校园","value":"15"},
+				{"name":"历史","value":"16"},
+				{"name":"穿越","value":"17"},
+				{"name":"后宫","value":"18"},
+				{"name":"体育","value":"19"},
+				{"name":"都市","value":"20"},
+				{"name":"萝莉","value":"21"},
+				{"name":"漫改","value":"22"},
+				{"name":"修真","value":"53"},
+				{"name":"耽美","value":"54"},
+				{"name":"百合","value":"55"},
+				{"name":"霸总","value":"62"},
+				{"name":"古风","value":"63"},
+				{"name":"游戏","value":"64"},
+				{"name":"真人","value":"65"},
+				{"name":"武侠","value":"66"},
+				{"name":"连载","value":"23"},
+				{"name":"完结","value":"24"},
+				{"name":"短篇","value":"57"},
+				{"name":"少男","value":"25"},
+				{"name":"少女","value":"26"},
+				{"name":"青年","value":"27"},
+				{"name":"知音漫客","value":"28"},
+				{"name":"漫客栈","value":"51"},
+				{"name":"神漫","value":"29"},
+				{"name":"飒漫画","value":"30"},
+				{"name":"飒漫乐画","value":"52"},
+				{"name":"其他","value":"58"}
+			]
+		}
+	},
+	"details_page":{
+		"url":"/{comic:}/",
+		"wv-js":"document.getElementsByTagName('html')[0].outerHTML;",
+		"cssQuery":{
+			"comic-name":"$('.comic-info .name').text()",
+			"comic-image-url":"$('.comic-info .thumbnail img').attr('data-src')",
+			"comic-tag":"$('.comic-info .tags-box li').text().replace('完结','')",
+			"comic-author":"$('.comic-info .author').text()",
+			"comic-update":"$('#updateTime').text()",
+			"comic-score":"$('.comic-info .thumbnail .score').text()",
+			"comic-update-status":"$('#updateTime').attr('data-lc_name')",
+			"comic-end":"$('.comic-info .tags-box li').text().indexOf('完结')!=-1",
+			"comic-info":"$('.comic-detail p.content').eq(0).text()",
+			"comic-is-ban":"$('body').size()==0"
+		}
+	},
+	"details_page_chapter":{
+		"cssQuery":{
+			"chapter-lists":"$('.mk-chapterlist-box .bd ul')",
+			"chapter-list":"$('ul')",
+			"chapter-items":"$('li')",
+			"chapter-id":"$('a').attr('href')",
+			"chapter-name":"$('a').attr('title')"
+		}
+	},
+	"read_page":{
+		"url":"/{comic:}/{chapter:}",
+		"wv-js":"var res = [];for(var i = 1;i<=__cr.end_var;i++){res.push(__cr.getPicUrl(i));}res;"
+	},
+	"search_page":{
+		"url":"/sort/all_p{page:}.html?key={keyword:}",
+		"cssQuery":{
+			"items":"$('.comic-sort li')",
+			"comic-id":"$('.thumbnail a').attr('href').match('/(\\d+)/')[1]",
+			"comic-name":"$('.comic-item .title').text()",
+			"comic-image-url":"$('.thumbnail a img').attr('data-src').match('http[s]?:.+.(?:jpg|jpeg|png|gif|bmp)-{0,}[0-9x]*')[0]",
+			"comic-score":"$('.thumbnail a .score').text()",
+			"comic-update":"",
+			"comic-update-status":"$('.thumbnail a .chapter').text()",
+			"comic-end":"$('.comic-sort').size()!=-1",
+			"comic-author":"",
+			"comic-tag":"",
+			"comic-info":"",
+			"max-page":"$('.comic-sort').attr('data-total')"
+		}
+	}
+}
