@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +42,8 @@ public class HomeFragment extends BaseFragment{
     ImageView btn_filter;
     @BindView(R.id.nav_btn_search)
     ImageView btn_search;
+    @BindView(R.id.nav_title)
+    TextView nav_title;
 
     public HomeFragment() {
     }
@@ -71,6 +74,11 @@ public class HomeFragment extends BaseFragment{
         initViewPager();
         //tab标题栏绑定viewpager
         tabLayout.setupWithViewPager(viewPager);
+        if(ruleStore.getTitle()!=null){
+            nav_title.setText(ruleStore.getTitle());
+        }else{
+            nav_title.setText(R.string.app_name);
+        }
     }
 
 
@@ -90,6 +98,7 @@ public class HomeFragment extends BaseFragment{
             if(ruleStore.getConfigRule()!=null) {
                 hasAddNew = ruleStore.getConfigRule().get("hasAddNew");
             }
+
             if(hasAddNew==null || hasAddNew.equals("true")) {
                 newAddFragment = new NewAddFragment();
                 myFragmentPagerAdapter.addFragment(newAddFragment, getString(R.string.opt_new));
@@ -106,6 +115,9 @@ public class HomeFragment extends BaseFragment{
         myFragmentPagerAdapter.setLoaded(0);
 
         myFragmentPagerAdapter.notifyDataSetChanged();
+        if(myFragmentPagerAdapter.getCount()<=1){
+            tabLayout.setVisibility(View.GONE);
+        }
     }
 
     public void addListener(){

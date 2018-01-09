@@ -3,9 +3,53 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_navibar"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/toolbar_height"
     android:background="@color/holo_red_light"
-    android:elevation="5dp">
+    android:elevation="5dp"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/nav_main"
+        android:layout_height="36dp">
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            app:srcCompat="@drawable/ico_filter"
+            android:layout_centerVertical="true"
+            android:id="@+id/nav_btn_filter"
+            android:adjustViewBounds="false"
+            android:background="@drawable/selector_btn_circle_bg"
+            android:padding="5dp"
+            android:layout_marginLeft="2dp" />
+
+        <TextView
+            android:text="@string/app_name"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:id="@+id/nav_title"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="90dp"
+            android:layout_marginLeft="90dp" />
+
+        <ImageView
+            android:gravity="center_vertical"
+            android:id="@+id/nav_btn_search"
+            android:clickable="true"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ico_search"
+            android:layout_alignParentRight="true"
+            android:layout_height="34dp"
+            android:background="@drawable/selector_btn_circle_bg"
+            android:layout_width="34dp"
+            android:padding="5dp"
+            android:layout_marginRight="2dp" />
+
+    </RelativeLayout>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
@@ -14,35 +58,12 @@
         app:tabTextColor="@color/white"
         app:tabIndicatorColor="@color/green"
         app:tabIndicatorHeight="0dp"
-        android:layout_height="48dp"
-        android:layout_marginRight="90dp"
         app:tabTextAppearance="@style/home_bar_tab_text_font"
+        android:layout_centerInParent="true"
         android:layout_marginLeft="90dp"
-        android:layout_centerVertical="true">
+        android:layout_marginRight="90dp"
+        android:layout_below="@+id/nav_main"
+        android:layout_height="36dp">
     </android.support.design.widget.TabLayout>
-
-    <ImageView
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        app:srcCompat="@drawable/ico_filter"
-        android:layout_centerVertical="true"
-        android:id="@+id/nav_btn_filter"
-        android:adjustViewBounds="false"
-        android:background="@drawable/selector_btn_circle_bg"
-        android:padding="5dp"
-        android:layout_marginLeft="2dp" />
-
-    <ImageView
-        android:gravity="center_vertical"
-        android:id="@+id/nav_btn_search"
-        android:clickable="true"
-        android:layout_centerVertical="true"
-        app:srcCompat="@drawable/ico_search"
-        android:layout_alignParentRight="true"
-        android:layout_height="34dp"
-        android:background="@drawable/selector_btn_circle_bg"
-        android:layout_width="34dp"
-        android:padding="5dp"
-        android:layout_marginRight="2dp" />
 
 </RelativeLayout>

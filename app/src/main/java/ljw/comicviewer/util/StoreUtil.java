@@ -26,14 +26,14 @@ public class StoreUtil {
     public static void initRuleStore(Context context,int resId){
         String rule = FileUtil.readJson(context,resId);
         RuleStore.get().setCurrentRule(rule.equals("fail") ? null : rule);
-        if(AppStatusStore.get().getCurrentSource()==null){
-            AppStatusStore.get().setCurrentSource(RuleStore.get().getComeFrom());
-        }
         if(RuleStore.get().getCurrentRule()!=null){
             RuleStore.get().clearAll();
             RuleParser.get().parseAll();
         }else{
             throw new RuntimeException("初始化失败");
+        }
+        if(AppStatusStore.get().getCurrentSource()==null){
+            AppStatusStore.get().setCurrentSource(RuleStore.get().getComeFrom());
         }
         RuleStore.get().printRules();
     }

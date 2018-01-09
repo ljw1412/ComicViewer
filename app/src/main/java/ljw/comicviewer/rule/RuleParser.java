@@ -96,6 +96,8 @@ public class RuleParser {
         ruleStore.setCookie(cookie==null ? null : cookie.toString());
         Object comeFrom = jsonObject.get("comeFrom");
         ruleStore.setComeFrom(comeFrom==null ? null : comeFrom.toString());
+        Object title = jsonObject.get("title");
+        ruleStore.setTitle(title==null ? null : title.toString());
     }
 
     private void parseHomePage(){

@@ -7,8 +7,6 @@
 
 
     <include
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         layout="@layout/navigation_bar_home_tab_search"
         android:id="@+id/home_bar" />
 

@@ -8,13 +8,14 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2.5dp"
-        android:layout_marginTop="2.5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:id="@+id/search_body"
-        android:background="@drawable/selector_search_item_bg"
-        android:paddingBottom="2.5dp">
+        android:paddingBottom="2.5dp"
+        android:elevation="5dp"
+        android:layout_marginBottom="2.5dp"
+        android:layout_marginTop="2.5dp"
+        android:background="@drawable/selector_search_item_bg">
 
         <ImageView
             android:layout_width="84dp"
@@ -22,14 +23,16 @@
             android:id="@+id/search_cover"
             android:adjustViewBounds="false"
             android:padding="5dp"
-            android:layout_height="112.7dp" />
+            android:layout_height="112.7dp"
+            android:layout_gravity="center_vertical" />
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="5dp">
+            android:padding="5dp"
+            android:layout_gravity="center_vertical">
 
             <TextView
                 android:text="search_name"

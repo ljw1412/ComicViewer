@@ -9,8 +9,6 @@
 
     <include
         android:id="@+id/search_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
         layout="@layout/navigation_bar_search_back" />
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout

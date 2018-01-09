@@ -14,13 +14,14 @@ import ljw.comicviewer.bean.Category;
 public class RuleStore {
     private final String TAG = this.getClass().getSimpleName()+"----";
     private static RuleStore ruleStore = null;
+    private String title;
     private String comeFrom;
     private String host;
     private String domain;
     private String cookie;
     private String imgHost;
     private String currentRule;
-    private Map<String,String> configRule = homeRule=listRule=latestRule=detailsRule=searchRule=detailsChapterRule=readRule=authorRule = null;
+    private Map<String,String> configRule;
     private Map<String,List<Category>> typeRule;
     private Map<String,String> homeRule;
     private Map<String,String> listRule;
@@ -38,6 +39,14 @@ public class RuleStore {
             ruleStore = new RuleStore();
         }
         return ruleStore;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getComeFrom() {
@@ -169,8 +178,7 @@ public class RuleStore {
     }
 
     public void clearAll(){
-        comeFrom = host = domain = cookie = imgHost
-                = null;
+        comeFrom = host = domain = cookie = imgHost = null;
         typeRule = null;
         configRule=homeRule=listRule=latestRule=detailsRule=searchRule=detailsChapterRule=readRule=authorRule = null;
     }

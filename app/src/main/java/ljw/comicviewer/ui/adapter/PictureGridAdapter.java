@@ -1,7 +1,9 @@
 package ljw.comicviewer.ui.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,7 +103,7 @@ public class PictureGridAdapter extends BaseAdapter {
         if(viewHolder != null){
             final WeakReference<ImageView> imageViewWeakReference = new WeakReference<>(viewHolder.image);
             final ImageView target = imageViewWeakReference.get();
-            if (target != null && comics.size()>0) {
+            if (target != null && comics.size()>0 && !((Activity)context).isDestroyed()) {
                 Glide.with(context)
                         .asBitmap()
                         .load(comics.get(position).getImageUrl())
@@ -110,15 +112,15 @@ public class PictureGridAdapter extends BaseAdapter {
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                                 target.setImageBitmap(resource);
-                                String no_end_info = "false";
-                                try {
+                                String no_end_info = null;
+                                if (RuleStore.get().getConfigRule() != null) {
                                     no_end_info = RuleStore.get().getConfigRule().get("no-end-info");
-                                } catch (Exception e) {}
-                                if(no_end_info.equals("false")) {
+                                }
+                                if (no_end_info == null || no_end_info.equals("false")) {
                                     viewHolder.isEnd.setImageResource(
                                             comics.get(position).isEnd() ?
                                                     R.drawable.state_finish : R.drawable.state_serialise);
-                                }else{
+                                } else {
                                     viewHolder.isEnd.setImageResource(0);
                                 }
                             }

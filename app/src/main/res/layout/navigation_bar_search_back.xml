@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_navibar"
     android:layout_width="fill_parent"
-    android:layout_height="48dp"
+    android:layout_height="36dp"
     android:background="@color/holo_red_light"
     android:elevation="1dp">
 
@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         app:srcCompat="@drawable/img_back_white"
         android:id="@+id/search_back"
-        android:layout_width="40dp"
+        android:layout_width="36dp"
         android:padding="6dp"
         android:onClick="onBack" />
 

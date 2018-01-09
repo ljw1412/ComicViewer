@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_navibar"
     android:layout_width="fill_parent"
-    android:layout_height="48dp">
+    android:layout_height="@dimen/toolbar_height">
 
     <ImageView
         android:gravity="center_vertical"
@@ -16,7 +16,7 @@
         android:layout_height="fill_parent"
         android:layout_centerVertical="true"
         android:onClick="onBack"
-        android:layout_width="48.0dp"
+        android:layout_width="36dp"
         android:elevation="1dp"
         app:srcCompat="@drawable/img_back_white"
         android:alpha="0.75" />
@@ -24,7 +24,7 @@
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:text="title"
         android:textSize="@dimen/toolbar_font_size"

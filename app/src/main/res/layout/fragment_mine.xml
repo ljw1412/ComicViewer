@@ -8,8 +8,6 @@
 
     <include
         android:id="@+id/mine_bar"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
         layout="@layout/navigation_bar_default" />
 
     <RelativeLayout

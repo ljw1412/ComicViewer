@@ -1,4 +1,5 @@
 {
+	"title":"知音漫客",
 	"comeFrom":"zymk",
 	"host":"http://m.zymk.cn",
 	"imghost":"mhpic.xiaomingtaiji.net",
@@ -91,7 +92,7 @@
 		"cssQuery":{
 			"comic-name":"$('.comic-info .name').text()",
 			"comic-image-url":"$('.comic-info .thumbnail img').attr('data-src')",
-			"comic-tag":"$('.comic-info .tags-box li').text().replace('完结','')",
+			"comic-tag":"$('.comic-info .tags-box li').text().replace('完结','').replace('连载','')",
 			"comic-author":"$('.comic-info .author').text()",
 			"comic-update":"$('#updateTime').text()",
 			"comic-score":"$('.comic-info .thumbnail .score').text()",

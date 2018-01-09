@@ -7,8 +7,6 @@
 
     <include
         android:id="@+id/collection_bar"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
         layout="@layout/navigation_bar_search" />
 
     <RelativeLayout

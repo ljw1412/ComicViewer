@@ -92,7 +92,7 @@ public class MineFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: requestCode:"+requestCode + "resultCode:"+resultCode);
+
         switch (requestCode){
             case Global.HomeToSetting:
                 if(!RuleStore.get().getComeFrom().equals(AppStatusStore.get().getCurrentSource())){

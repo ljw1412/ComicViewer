@@ -8,8 +8,6 @@
     tools:context="ljw.comicviewer.ui.AboutActivity">
 
     <include
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
         layout="@layout/navigation_bar_child"
         android:id="@+id/about_bar" />
 
