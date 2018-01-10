@@ -15,14 +15,12 @@
         android:id="@+id/content_home"
         android:layout_above="@+id/bottom_tab"></LinearLayout>
 
-    <FrameLayout
+    <View
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:background="@color/black_shadow"
-        android:layout_weight="1"
         android:layout_above="@+id/bottom_tab"
-        android:id="@+id/tab_line">
-    </FrameLayout>
+        />
 
     <LinearLayout
         android:id="@+id/bottom_tab"
@@ -107,7 +105,12 @@
                 android:text="@string/txt_mine" />
         </LinearLayout>
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@color/black_pressed"
+        android:layout_alignBottom="@+id/bottom_tab"
+        />
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

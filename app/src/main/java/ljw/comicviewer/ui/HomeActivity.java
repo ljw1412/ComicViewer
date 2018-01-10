@@ -1,14 +1,18 @@
 package ljw.comicviewer.ui;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,14 +22,16 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
+import ljw.comicviewer.others.MyAppCompatActivity;
 import ljw.comicviewer.store.AppStatusStore;
 import ljw.comicviewer.ui.fragment.CollectionFragment;
 import ljw.comicviewer.ui.fragment.HomeFragment;
 import ljw.comicviewer.ui.fragment.MineFragment;
+import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.StoreUtil;
 
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
+public class HomeActivity extends MyAppCompatActivity implements View.OnClickListener {
     private String TAG = this.getClass().getSimpleName()+"----";
     private Context context;
     private Fragment currentFragment;
@@ -48,12 +54,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.home_coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.activity_home);
+
+        TypedValue typedValue = new TypedValue();
+
 
         //fragment事务管理
         fragmentManager = getSupportFragmentManager();

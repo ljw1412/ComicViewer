@@ -35,6 +35,7 @@ import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
+import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 
@@ -60,7 +61,7 @@ public class NewAddFragment extends BaseFragment
     GridView gridView;
     @BindView(R.id.grid_net_error)
     TextView txt_netError;
-    @BindView(R.id.newAdd_btn_toTop)
+    @BindView(R.id.btn_toTop)
     FloatingActionButton btn_toTop;
     @BindView(R.id.comic_grid_coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
@@ -76,7 +77,7 @@ public class NewAddFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = this.getActivity();
-        View rootView = inflater.inflate(R.layout.fragment_newadd,null);
+        View rootView = inflater.inflate(R.layout.fragment_comic_gird_top,null);
         ButterKnife.bind(this,rootView);
         initView();
         return rootView;
@@ -87,7 +88,7 @@ public class NewAddFragment extends BaseFragment
         //只能下拉刷新
         RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
         //设置主题色
-        refreshLayout.setPrimaryColorsId(R.color.colorPrimary);
+        refreshLayout.setPrimaryColors(DisplayUtil.getAttrColor(context,R.attr.colorPrimary));
         //下拉到底最后不自动加载，需要再拉一下
         refreshLayout.setEnableAutoLoadmore(false);
         //不在加载更多完成之后滚动内容显示新数据

@@ -4,7 +4,7 @@
     android:id="@+id/layout_navibar"
     android:layout_width="fill_parent"
     android:layout_height="36dp"
-    android:background="@color/holo_red_light"
+    android:background="?colorPrimary"
     android:elevation="1dp">
 
     <ImageView

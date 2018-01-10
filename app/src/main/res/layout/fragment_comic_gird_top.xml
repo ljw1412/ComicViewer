@@ -16,10 +16,10 @@
         android:layout_height="wrap_content"
         app:fabSize="mini"
         app:srcCompat="@drawable/img_arrow2top"
-        android:id="@+id/newAdd_btn_toTop"
+        android:id="@+id/btn_toTop"
         android:layout_marginRight="5dp"
         android:clickable="true"
-        app:backgroundTint="@color/holo_red_light"
+        app:backgroundTint="?colorPrimary"
         android:layout_gravity="right|bottom"
         android:layout_marginBottom="5dp"
         android:visibility="gone"/>

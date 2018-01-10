@@ -39,6 +39,7 @@ import ljw.comicviewer.bean.Category;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
+import ljw.comicviewer.others.MyAppCompatActivity;
 import ljw.comicviewer.others.MyWebView;
 import ljw.comicviewer.store.FilterStore;
 import ljw.comicviewer.store.RuleStore;
@@ -50,7 +51,7 @@ import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.StringUtil;
 import retrofit2.Call;
 
-public class FilterActivity extends AppCompatActivity
+public class FilterActivity extends MyAppCompatActivity
         implements ComicService.RequestCallback {
     private String TAG = this.getClass().getSimpleName()+"----";
     private Context context;
@@ -82,7 +83,7 @@ public class FilterActivity extends AppCompatActivity
     GridView gridView_comics;
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
-    @BindView(R.id.newAdd_btn_toTop)
+    @BindView(R.id.btn_toTop)
     FloatingActionButton btn_toTop;
     @BindView(R.id.comic_grid_coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
@@ -101,7 +102,7 @@ public class FilterActivity extends AppCompatActivity
         //只能下拉刷新
         RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
         //设置主题色
-        refreshLayout.setPrimaryColorsId(R.color.colorPrimary);
+        refreshLayout.setPrimaryColors(DisplayUtil.getAttrColor(context,R.attr.colorPrimary));
         //下拉到底最后不自动加载，需要再拉一下
         refreshLayout.setEnableAutoLoadmore(false);
         //不在加载更多完成之后滚动内容显示新数据

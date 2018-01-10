@@ -20,6 +20,7 @@ import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
+import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 
 /**
@@ -42,7 +43,7 @@ public class UpdateFragment extends NewAddFragment {
         //禁用上拉下拉
         RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
         //设置主题色
-        refreshLayout.setPrimaryColorsId(R.color.colorPrimary);
+        refreshLayout.setPrimaryColors(DisplayUtil.getAttrColor(context,R.attr.colorPrimary));
         //下拉到底最后不自动加载，需要再拉一下
         refreshLayout.setEnableAutoLoadmore(false);
         //不在加载更多完成之后滚动内容显示新数据

@@ -4,7 +4,6 @@ package ljw.comicviewer.ui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -79,7 +77,7 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
         //只能下拉刷新
         RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
         //设置主题色
-        refreshLayout.setPrimaryColorsId(R.color.colorPrimary);
+        refreshLayout.setPrimaryColors(DisplayUtil.getAttrColor(context,R.attr.colorPrimary));
         //下拉到底最后不自动加载，需要再拉一下
         refreshLayout.setEnableAutoLoadmore(false);
         //不在加载更多完成之后滚动内容显示新数据

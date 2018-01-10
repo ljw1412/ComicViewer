@@ -35,6 +35,7 @@ import ljw.comicviewer.bean.CallBackData;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
+import ljw.comicviewer.others.MyAppCompatActivity;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.SearchListAdapter;
 import ljw.comicviewer.util.DisplayUtil;
@@ -43,7 +44,7 @@ import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.StringUtil;
 import retrofit2.Call;
 
-public class SearchActivity extends AppCompatActivity
+public class SearchActivity extends MyAppCompatActivity
         implements ComicService.RequestCallback{
     private String TAG = this.getClass().getSimpleName()+"----";
     private Context context;

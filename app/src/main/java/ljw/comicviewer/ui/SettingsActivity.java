@@ -13,10 +13,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
 import ljw.comicviewer.http.ComicService;
+import ljw.comicviewer.others.MyAppCompatActivity;
 import ljw.comicviewer.store.AppStatusStore;
 import ljw.comicviewer.util.StoreUtil;
 
-public class SettingsActivity extends AppCompatActivity
+public class SettingsActivity extends MyAppCompatActivity
         implements ComicService.RequestCallback {
     private String TAG = SettingsActivity.class.getSimpleName()+"----";
     private Context context;

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -74,6 +75,8 @@ public class CollectionFragment extends BaseFragment
     ImageView btn_cancel;//取消按钮
     @BindView(R.id.nav_search_edit)
     EditText edit_search;//输入框
+    @BindView(R.id.btn_toTop)
+    FloatingActionButton btn_toTop;
 
     public CollectionFragment() {}
 
@@ -102,7 +105,7 @@ public class CollectionFragment extends BaseFragment
         //只允许刷新，以便初次启动时自动刷新
         RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
         //设置主题色
-        refreshLayout.setPrimaryColorsId(R.color.colorPrimary,R.color.white);
+        refreshLayout.setPrimaryColors(DisplayUtil.getAttrColor(context,R.attr.colorPrimary));
         //下拉到底最后不自动加载，需要再拉一下
         refreshLayout.setEnableAutoLoadmore(false);
         //不在加载更多完成之后滚动内容显示新数据
@@ -205,6 +208,12 @@ public class CollectionFragment extends BaseFragment
                 return true;
             }
         });
+        btn_toTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gridView.smoothScrollToPosition(0);
+            }
+        });
     }
 
     private void showItemDialog(final Comic comic){
@@ -239,6 +248,7 @@ public class CollectionFragment extends BaseFragment
         if(searching) {
             changeNormalMode();
         }
+        btn_toTop.setVisibility(View.GONE);
         loading = true;
         //执行自动刷新,此处不采用动画自动加载
 //        refreshLayout.autoRefresh();
@@ -280,7 +290,7 @@ public class CollectionFragment extends BaseFragment
         maxPage = allComics.size() % 20 > 0 ? (allComics.size() / 20 + 1) : allComics.size() / 20;
         add20(currentPage);
         delayedFlushAdapter();
-
+        if (allComics.size()>0) btn_toTop.setVisibility(View.VISIBLE);
     }
 
     private int maxPage;

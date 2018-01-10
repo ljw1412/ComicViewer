@@ -48,7 +48,6 @@ public class HomeFragment extends BaseFragment{
     public HomeFragment() {
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

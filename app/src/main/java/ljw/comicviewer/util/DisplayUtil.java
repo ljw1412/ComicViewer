@@ -4,11 +4,14 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ljw.comicviewer.R;
 
 /**
  * Created by ljw on 2017-08-29 029.
@@ -117,4 +120,12 @@ public class DisplayUtil {
             imm.toggleSoftInput(0,InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
+
+    public static int getAttrColor(Context context,int id){
+        TypedValue typedValue = new  TypedValue();
+        context.getTheme().resolveAttribute(id, typedValue, true);
+        final int color = typedValue.data;
+        return color;
+    }
+
 }
