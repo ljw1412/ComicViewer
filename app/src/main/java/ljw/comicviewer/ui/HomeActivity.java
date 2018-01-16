@@ -60,9 +60,6 @@ public class HomeActivity extends MyAppCompatActivity implements View.OnClickLis
         context = this;
         setContentView(R.layout.activity_home);
 
-        TypedValue typedValue = new TypedValue();
-
-
         //fragment事务管理
         fragmentManager = getSupportFragmentManager();
 

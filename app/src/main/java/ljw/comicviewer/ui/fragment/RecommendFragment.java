@@ -1,6 +1,7 @@
 package ljw.comicviewer.ui.fragment;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -174,12 +175,13 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
             //图片网络
             RequestOptions options = new RequestOptions();
             options.skipMemoryCache(true).centerCrop().override(300,400);
-            Glide.with(context)
-                    .asBitmap()
-                    .apply(options)
-                    .load(comic.getImageUrl())
-                    .into(itemViewHolder.image);
-
+            if(!((Activity)context).isDestroyed()) {
+                Glide.with(context)
+                        .asBitmap()
+                        .apply(options)
+                        .load(comic.getImageUrl())
+                        .into(itemViewHolder.image);
+            }
             itemViewHolder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

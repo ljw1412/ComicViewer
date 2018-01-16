@@ -14,12 +14,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".ui.HomeActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTop"
+        <activity android:name=".ui.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Launch">
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,14 +24,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.HomeActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Default"></activity>
+        <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Default">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ljw.comicviewer.ui.HomeActivity" />
         </activity>
         <activity
             android:name=".ui.AboutActivity"
@@ -47,10 +47,7 @@
             android:launchMode="singleTop"
             android:parentActivityName=".ui.HomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ljw.comicviewer.ui.HomeActivity" />
+            android:theme="@style/AppTheme.NoActionBar.Transparent">
         </activity>
         <activity
             android:name=".ui.SearchActivity"
@@ -73,10 +70,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Default" />
-        <activity android:name=".ui.FilterActivity"
+        <activity
+            android:name=".ui.FilterActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Default"></activity>
+            android:theme="@style/AppTheme.NoActionBar.Default" />
     </application>
 
 </manifest>
