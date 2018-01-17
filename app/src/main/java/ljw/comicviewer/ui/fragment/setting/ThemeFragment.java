@@ -26,7 +26,7 @@ public class ThemeFragment extends PreferenceFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences_setting);
+        addPreferencesFromResource(R.xml.preferences_theme);
     }
 
 

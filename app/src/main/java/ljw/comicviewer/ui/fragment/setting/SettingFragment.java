@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 import ljw.comicviewer.R;
 import ljw.comicviewer.db.CollectionHolder;
 import ljw.comicviewer.store.RuleStore;
+import ljw.comicviewer.ui.SettingsActivity;
 import ljw.comicviewer.util.StoreUtil;
 
 /**
@@ -82,8 +83,10 @@ public class SettingFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 Log.d(TAG, "onPreferenceClick: setting_theme");
+
                 return true;
             }
         });
     }
+
 }
