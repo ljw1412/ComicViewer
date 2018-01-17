@@ -4,20 +4,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import butterknife.ButterKnife;
 import ljw.comicviewer.R;
-import ljw.comicviewer.db.CollectionHolder;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.SettingsActivity;
+import ljw.comicviewer.util.PreferenceUtil;
 import ljw.comicviewer.util.StoreUtil;
 
 /**
@@ -32,6 +27,7 @@ public class SettingFragment extends PreferenceFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+        getPreferenceManager().setSharedPreferencesName(PreferenceUtil.PreferenceName);
         addPreferencesFromResource(R.xml.preferences_setting);
         addListener();
     }
@@ -41,19 +37,7 @@ public class SettingFragment extends PreferenceFragment {
         preference_source.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                int currentSelected = 0;
-                switch (RuleStore.get().getComeFrom()){
-                    case "manhuagui":
-                        currentSelected = 0;
-                        break;
-                    case "manhuatai":
-                        currentSelected = 1;
-                        break;
-                    case "zymk":
-                        currentSelected = 2;
-                        break;
-                }
-                Log.d(TAG, "onPreferenceClick: setting_source");
+                int currentSelected = PreferenceUtil.getSharedPreferences(context).getInt("sourceId",0);
                 String[] items = {"漫画柜","漫画台","知音漫客"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(R.string.setting_sub_title_source);
@@ -71,6 +55,7 @@ public class SettingFragment extends PreferenceFragment {
                                 StoreUtil.initRuleStore(context,R.raw.zymk);
                                 break;
                         }
+                        PreferenceUtil.modify(context,"sourceId",i);
                         dialogInterface.dismiss();
                     }
                 }).setNegativeButton("取消", null);
@@ -83,7 +68,7 @@ public class SettingFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 Log.d(TAG, "onPreferenceClick: setting_theme");
-
+                ((SettingsActivity) context).changePref(new ThemeFragment(),preference.getTitle().toString());
                 return true;
             }
         });

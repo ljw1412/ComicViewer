@@ -6,12 +6,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
+import ljw.comicviewer.util.PreferenceUtil;
 
 public class SplashActivity extends AppCompatActivity {
     private int time = 2000;
@@ -20,13 +22,11 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-//        if(true){
-//            toHome();
-//            return;
-//        }
-
+        if(PreferenceUtil.getSharedPreferences(this).getBoolean("noSplash",false)){
+            toHome();
+            return;
+        }
 
         new Handler().postDelayed(new Runnable() {
             @Override

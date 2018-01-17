@@ -61,6 +61,6 @@
     <string name="setting_sub_summary_source">你可以在这里切换漫画源</string>
     <string name="setting_sub_title_theme">主题风格</string>
     <string name="setting_sub_summary_theme">你可以在这里切换主题风格</string>
-    <string name="setting_sub_title_no_splash">禁用启动动画</string>
-    <string name="setting_sub_summary_no_splash">直接进入主界面</string>
+    <string name="setting_sub_title_no_splash">缩短启动动画</string>
+    <string name="setting_sub_summary_no_splash">快速进入主界面</string>
 </resources>

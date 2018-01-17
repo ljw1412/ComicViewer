@@ -2,6 +2,7 @@ package ljw.comicviewer.ui;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -28,6 +29,7 @@ import ljw.comicviewer.ui.fragment.CollectionFragment;
 import ljw.comicviewer.ui.fragment.HomeFragment;
 import ljw.comicviewer.ui.fragment.MineFragment;
 import ljw.comicviewer.util.DisplayUtil;
+import ljw.comicviewer.util.PreferenceUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.StoreUtil;
 
@@ -58,6 +60,12 @@ public class HomeActivity extends MyAppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+//        getWindow().setNavigationBarColor(DisplayUtil.getAttrColor(context,R.attr.colorPrimary));
+//        深色系
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {//android6.0以后可以对状态栏文字颜色和图标进行修改
+//            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+//            getWindow().setStatusBarColor(DisplayUtil.getAttrColor(context,R.attr.colorPrimary));
+//        }
         setContentView(R.layout.activity_home);
 
         //fragment事务管理
@@ -74,7 +82,18 @@ public class HomeActivity extends MyAppCompatActivity implements View.OnClickLis
         img_comic.setSelected(true);
 
         //初始化ruleStore
-        StoreUtil.initRuleStore(context,R.raw.zymk);
+        int currentSelected = PreferenceUtil.getSharedPreferences(context).getInt("sourceId",0);
+        switch (currentSelected){
+            case 0:
+                StoreUtil.initRuleStore(context,R.raw.manhuagui);
+                break;
+            case 1:
+                StoreUtil.initRuleStore(context,R.raw.manhuatai);
+                break;
+            case 2:
+                StoreUtil.initRuleStore(context,R.raw.zymk);
+                break;
+        }
     }
 
 

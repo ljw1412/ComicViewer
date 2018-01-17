@@ -19,4 +19,22 @@
     <color name="green">#6CE26C</color>
     <color name="purple">#cc55f6</color>
     <color name="transparent">#00000000</color>
+
+    <color name="accent_blue">#2196f3</color>
+    <color name="accent_blue_grey">#ff607d8b</color>
+    <color name="accent_brown">#ff795548</color>
+    <color name="accent_cyan">#ff00bcd4</color>
+    <color name="accent_dark_s">#ff757575</color>
+    <color name="accent_deep_purple">#ff673ab7</color>
+    <color name="accent_green">#ff4caf50</color>
+    <color name="accent_indigo">#ff3f51b5</color>
+    <color name="accent_material_dark">@color/material_deep_teal_200</color>
+    <color name="accent_material_light">@color/material_deep_teal_500</color>
+    <color name="accent_orange">#ffff9800</color>
+    <color name="accent_pink">#fffb7299</color>
+    <color name="accent_purple">#ff9c27b0</color>
+    <color name="accent_red">#ffdb4437</color>
+    <color name="accent_teal">#ff009688</color>
+    <color name="accent_white">@color/green</color>
+
 </resources>

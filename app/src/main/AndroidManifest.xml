@@ -14,7 +14,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.SplashActivity"
+        <activity
+            android:name=".ui.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -28,14 +29,13 @@
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Default"></activity>
+            android:theme="@style/AppTheme.NoActionBar.Default" />
         <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.HomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Default">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar.Default" />
         <activity
             android:name=".ui.AboutActivity"
             android:parentActivityName=".ui.HomeActivity"
@@ -47,8 +47,7 @@
             android:launchMode="singleTop"
             android:parentActivityName=".ui.HomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Transparent">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar.Transparent" />
         <activity
             android:name=".ui.SearchActivity"
             android:launchMode="singleTop"

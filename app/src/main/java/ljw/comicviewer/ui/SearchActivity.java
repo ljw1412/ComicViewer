@@ -88,7 +88,7 @@ public class SearchActivity extends MyAppCompatActivity
         //初始化时，禁用上拉下拉界面
         RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Disable);
         //设置主题色
-        refreshLayout.setPrimaryColorsId(R.color.colorPrimary);
+        refreshLayout.setPrimaryColors(DisplayUtil.getAttrColor(context,R.attr.colorPrimary));
         //设置头部主题
         refreshHeader = new ClassicsHeader(context);//使用经典主题
         refreshLayout.setRefreshHeader(new ClassicsHeader(context));

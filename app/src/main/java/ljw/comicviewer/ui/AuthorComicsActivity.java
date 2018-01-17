@@ -31,6 +31,7 @@ import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.others.MyAppCompatActivity;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.SearchListAdapter;
+import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import retrofit2.Call;
 
@@ -88,7 +89,7 @@ public class AuthorComicsActivity extends MyAppCompatActivity
         //未加载时，禁用上拉下拉界面
         RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
         //设置主题色
-        refreshLayout.setPrimaryColorsId(R.color.colorPrimary);
+        refreshLayout.setPrimaryColors(DisplayUtil.getAttrColor(context,R.attr.colorPrimary));
         //设置头部主题
         RefreshHeader refreshHeader = new ClassicsHeader(context);//使用经典主题
         refreshLayout.setRefreshHeader(refreshHeader);

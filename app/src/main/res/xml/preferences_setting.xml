@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="setting_parent">
     <PreferenceCategory android:title="@string/setting_title_app">
         <Preference
             android:title="@string/setting_sub_title_source"
@@ -9,15 +10,6 @@
             android:title="@string/setting_sub_title_theme"
             android:summary="@string/setting_sub_summary_theme"
             android:key="setting_theme">
-            <Preference
-                android:title="@string/setting_sub_title_theme"
-                android:layout="@layout/layout_preferences_header">
-            </Preference>
-            <Preference
-                android:title="@string/setting_sub_title_theme"
-                android:summary="@string/setting_sub_summary_theme"
-                android:key="setting_theme">
-            </Preference>
         </PreferenceScreen>
         <SwitchPreference
             android:defaultValue="false"
