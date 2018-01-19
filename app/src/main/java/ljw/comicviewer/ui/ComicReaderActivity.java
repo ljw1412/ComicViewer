@@ -43,7 +43,6 @@ import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Chapter;
 import ljw.comicviewer.others.MyViewPager;
 import ljw.comicviewer.others.MyWebView;
-import ljw.comicviewer.store.AppStatusStore;
 import ljw.comicviewer.store.ComicReadStore;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.PicturePagerAdapter;

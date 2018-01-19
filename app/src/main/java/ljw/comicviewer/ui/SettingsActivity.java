@@ -3,22 +3,23 @@ package ljw.comicviewer.ui;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
-import ljw.comicviewer.others.MyAppCompatActivity;
 import ljw.comicviewer.ui.fragment.setting.SettingFragment;
-import ljw.comicviewer.ui.fragment.setting.ThemeFragment;
+import ljw.comicviewer.util.ThemeUtil;
 
-public class SettingsActivity extends MyAppCompatActivity{
+public class SettingsActivity extends BaseActivity {
     private String TAG = SettingsActivity.class.getSimpleName()+"----";
     private Context context;
     private Fragment currentFragment;
@@ -49,17 +50,17 @@ public class SettingsActivity extends MyAppCompatActivity{
         currentFragment = settingFragment;
     }
 
-    public void changePref(Fragment fragment){
-        fragmentManager.beginTransaction()
-                .hide(settingFragment).add(R.id.setting_content,fragment).commit();
-        currentFragment = fragment;
-    }
-
+    //切换二级设置页
     public void changePref(Fragment fragment,String subTitle){
         title.setText(subTitle);
         fragmentManager.beginTransaction()
                 .hide(settingFragment).add(R.id.setting_content,fragment).commit();
         currentFragment = fragment;
+    }
+
+    public void changeThemeColor(@ColorInt int color){
+        ThemeUtil.setThemeByColor(context,color);
+        setResult(Global.THEME_CHANGE,new Intent().putExtra("theme_change",true));
     }
 
     //按标题栏返回按钮

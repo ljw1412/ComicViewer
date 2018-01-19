@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="theme_name">
+        <item>热情红</item>
+        <item>知乎蓝</item>
+        <item>哔哩粉</item>
+    </string-array>
+    <integer-array name="theme_color">
+        <item>@color/accent_red</item>
+        <item>@color/accent_blue</item>
+        <item>@color/accent_pink</item>
+    </integer-array>
+</resources>

@@ -37,4 +37,7 @@
     <color name="accent_teal">#ff009688</color>
     <color name="accent_white">@color/green</color>
 
+    <color name="text_primary_color">#2d2d2d</color>
+    <color name="window_background">#eaeaea</color>
+
 </resources>

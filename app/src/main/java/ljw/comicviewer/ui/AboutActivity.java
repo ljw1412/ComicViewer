@@ -9,9 +9,8 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
-import ljw.comicviewer.others.MyAppCompatActivity;
 
-public class AboutActivity extends MyAppCompatActivity {
+public class AboutActivity extends BaseActivity {
     private String TAG = this.getClass().getSimpleName()+"----";
     private Context context;
     @BindView(R.id.nav_child_title)

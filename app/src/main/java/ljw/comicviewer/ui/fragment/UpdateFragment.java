@@ -2,8 +2,10 @@ package ljw.comicviewer.ui.fragment;
 
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,7 @@ import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
+import ljw.comicviewer.util.ThemeUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,11 +46,14 @@ public class UpdateFragment extends NewAddFragment {
         //禁用上拉下拉
         RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
         //设置主题色
-        refreshLayout.setPrimaryColors(DisplayUtil.getAttrColor(context,R.attr.colorPrimary));
+        refreshLayout.setPrimaryColors(ThemeUtil.getThemeColor(context));
         //下拉到底最后不自动加载，需要再拉一下
         refreshLayout.setEnableAutoLoadmore(false);
         //不在加载更多完成之后滚动内容显示新数据
         refreshLayout.setEnableScrollContentWhenLoaded(false);
+        //设置回顶按钮颜色
+        btn_toTop.setBackgroundTintList(ColorStateList.valueOf(ThemeUtil.getThemeColor(context)));
+
         initGridView();
         addListener();
     }

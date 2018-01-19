@@ -1,21 +1,16 @@
 package ljw.comicviewer.ui;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import ljw.comicviewer.R;
 import ljw.comicviewer.util.PreferenceUtil;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
     private int time = 2000;
     @BindView(R.id.splash_slogan)
     TextView slogan;

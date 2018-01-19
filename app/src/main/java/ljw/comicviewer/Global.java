@@ -16,6 +16,7 @@ public class Global {
     public static final String REQUEST_AUTHOR_COMICS = "REQUEST_AUTHOR_COMICS";//获得作者漫画
 
     public static final int REQUEST_COMIC_HISTORY = 100;//漫画历史记录标识
+    public static final int THEME_CHANGE = 101;//换肤标识
     public static final int CollectionToDetails = 10001;//从收藏到详细页的标识
     public static final int HomeToSetting = 10002;
     //参数

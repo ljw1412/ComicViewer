@@ -35,16 +35,16 @@ import ljw.comicviewer.bean.CallBackData;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
-import ljw.comicviewer.others.MyAppCompatActivity;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.SearchListAdapter;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.StringUtil;
+import ljw.comicviewer.util.ThemeUtil;
 import retrofit2.Call;
 
-public class SearchActivity extends MyAppCompatActivity
+public class SearchActivity extends BaseActivity
         implements ComicService.RequestCallback{
     private String TAG = this.getClass().getSimpleName()+"----";
     private Context context;
@@ -88,7 +88,7 @@ public class SearchActivity extends MyAppCompatActivity
         //初始化时，禁用上拉下拉界面
         RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Disable);
         //设置主题色
-        refreshLayout.setPrimaryColors(DisplayUtil.getAttrColor(context,R.attr.colorPrimary));
+        refreshLayout.setPrimaryColors(ThemeUtil.getThemeColor(context));
         //设置头部主题
         refreshHeader = new ClassicsHeader(context);//使用经典主题
         refreshLayout.setRefreshHeader(new ClassicsHeader(context));

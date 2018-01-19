@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -21,11 +19,10 @@ import butterknife.ButterKnife;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.History;
 import ljw.comicviewer.db.HistoryHolder;
-import ljw.comicviewer.others.MyAppCompatActivity;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.HistoryRecyclerViewAdapter;
 
-public class HistoryActivity extends MyAppCompatActivity {
+public class HistoryActivity extends BaseActivity {
     private String TAG = SettingsActivity.class.getSimpleName()+"----";
     private Context context;
     private HistoryRecyclerViewAdapter recyclerViewAdapter;

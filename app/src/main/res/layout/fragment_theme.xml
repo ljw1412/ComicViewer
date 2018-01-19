@@ -3,4 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/theme_content"></LinearLayout>
+    android:id="@+id/theme_content">
+
+    <Switch
+        android:text="Switch"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/theme_swich_navbar" />
+
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/theme_grid"
+        android:columnWidth="60dp"
+        android:numColumns="auto_fit"/>
+
+</LinearLayout>

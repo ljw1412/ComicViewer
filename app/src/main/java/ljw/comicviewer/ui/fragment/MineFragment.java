@@ -92,9 +92,13 @@ public class MineFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode){
             case Global.HomeToSetting:
+                if(data!=null && data.getBooleanExtra("theme_change",false)){
+                    Log.d(TAG, "onActivityResult: "+data.getBooleanExtra("theme_change",false));
+                    ((HomeActivity) context).changeTheme();
+                    ((HomeActivity) context).resetView();
+                }
                 if(!RuleStore.get().getComeFrom().equals(AppStatusStore.get().getCurrentSource())){
                     AppStatusStore.get().setSourceReplace(true);
                     AppStatusStore.get().setCurrentSource(RuleStore.get().getComeFrom());

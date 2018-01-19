@@ -1,39 +1,40 @@
 package ljw.comicviewer.ui;
 
+import android.app.ActivityManager;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.TypedValue;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bilibili.magicasakura.utils.ThemeUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
-import ljw.comicviewer.others.MyAppCompatActivity;
 import ljw.comicviewer.store.AppStatusStore;
+import ljw.comicviewer.ui.fragment.BaseFragment;
 import ljw.comicviewer.ui.fragment.CollectionFragment;
 import ljw.comicviewer.ui.fragment.HomeFragment;
 import ljw.comicviewer.ui.fragment.MineFragment;
-import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.PreferenceUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.StoreUtil;
 
-public class HomeActivity extends MyAppCompatActivity implements View.OnClickListener {
+public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private String TAG = this.getClass().getSimpleName()+"----";
     private Context context;
     private Fragment currentFragment;
@@ -67,6 +68,8 @@ public class HomeActivity extends MyAppCompatActivity implements View.OnClickLis
 //            getWindow().setStatusBarColor(DisplayUtil.getAttrColor(context,R.attr.colorPrimary));
 //        }
         setContentView(R.layout.activity_home);
+        //view绑定代码生成
+        ButterKnife.bind(this);
 
         //fragment事务管理
         fragmentManager = getSupportFragmentManager();
@@ -76,8 +79,6 @@ public class HomeActivity extends MyAppCompatActivity implements View.OnClickLis
         }
         setCurrentFragment(homeFragment);
 
-        //view绑定代码生成
-        ButterKnife.bind(this);
         //默认漫画标签
         img_comic.setSelected(true);
 
@@ -93,6 +94,46 @@ public class HomeActivity extends MyAppCompatActivity implements View.OnClickLis
             case 2:
                 StoreUtil.initRuleStore(context,R.raw.zymk);
                 break;
+        }
+    }
+
+    public void resetView(){
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        if(mineFragment != null){
+            ft.remove(mineFragment);
+            mineFragment = null;
+        }
+        if(homeFragment != null){
+            ft.remove(homeFragment);
+            homeFragment = null;
+        }
+        if(collectionFragment != null){
+            ft.remove(collectionFragment);
+            collectionFragment = null;
+        }
+        ft.commit();
+        if(mineFragment == null){
+            mineFragment = new MineFragment();
+        }
+        currentFragment = null;
+        setCurrentFragment(mineFragment);
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        changeTheme();
+    }
+
+    public void changeTheme(){
+        if (Build.VERSION.SDK_INT >= 21) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(ThemeUtils.getColorById(this, R.color.colorPrimary));
+            ActivityManager.TaskDescription description = new ActivityManager.TaskDescription(null, null,
+                    ThemeUtils.getThemeAttrColor(this, android.R.attr.colorPrimary));
+            setTaskDescription(description);
         }
     }
 
@@ -155,6 +196,9 @@ public class HomeActivity extends MyAppCompatActivity implements View.OnClickLis
         switch (view.getId()){
             case R.id.goto_comic:
                 setBtnSelected(img_comic);
+                if(homeFragment ==null){
+                    homeFragment = new HomeFragment();
+                }
                 setCurrentFragment(homeFragment);
                 break;
             case R.id.goto_collection:
