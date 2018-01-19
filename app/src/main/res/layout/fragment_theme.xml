@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/theme_content">
 
-    <Switch
-        android:text="Switch"
+    <android.support.v7.widget.SwitchCompat
+        android:text="@string/setting_sub_nav_no_auto"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:id="@+id/theme_swich_navbar" />
-
+        android:id="@+id/theme_swich_navbar"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black_pressed"></View>
     <GridView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/theme_grid"
         android:columnWidth="60dp"
         android:numColumns="auto_fit"/>
-
 </LinearLayout>

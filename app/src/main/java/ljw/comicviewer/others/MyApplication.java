@@ -9,7 +9,9 @@ import android.support.v4.content.ContextCompat;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
 
+import ljw.comicviewer.R;
 import ljw.comicviewer.store.AppStatusStore;
+import ljw.comicviewer.util.PreferenceUtil;
 import ljw.comicviewer.util.ThemeUtil;
 
 /**
@@ -26,11 +28,16 @@ public class MyApplication extends Application implements ThemeUtils.switchColor
 
     @Override
     public int replaceColorById(Context context, @ColorRes int colorId) {
-//        int color = ContextCompat.getColor(context,ThemeUtil.getThemeColorId(context));
         int color = ThemeUtil.getThemeColor(context);
         if(context instanceof Activity) {
             ((Activity) context).getWindow().setStatusBarColor(color);
-            ((Activity) context).getWindow().setNavigationBarColor(color);
+            //虚拟导航栏是否跟随变色
+            if(PreferenceUtil.getSharedPreferences(context).getBoolean("nav_bar_auto",false)){
+                ((Activity) context).getWindow().setNavigationBarColor(color);
+            }else{
+                ((Activity) context).getWindow().setNavigationBarColor(
+                        ContextCompat.getColor(context, R.color.black));
+            }
         }
         return color;
     }
@@ -40,7 +47,12 @@ public class MyApplication extends Application implements ThemeUtils.switchColor
         color = ThemeUtil.getThemeColor(context);
         if(context instanceof Activity) {
             ((Activity) context).getWindow().setStatusBarColor(color);
-            ((Activity) context).getWindow().setNavigationBarColor(color);
+            //虚拟导航栏是否跟随变色
+            if(PreferenceUtil.getSharedPreferences(context).getBoolean("nav_bar_auto",false)){
+                ((Activity) context).getWindow().setNavigationBarColor(color);
+            }else{
+                ((Activity) context).getWindow().setNavigationBarColor(ContextCompat.getColor(context, R.color.black));
+            }
         }
         return color;
     }

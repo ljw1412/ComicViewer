@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="40dp">
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-    <CheckBox
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/theme_color"
-        android:layout_centerVertical="true"
-        />
+        android:layout_gravity="center">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/theme_item_color" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:srcCompat="@drawable/img_checked"
+            android:id="@+id/theme_item_checked"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 
     <TextView
         android:text="colorName"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/theme_color_name"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:background="@drawable/selector_bg_null_to_black_pressed" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/black_pressed"
-        android:layout_below="@id/theme_color_name" />
-</RelativeLayout>
+        android:layout_height="wrap_content"
+        android:id="@+id/theme_item_color_name"
+        android:gravity="center" />
+</LinearLayout>

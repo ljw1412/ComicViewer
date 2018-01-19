@@ -2,12 +2,26 @@
 <resources>
     <string-array name="theme_name">
         <item>热情红</item>
-        <item>知乎蓝</item>
         <item>哔哩粉</item>
+        <item>伊藤橙</item>
+        <item>知乎蓝</item>
+        <item>酷安绿</item>
+        <item>水鸭绿</item>
+        <item>古铜棕</item>
+        <item>基佬紫</item>
+        <item>颐堤蓝</item>
+        <item>低调灰</item>
     </string-array>
     <integer-array name="theme_color">
         <item>@color/accent_red</item>
-        <item>@color/accent_blue</item>
         <item>@color/accent_pink</item>
+        <item>@color/accent_orange</item>
+        <item>@color/accent_blue</item>
+        <item>@color/accent_green</item>
+        <item>@color/accent_teal</item>
+        <item>@color/accent_brown</item>
+        <item>@color/accent_deep_purple</item>
+        <item>@color/accent_indigo</item>
+        <item>@color/accent_blue_grey</item>
     </integer-array>
 </resources>

@@ -31,9 +31,12 @@ public class ThemeUtil {
         List<Theme> themes = AppStatusStore.get().getThemes(context);
         if(themes.size()==0) return R.color.accent_red;
         int position = getThemePosition(context);
-        if(position>themes.size()){
-            position = 0;
+        if(position>themes.size()) position = 0;
+        //修改选择状态
+        for (Theme theme : themes){
+            theme.setChecked(false);
         }
+        themes.get(position).setChecked(true);
         return themes.get(position).getColor();
     }
 

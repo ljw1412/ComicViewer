@@ -7,6 +7,7 @@ package ljw.comicviewer.bean;
 public class Theme {
     private String name;
     private int color;
+    private boolean checked = false;
 
     public String getName() {
         return name;
@@ -22,5 +23,13 @@ public class Theme {
 
     public void setColor(int color) {
         this.color = color;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

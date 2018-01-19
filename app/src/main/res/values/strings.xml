@@ -58,9 +58,10 @@
     <string name="alert_search_loading_tips">正在搜索关键词\"%1$s\"</string>
     <string name="setting_title_app">应用设置</string>
     <string name="setting_sub_title_source">漫画源</string>
-    <string name="setting_sub_summary_source">你可以在这里切换漫画源</string>
+    <string name="setting_sub_summary_source">当前漫画源:%1$s</string>
     <string name="setting_sub_title_theme">主题风格</string>
     <string name="setting_sub_summary_theme">你可以在这里切换主题风格</string>
+    <string name="setting_sub_nav_no_auto">虚拟导航栏跟随变色</string>
     <string name="setting_sub_title_no_splash">缩短启动动画</string>
     <string name="setting_sub_summary_no_splash">快速进入主界面</string>
 </resources>

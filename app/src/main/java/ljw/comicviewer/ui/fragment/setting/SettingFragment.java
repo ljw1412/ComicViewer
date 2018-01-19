@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import ljw.comicviewer.R;
-import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.SettingsActivity;
 import ljw.comicviewer.util.PreferenceUtil;
 import ljw.comicviewer.util.StoreUtil;
@@ -29,16 +28,25 @@ public class SettingFragment extends PreferenceFragment {
         context = getActivity();
         getPreferenceManager().setSharedPreferencesName(PreferenceUtil.PreferenceName);
         addPreferencesFromResource(R.xml.preferences_setting);
+        initView();
         addListener();
     }
 
+    private void initView(){
+        int currentSelected = getPreferenceManager().getSharedPreferences().getInt("sourceId",0);
+        if(currentSelected>items.length) currentSelected = 0;
+        Preference preference_source = findPreference("setting_source");
+        preference_source.setSummary(
+                String.format(getString(R.string.setting_sub_summary_source),items[currentSelected]));
+    }
+
+    private String[] items = {"漫画柜","漫画台","知音漫客"};
     private void addListener(){
         Preference preference_source = findPreference("setting_source");
         preference_source.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
+            public boolean onPreferenceClick(final Preference preference) {
                 int currentSelected = PreferenceUtil.getSharedPreferences(context).getInt("sourceId",0);
-                String[] items = {"漫画柜","漫画台","知音漫客"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(R.string.setting_sub_title_source);
                 builder.setSingleChoiceItems(items,currentSelected,new DialogInterface.OnClickListener() {
@@ -55,6 +63,8 @@ public class SettingFragment extends PreferenceFragment {
                                 StoreUtil.initRuleStore(context,R.raw.zymk);
                                 break;
                         }
+                        preference.setSummary(
+                                String.format(getString(R.string.setting_sub_summary_source),items[i]));
                         PreferenceUtil.modify(context,"sourceId",i);
                         dialogInterface.dismiss();
                     }

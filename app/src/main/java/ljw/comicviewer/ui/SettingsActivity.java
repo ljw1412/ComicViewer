@@ -59,6 +59,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     public void changeThemeColor(@ColorInt int color){
+        //即使反馈，修改当前页面的主题
         ThemeUtil.setThemeByColor(context,color);
         setResult(Global.THEME_CHANGE,new Intent().putExtra("theme_change",true));
     }

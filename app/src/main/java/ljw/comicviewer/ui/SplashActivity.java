@@ -10,7 +10,7 @@ import butterknife.BindView;
 import ljw.comicviewer.R;
 import ljw.comicviewer.util.PreferenceUtil;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends AppCompatActivity {
     private int time = 2000;
     @BindView(R.id.splash_slogan)
     TextView slogan;
