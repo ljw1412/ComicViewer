@@ -5,7 +5,7 @@
     android:id="@+id/layout_navibar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/toolbar_height"
-    android:background="?colorPrimary"
+    android:background="@color/theme_color_primary"
     android:elevation="5dp">
 
     <TextView
@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/nav_search_view"
-        android:background="?colorPrimary"
+        android:background="@color/theme_color_primary"
         android:visibility="gone">
         <EditText
             android:layout_width="match_parent"

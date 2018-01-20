@@ -1,7 +1,6 @@
 package ljw.comicviewer.ui.fragment;
 
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -43,6 +41,7 @@ import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.HomeActivity;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
+import ljw.comicviewer.util.DialogUtil;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.ThemeUtil;
@@ -225,11 +224,9 @@ public class CollectionFragment extends BaseFragment
     private void showItemDialog(final Comic comic){
         if (comic==null) return;
         String[] items = {"查看详情","删除收藏"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(comic.getName());
-        builder.setItems(items, new DialogInterface.OnClickListener() {
+        DialogUtil.OnClickListener onClickListener = new DialogUtil.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(DialogInterface dialog, int i) {
                 switch (i){
                     case 0:
                         //查看详情
@@ -242,9 +239,11 @@ public class CollectionFragment extends BaseFragment
                         initLoad();
                         break;
                 }
+                dialog.dismiss();
             }
-        });
-        builder.show();
+        };
+        DialogUtil.buildThemeDialog(context,comic.getName(),items,onClickListener).show();
+
     }
 
 

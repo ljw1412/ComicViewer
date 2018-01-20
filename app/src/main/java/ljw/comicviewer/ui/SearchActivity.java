@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -44,6 +43,9 @@ import ljw.comicviewer.util.StringUtil;
 import ljw.comicviewer.util.ThemeUtil;
 import retrofit2.Call;
 
+/**
+ * 搜索页
+ */
 public class SearchActivity extends BaseActivity
         implements ComicService.RequestCallback{
     private String TAG = this.getClass().getSimpleName()+"----";

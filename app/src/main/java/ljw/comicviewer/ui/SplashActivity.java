@@ -10,6 +10,9 @@ import butterknife.BindView;
 import ljw.comicviewer.R;
 import ljw.comicviewer.util.PreferenceUtil;
 
+/**
+ * 启动页
+ */
 public class SplashActivity extends AppCompatActivity {
     private int time = 2000;
     @BindView(R.id.splash_slogan)

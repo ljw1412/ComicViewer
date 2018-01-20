@@ -8,7 +8,7 @@ import ljw.comicviewer.store.AppStatusStore;
 import ljw.comicviewer.store.RuleStore;
 
 /**
- * Created by ljw on 2017-12-03 003.
+ * 数据存储工具类
  */
 
 public class StoreUtil {

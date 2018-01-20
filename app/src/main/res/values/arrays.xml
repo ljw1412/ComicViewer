@@ -5,23 +5,41 @@
         <item>哔哩粉</item>
         <item>伊藤橙</item>
         <item>知乎蓝</item>
+        <item>靛青蓝</item>
         <item>酷安绿</item>
         <item>水鸭绿</item>
         <item>古铜棕</item>
         <item>基佬紫</item>
         <item>颐堤蓝</item>
         <item>低调灰</item>
+        <item>夜间模式</item>
     </string-array>
     <integer-array name="theme_color">
-        <item>@color/accent_red</item>
-        <item>@color/accent_pink</item>
-        <item>@color/accent_orange</item>
-        <item>@color/accent_blue</item>
-        <item>@color/accent_green</item>
-        <item>@color/accent_teal</item>
-        <item>@color/accent_brown</item>
-        <item>@color/accent_deep_purple</item>
-        <item>@color/accent_indigo</item>
-        <item>@color/accent_blue_grey</item>
+        <item>@color/theme_red</item>
+        <item>@color/theme_pink</item>
+        <item>@color/theme_orange</item>
+        <item>@color/theme_blue</item>
+        <item>@color/theme_cyan</item>
+        <item>@color/theme_green</item>
+        <item>@color/theme_teal</item>
+        <item>@color/theme_brown</item>
+        <item>@color/theme_deep_purple</item>
+        <item>@color/theme_indigo</item>
+        <item>@color/theme_blue_grey</item>
+        <item>@color/theme_night</item>
     </integer-array>
+    <string-array name="theme_prefix">
+        <item>theme_red</item>
+        <item>theme_pink</item>
+        <item>theme_orange</item>
+        <item>theme_blue</item>
+        <item>theme_cyan</item>
+        <item>theme_green</item>
+        <item>theme_teal</item>
+        <item>theme_brown</item>
+        <item>theme_deep_purple</item>
+        <item>theme_indigo</item>
+        <item>theme_blue_grey</item>
+        <item>theme_night</item>
+    </string-array>
 </resources>

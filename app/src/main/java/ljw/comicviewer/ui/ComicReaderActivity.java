@@ -53,6 +53,9 @@ import ljw.comicviewer.util.WebViewUtil;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
+/**
+ * 阅读界面
+ */
 public class ComicReaderActivity extends AppCompatActivity {
     private String TAG = getClass().getSimpleName()+"----";
     private Context context;

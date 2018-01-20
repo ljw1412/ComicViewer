@@ -9,7 +9,7 @@ import java.io.InputStream;
 import ljw.comicviewer.R;
 
 /**
- * Created by ljw on 2017-09-06 006.
+ * 文件工具类
  */
 
 public class FileUtil {

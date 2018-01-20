@@ -6,13 +6,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="circular_blue">#315eff</color>
     <color name="blue_A1E0F4">#ffA1E0F4</color>
-    <color name="black_shadow">#75000000</color>
-    <color name="white_60">#a0ffffff</color>
-    <color name="white">#ffffffff</color>
-    <color name="black">#000000</color>
-    <color name="black_b2">#b2000000</color>
-    <color name="black_60">#606060</color>
-    <color name="black_pressed">#33333333</color>
     <color name="star_yellow">#FF9A23</color>
     <color name="warning_yellow">#F9F400</color>
     <color name="smmcl_green">#99cc33</color>
@@ -20,24 +13,124 @@
     <color name="purple">#cc55f6</color>
     <color name="transparent">#00000000</color>
 
-    <color name="accent_blue">#2196f3</color>
-    <color name="accent_blue_grey">#ff607d8b</color>
-    <color name="accent_brown">#ff795548</color>
-    <color name="accent_cyan">#ff00bcd4</color>
-    <color name="accent_dark_s">#ff757575</color>
-    <color name="accent_deep_purple">#ff673ab7</color>
-    <color name="accent_green">#ff4caf50</color>
-    <color name="accent_indigo">#ff3f51b5</color>
+    <color name="black">#000000</color>
+    <color name="black_light">#333333</color>
+    <color name="black_b2">#b2000000</color>
+    <color name="black_60">#606060</color>
+    <color name="black_shadow">#75000000</color>
+    <color name="black_pressed">#33333333</color>
+
+    <color name="theme_color_primary">#fff44336</color>
+    <color name="theme_color_primary_dark">#C62828</color>
+    <color name="theme_color_primary_trans">#99F44336</color>
+    <color name="theme_color_secondary">#fff44336</color>
+
+    <color name="white">#ffffff</color>
+    <color name="white_60">#a0ffffff</color>
+    <color name="white_trans">#99ffffff</color>
+
+
+    <color name="gray">#bbbbbb</color>
+    <color name="gray_dark">#999999</color>
+    <color name="gray_trans">#44999999</color>
+    <color name="gray_light">#dcdcdc</color>
+
+
+    <color name="theme_red">#fff44336</color>
+    <color name="theme_red_dark">#C62828</color>
+    <color name="theme_red_trans">#99F44336</color>
+
+    <color name="theme_pink">#fffb7299</color>
+    <color name="theme_pink_dark">#b85671</color>
+    <color name="theme_pink_trans">#99f0486c</color>
+
+    <color name="theme_orange">#ffff9800</color>
+    <color name="theme_orange_dark">#EF6C00</color>
+    <color name="theme_orange_trans">#99FF9800</color>
+
+    <color name="theme_blue">#2196f3</color>
+    <color name="theme_blue_dark">#1565C0</color>
+    <color name="theme_blue_trans">#992196f3</color>
+
+    <color name="theme_cyan">#ff00bcd4</color>
+    <color name="theme_cyan_dark">#007d8c</color>
+    <color name="theme_cyan_trans">#9900bcd4</color>
+
+    <color name="theme_green">#ff4caf50</color>
+    <color name="theme_green_dark">#2E7D32</color>
+    <color name="theme_green_trans">#994CAF50</color>
+
+    <color name="theme_teal">#ff009688</color>
+    <color name="theme_teal_dark">#00695f</color>
+    <color name="theme_teal_trans">#99009688</color>
+
+    <color name="theme_brown">#ff795548</color>
+    <color name="theme_brown_dark">#644033</color>
+    <color name="theme_brown_trans">#99795548</color>
+
+    <color name="theme_deep_purple">#ff673ab7</color>
+    <color name="theme_deep_purple_dark">#5326a3</color>
+    <color name="theme_deep_purple_trans">#99673ab7</color>
+
+    <color name="theme_indigo">#ff3f51b5</color>
+    <color name="theme_indigo_dark">#2b3da1</color>
+    <color name="theme_indigo_trans">#993f51b5</color>
+
+    <color name="theme_blue_grey">#ff607d8b</color>
+    <color name="theme_blue_grey_dark">#3f525b</color>
+    <color name="theme_blue_grey_trans">#99607d8b</color>
+
+    <color name="theme_night">#ff000000</color>
+    <color name="theme_night_dark">#ff000000</color>
+    <color name="theme_night_trans">#99000000</color>
+
+
+
+
     <color name="accent_material_dark">@color/material_deep_teal_200</color>
     <color name="accent_material_light">@color/material_deep_teal_500</color>
-    <color name="accent_orange">#ffff9800</color>
-    <color name="accent_pink">#fffb7299</color>
-    <color name="accent_purple">#ff9c27b0</color>
-    <color name="accent_red">#ffdb4437</color>
-    <color name="accent_teal">#ff009688</color>
-    <color name="accent_white">@color/green</color>
+
 
     <color name="text_primary_color">#2d2d2d</color>
     <color name="window_background">#eaeaea</color>
+    <color name="window_night_background">#ff757575</color>
 
+
+
+
+
+
+    <!-- theme color -->
+    <!--
+    <color name="pink">#fb7299</color>
+    <color name="pink_dark">#b85671</color>
+    <color name="pink_trans">#99f0486c</color>
+
+    <color name="blue">#2196F3</color>
+    <color name="blue_dark">#1565C0</color>
+    <color name="blue_trans">#B41A78C3</color>
+
+    <color name="purple">#673AB7</color>
+    <color name="purple_dark">#311B92</color>
+    <color name="purple_trans">#99673AB7</color>
+
+    <color name="green">#4CAF50</color>
+    <color name="green_dark">#2E7D32</color>
+    <color name="green_trans">#994CAF50</color>
+
+    <color name="green_light">#8BC34A</color>
+    <color name="green_light_dark">#558B2F</color>
+    <color name="green_light_trans">#998BC34A</color>
+
+    <color name="yellow">#FDD835</color>
+    <color name="yellow_dark">#FBC02D</color>
+    <color name="yellow_trans">#99FDD835</color>
+
+    <color name="orange">#FF9800</color>
+    <color name="orange_dark">#EF6C00</color>
+    <color name="orange_trans">#99FF9800</color>
+
+    <color name="red">#F44336</color>
+    <color name="red_dark">#C62828</color>
+    <color name="red_trans">#99F44336</color>-->
 </resources>

@@ -14,8 +14,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Theme;
-import ljw.comicviewer.store.AppStatusStore;
-import ljw.comicviewer.ui.fragment.setting.ThemeFragment;
 
 /**
  * Created by ljw on 2018-01-19 019.
@@ -61,6 +59,8 @@ public class ThemeGridAdapter extends BaseAdapter {
         themeItemHolder.checked.setVisibility(themes.get(position).isChecked()?View.VISIBLE:View.GONE);
         return view;
     }
+
+
     class ThemeItemHolder{
         @BindView(R.id.theme_item_color)
         ImageView color;

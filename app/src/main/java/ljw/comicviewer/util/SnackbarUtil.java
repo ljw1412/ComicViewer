@@ -10,7 +10,7 @@ import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 
 /**
- * Created by ljw on 2017-11-25 025.
+ * SnackBar工具类
  */
 
 public class SnackbarUtil {

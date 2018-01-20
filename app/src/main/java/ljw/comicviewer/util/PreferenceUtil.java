@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import java.util.Set;
 
 /**
- * Created by ljw on 2018-01-17 017.
+ * 首选项工具类
  */
 
 public class PreferenceUtil {

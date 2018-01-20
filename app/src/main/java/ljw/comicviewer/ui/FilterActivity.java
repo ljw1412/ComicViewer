@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -44,13 +43,15 @@ import ljw.comicviewer.store.FilterStore;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.FilterAdapter;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
-import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.StringUtil;
 import ljw.comicviewer.util.ThemeUtil;
 import retrofit2.Call;
 
+/**
+ * 分类界面
+ */
 public class FilterActivity extends BaseActivity
         implements ComicService.RequestCallback {
     private String TAG = this.getClass().getSimpleName()+"----";
@@ -161,7 +162,7 @@ public class FilterActivity extends BaseActivity
                     @Override
                     public void onReceiveValue(String s) {
                         if(s!=null){
-                            s = DisplayUtil.unicodeDecode(s).replace("\\\"", "\"");
+                            s = StringUtil.unicodeDecode(s).replace("\\\"", "\"");
                             Log.d(TAG, "onReceiveValue: "+s);
                             LoadDataTask loadDataTask = new LoadDataTask(Global.REQUEST_COMIC_FILTER,s);
                             loadDataTask.execute();

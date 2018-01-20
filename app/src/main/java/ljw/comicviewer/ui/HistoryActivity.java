@@ -2,7 +2,6 @@ package ljw.comicviewer.ui;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
@@ -22,6 +21,9 @@ import ljw.comicviewer.db.HistoryHolder;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.HistoryRecyclerViewAdapter;
 
+/**
+ * 历史记录界面
+ */
 public class HistoryActivity extends BaseActivity {
     private String TAG = SettingsActivity.class.getSimpleName()+"----";
     private Context context;

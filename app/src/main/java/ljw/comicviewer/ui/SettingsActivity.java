@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,6 +17,9 @@ import ljw.comicviewer.R;
 import ljw.comicviewer.ui.fragment.setting.SettingFragment;
 import ljw.comicviewer.util.ThemeUtil;
 
+/**
+ * 设置页
+ */
 public class SettingsActivity extends BaseActivity {
     private String TAG = SettingsActivity.class.getSimpleName()+"----";
     private Context context;

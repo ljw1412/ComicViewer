@@ -2,6 +2,9 @@ package ljw.comicviewer.util;
 
 import android.content.Context;
 
+/**
+ * 区域点击帮助类
+ */
 public class AreaClickHelper {
     private int xOffset, yOffset;
     private OnAreaClickListener onAreaClickListener;

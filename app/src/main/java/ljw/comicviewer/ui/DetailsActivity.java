@@ -49,16 +49,20 @@ import ljw.comicviewer.db.CollectionHolder;
 import ljw.comicviewer.db.HistoryHolder;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
-import ljw.comicviewer.others.BottomDialog;
+import ljw.comicviewer.ui.dialog.BottomDialog;
 import ljw.comicviewer.others.MyWebView;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.fragment.ChaptersFragment;
 import ljw.comicviewer.util.DialogUtil;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.SnackbarUtil;
+import ljw.comicviewer.util.StringUtil;
 import ljw.comicviewer.util.WebViewUtil;
 import retrofit2.Call;
 
+/**
+ * 漫画详细页
+ */
 public class DetailsActivity extends AppCompatActivity
         implements SwipeRefreshLayout.OnRefreshListener, ComicService.RequestCallback {
     private String TAG = this.getClass().getSimpleName()+"----";
@@ -324,7 +328,7 @@ public class DetailsActivity extends AppCompatActivity
                                     getChapters();
                                 }
                             } else {
-                                s = DisplayUtil.unicodeDecode(s).replace("\\\"", "\"");
+                                s = StringUtil.unicodeDecode(s).replace("\\\"", "\"");
                                 Log.d(TAG, "onReceiveValue: " + s);
                                 details_container.setRefreshing(false);
                                 new ChaptersDistributeTask(s).execute();
@@ -623,7 +627,7 @@ public class DetailsActivity extends AppCompatActivity
                 collectionHolder.addOrUpdateCollection(comic);
             }
             if (comic.isBan()){
-                final BottomDialog bottomDialog = DialogUtil.showBottomDialog(context);
+                final BottomDialog bottomDialog = DialogUtil.bulidBottomDialog(context);
                 bottomDialog.setClickOK(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

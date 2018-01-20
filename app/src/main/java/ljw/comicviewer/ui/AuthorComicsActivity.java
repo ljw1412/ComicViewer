@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,11 +29,13 @@ import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.SearchListAdapter;
-import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.ThemeUtil;
 import retrofit2.Call;
 
+/**
+ * 作者相关界面
+ */
 public class AuthorComicsActivity extends BaseActivity
         implements ComicService.RequestCallback{
     private String TAG = this.getClass().getSimpleName()+"----";

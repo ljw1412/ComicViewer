@@ -10,6 +10,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
 
+/**
+ * 关于界面
+ */
 public class AboutActivity extends BaseActivity {
     private String TAG = this.getClass().getSimpleName()+"----";
     private Context context;

@@ -1,7 +1,7 @@
 package ljw.comicviewer;
 
 /**
- * Created by ljw on 2017-08-31 031.
+ * 全局常量
  */
 
 public class Global {

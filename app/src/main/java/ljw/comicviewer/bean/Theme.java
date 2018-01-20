@@ -7,6 +7,7 @@ package ljw.comicviewer.bean;
 public class Theme {
     private String name;
     private int color;
+    private String prefix;
     private boolean checked = false;
 
     public String getName() {
@@ -23,6 +24,14 @@ public class Theme {
 
     public void setColor(int color) {
         this.color = color;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
     }
 
     public boolean isChecked() {

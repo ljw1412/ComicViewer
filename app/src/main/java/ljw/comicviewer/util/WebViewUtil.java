@@ -6,7 +6,7 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 /**
- * Created by ljw on 2017-09-06 006.
+ * WebView工具类
  */
 
 public class WebViewUtil {

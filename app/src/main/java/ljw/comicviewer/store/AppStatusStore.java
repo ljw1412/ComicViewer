@@ -8,6 +8,7 @@ import java.util.List;
 
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Theme;
+import ljw.comicviewer.util.ThemeUtil;
 
 /**
  * Created by ljw on 2017-12-27 027.
@@ -59,11 +60,15 @@ public class AppStatusStore {
         Resources resources = context.getResources();
         String[] colorsName = resources.getStringArray(R.array.theme_name);
         int[] colors = resources.getIntArray(R.array.theme_color);
+        String[] prefixs = resources.getStringArray(R.array.theme_prefix);
         int length = colorsName.length < colors.length ? colorsName.length : colors.length;
+        int position = ThemeUtil.getTheme(context);
         for(int i = 0 ;i<length;i++){
             Theme theme = new Theme();
             theme.setName(colorsName[i]);
             theme.setColor(colors[i]);
+            theme.setPrefix(prefixs[i]);
+            theme.setChecked(i == position);
             themes.add(theme);
         }
     }

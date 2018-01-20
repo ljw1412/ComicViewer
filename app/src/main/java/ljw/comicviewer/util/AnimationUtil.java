@@ -6,7 +6,7 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 
 /**
- * Created by ljw on 2017-09-17 017.
+ * 动画工具类
  */
 
 public class AnimationUtil {

@@ -4,7 +4,7 @@
     android:id="@+id/layout_navibar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/toolbar_height"
-    android:background="?colorPrimary"
+    android:background="@color/theme_color_primary"
     android:elevation="5dp">
 
     <TextView

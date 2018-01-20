@@ -1,4 +1,4 @@
-package ljw.comicviewer.others;
+package ljw.comicviewer.ui.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -15,7 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
 /**
- * Created by ljw on 2017-09-04 004.
+ * 底部弹窗.
  */
 
 public class BottomDialog extends Dialog{
@@ -58,8 +58,6 @@ public class BottomDialog extends Dialog{
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.y=0;
         window.setAttributes(lp);
-
-
     }
 
     @Override

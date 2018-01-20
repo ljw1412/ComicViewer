@@ -3,7 +3,7 @@ package ljw.comicviewer.util;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 /**
- * Created by ljw on 2017-12-05 005.
+ * 刷新界面工具类
  */
 
 public class RefreshLayoutUtil {

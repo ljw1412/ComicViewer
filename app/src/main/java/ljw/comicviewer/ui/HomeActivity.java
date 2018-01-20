@@ -1,19 +1,13 @@
 package ljw.comicviewer.ui;
 
-import android.app.ActivityManager;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,14 +20,17 @@ import butterknife.OnClick;
 import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 import ljw.comicviewer.store.AppStatusStore;
-import ljw.comicviewer.ui.fragment.BaseFragment;
 import ljw.comicviewer.ui.fragment.CollectionFragment;
 import ljw.comicviewer.ui.fragment.HomeFragment;
 import ljw.comicviewer.ui.fragment.MineFragment;
 import ljw.comicviewer.util.PreferenceUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.StoreUtil;
+import ljw.comicviewer.util.ThemeUtil;
 
+/**
+ * 主界面
+ */
 public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private String TAG = this.getClass().getSimpleName()+"----";
     private Context context;
@@ -119,22 +116,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         setCurrentFragment(mineFragment);
     }
 
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        changeTheme();
-    }
-
     public void changeTheme(){
-        if (Build.VERSION.SDK_INT >= 21) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(ThemeUtils.getColorById(this, R.color.colorPrimary));
-            ActivityManager.TaskDescription description = new ActivityManager.TaskDescription(null, null,
-                    ThemeUtils.getThemeAttrColor(this, android.R.attr.colorPrimary));
-            setTaskDescription(description);
-        }
+        ThemeUtil.updateTheme(this,
+                ThemeUtils.getColorById(this, R.color.theme_color_primary));
     }
 
 
