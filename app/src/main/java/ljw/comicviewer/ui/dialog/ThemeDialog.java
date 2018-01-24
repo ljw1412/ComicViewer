@@ -3,6 +3,7 @@ package ljw.comicviewer.ui.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.ArrayRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
@@ -12,8 +13,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +43,8 @@ public class ThemeDialog {
     public OnButtonClickListener mNegativeButtonListener;
     public CharSequence mNeutralButtonText;
     public OnButtonClickListener mNeutralButtonListener;
+    private int mCheckedItem;
+    private boolean mIsSingleChoice;
     private View mView;
     @BindView(R.id.dialog_title)
     TextView vTitle;
@@ -142,6 +150,39 @@ public class ThemeDialog {
         return this;
     }
 
+    public ThemeDialog setSingleChoiceItems(@ArrayRes int itemsId, int checkedItem, final OnClickListener listener) {
+        mItems = context.getResources().getTextArray(itemsId);
+        mItemClickListener = listener;
+        mCheckedItem = checkedItem;
+        mIsSingleChoice = true;
+        return this;
+    }
+
+    public ThemeDialog setSingleChoiceItems(CharSequence[] items, int checkedItem, final OnClickListener listener) {
+        mItems = items;
+        mItemClickListener = listener;
+        mCheckedItem = checkedItem;
+        mIsSingleChoice = true;
+        return this;
+    }
+
+    @BindView(R.id.dialog_radio_group_linear)
+    LinearLayout radioGroupLinear;
+    public ThemeDialog addRadio(CharSequence text, final int i, final OnClickListener listener){
+        View view = LayoutInflater.from(context).inflate(R.layout.item_radio,null);
+        RadioButton radioButton = (RadioButton) view.findViewById(R.id.item_radio);
+        radioButton.setText(text);
+        radioButton.setChecked(i == mCheckedItem);
+        radioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onClick(mAlert,i);
+            }
+        });
+        radioGroupLinear.addView(view);
+        return this;
+    }
+
     private int buttonCount = 3;
     public void setButton(Button button, CharSequence text, final OnButtonClickListener listener){
         if (text != null) {
@@ -164,14 +205,30 @@ public class ThemeDialog {
         vList.setVisibility(mItems ==null || mItems.length <= 0 ? View.GONE : View.VISIBLE);
         vTitle.setVisibility(mTitle == null ? View.GONE : View.VISIBLE);
         mAlert = mBuilder.create();
-        if (mItems !=null && mItems.length > 0 && mItemClickListener !=null){
-            vList.setAdapter(new DialogListAdapter(context,mItems));
-            vList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    mItemClickListener.onClick(mAlert,i);
+        if(mItems !=null && mItems.length > 0 && mItemClickListener !=null) {
+            if (!mIsSingleChoice) {
+                vList.setAdapter(new DialogListAdapter(context, mItems));
+                vList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        mItemClickListener.onClick(mAlert, i);
+                    }
+                });
+            }else{
+//                final DialogSingleChoiceAdapter dialogSingleChoiceAdapter = new DialogSingleChoiceAdapter(context,mItems);
+//                vList.setAdapter(dialogSingleChoiceAdapter);
+//                vList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                        mItemClickListener.onClick(mAlert, i);
+//                        dialogSingleChoiceAdapter.changeChecked(i);
+//                        dialogSingleChoiceAdapter.notifyDataSetChanged();
+//                    }
+//                });
+                for (int i = 0 ; i < mItems.length ; i++){
+                    addRadio(mItems[i],i,mItemClickListener);
                 }
-            });
+            }
         }
         setButton(vButton1,mPositiveButtonText,mPositiveButtonListener);
         setButton(vButton2,mNegativeButtonText,mNegativeButtonListener);
@@ -181,7 +238,6 @@ public class ThemeDialog {
         }
         return mAlert;
     }
-
 
     public void show(){
         create();
@@ -228,6 +284,47 @@ public class ThemeDialog {
             textView.setPadding(0,30,0,30);
             return textView;
         }
+    }
 
+    class DialogSingleChoiceAdapter extends BaseAdapter{
+        private Context context;
+        private CharSequence[] items;
+        private List<RadioButton> radioButtons= new ArrayList<>();
+
+        public DialogSingleChoiceAdapter(Context context, CharSequence[] items) {
+            this.context = context;
+            this.items = items;
+        }
+
+        @Override
+        public int getCount() {
+            return items.length;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return items[i];
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(final int i, View view, ViewGroup viewGroup) {
+            view = LayoutInflater.from(context).inflate(R.layout.item_radio,null);
+            ((RadioButton) view).setText(items[i]);
+            ((RadioButton) view).setChecked(i==mCheckedItem);
+            radioButtons.add((RadioButton) view);
+            return view;
+        }
+
+        public void changeChecked(int position){
+            for(int i=0;i<radioButtons.size();i++){
+                radioButtons.get(i).setChecked(false);
+            }
+            radioButtons.get(position).setChecked(true);
+        }
     }
 }

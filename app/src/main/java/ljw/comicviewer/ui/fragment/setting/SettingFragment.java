@@ -1,6 +1,5 @@
 package ljw.comicviewer.ui.fragment.setting;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.util.Log;
 
 import ljw.comicviewer.R;
 import ljw.comicviewer.ui.SettingsActivity;
+import ljw.comicviewer.ui.dialog.ThemeDialog;
 import ljw.comicviewer.util.PreferenceUtil;
 import ljw.comicviewer.util.StoreUtil;
 
@@ -47,29 +47,57 @@ public class SettingFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceClick(final Preference preference) {
                 int currentSelected = PreferenceUtil.getSharedPreferences(context).getInt("sourceId",0);
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle(R.string.setting_sub_title_source);
-                builder.setSingleChoiceItems(items,currentSelected,new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        switch (i){
-                            case 0:
-                                StoreUtil.initRuleStore(context,R.raw.manhuagui);
-                                break;
-                            case 1:
-                                StoreUtil.initRuleStore(context,R.raw.manhuatai);
-                                break;
-                            case 2:
-                                StoreUtil.initRuleStore(context,R.raw.zymk);
-                                break;
-                        }
-                        preference.setSummary(
-                                String.format(getString(R.string.setting_sub_summary_source),items[i]));
-                        PreferenceUtil.modify(context,"sourceId",i);
-                        dialogInterface.dismiss();
-                    }
-                }).setNegativeButton("取消", null);
-                builder.show();
+                ThemeDialog themeDialog = new ThemeDialog(context);
+                themeDialog.setTitle(R.string.setting_sub_title_source)
+                        .setSingleChoiceItems(items, currentSelected, new ThemeDialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int i) {
+                                switch (i){
+                                    case 0:
+                                        StoreUtil.initRuleStore(context,R.raw.manhuagui);
+                                        break;
+                                    case 1:
+                                        StoreUtil.initRuleStore(context,R.raw.manhuatai);
+                                        break;
+                                    case 2:
+                                        StoreUtil.initRuleStore(context,R.raw.zymk);
+                                        break;
+                                }
+                                preference.setSummary(
+                                        String.format(getString(R.string.setting_sub_summary_source),items[i]));
+                                PreferenceUtil.modify(context,"sourceId",i);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton("取消", new ThemeDialog.OnButtonClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+//                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//                builder.setTitle(R.string.setting_sub_title_source);
+//                builder.setSingleChoiceItems(items,currentSelected,new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        switch (i){
+//                            case 0:
+//                                StoreUtil.initRuleStore(context,R.raw.manhuagui);
+//                                break;
+//                            case 1:
+//                                StoreUtil.initRuleStore(context,R.raw.manhuatai);
+//                                break;
+//                            case 2:
+//                                StoreUtil.initRuleStore(context,R.raw.zymk);
+//                                break;
+//                        }
+//                        preference.setSummary(
+//                                String.format(getString(R.string.setting_sub_summary_source),items[i]));
+//                        PreferenceUtil.modify(context,"sourceId",i);
+//                        dialogInterface.dismiss();
+//                    }
+//                }).setNegativeButton("取消", null);
+//                builder.show();
                 return true;
             }
         });
