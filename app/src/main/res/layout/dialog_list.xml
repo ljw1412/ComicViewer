@@ -12,8 +12,88 @@
         android:background="@color/theme_color_primary"
         android:textSize="18sp" />
 
+    <LinearLayout android:id="@+id/dialog_contentPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ScrollView android:id="@+id/dialog_scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dip"
+            android:paddingBottom="2dip"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:overScrollMode="ifContentScrolls">
+            <TextView
+                android:id="@+id/dialog_message"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dip"
+                android:textStyle="bold" />
+        </ScrollView>
+    </LinearLayout>
+
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/dialog_list" />
+
+    <LinearLayout android:id="@+id/dialog_buttonPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:measureWithLargestChild="true"
+            android:gravity="center">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3">
+
+                <com.bilibili.magicasakura.widgets.TintButton
+                    android:id="@+id/dialog_button3"
+                    android:layout_width="wrap_content"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:maxLines="2"
+                    android:textColor="@color/theme_color_primary"
+                    android:layout_height="wrap_content"
+                    android:minHeight="0dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2">
+
+                <com.bilibili.magicasakura.widgets.TintButton
+                    android:id="@+id/dialog_button2"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/theme_color_primary"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:maxLines="2"
+                    android:layout_height="wrap_content"
+                    android:minHeight="0dp"
+                    android:layout_alignParentRight="false"
+                    android:layout_toLeftOf="@+id/dialog_button1" />
+
+                <com.bilibili.magicasakura.widgets.TintButton
+                    android:id="@+id/dialog_button1"
+                    android:layout_width="wrap_content"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:maxLines="2"
+                    android:textColor="@color/theme_color_primary"
+                    android:layout_height="wrap_content"
+                    android:minHeight="0dp"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

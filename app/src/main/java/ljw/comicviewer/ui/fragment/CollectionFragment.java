@@ -41,7 +41,7 @@ import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.HomeActivity;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
-import ljw.comicviewer.util.DialogUtil;
+import ljw.comicviewer.ui.dialog.ThemeDialog;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.ThemeUtil;
@@ -224,26 +224,27 @@ public class CollectionFragment extends BaseFragment
     private void showItemDialog(final Comic comic){
         if (comic==null) return;
         String[] items = {"查看详情","删除收藏"};
-        DialogUtil.OnClickListener onClickListener = new DialogUtil.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                switch (i){
-                    case 0:
-                        //查看详情
-                        goToDetails(comic);
-                        break;
-                    case 1:
-                        //删除收藏
-                        CollectionHolder collectionHolder = new CollectionHolder(context);
-                        collectionHolder.deleteComic(comic.getComicId());
-                        initLoad();
-                        break;
-                }
-                dialog.dismiss();
-            }
-        };
-        DialogUtil.buildThemeDialog(context,comic.getName(),items,onClickListener).show();
-
+        ThemeDialog themeDialog = new ThemeDialog(context);
+        themeDialog.setTitle(comic.getName())
+                .setItems(items,new ThemeDialog.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        switch (i){
+                            case 0:
+                                //查看详情
+                                goToDetails(comic);
+                                break;
+                            case 1:
+                                //删除收藏
+                                CollectionHolder collectionHolder = new CollectionHolder(context);
+                                collectionHolder.deleteComic(comic.getComicId());
+                                initLoad();
+                                break;
+                        }
+                        dialog.dismiss();
+                    }
+        });
+        themeDialog.show();
     }
 
 

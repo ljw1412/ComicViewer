@@ -1,14 +1,12 @@
 package ljw.comicviewer.ui.adapter;
 
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,7 +133,7 @@ public class PicturePagerAdapter extends PagerAdapter {
         @BindView(R.id.iv_picture)
         public PhotoView ivPicture;
         @BindView(R.id.progress_bar)
-        public ProgressBarCircularIndeterminate progressBar;
+        public ProgressBar progressBar;
         @BindView(R.id.btn_refresh)
         public ImageView btnRefresh;
         @BindView(R.id.page_num)

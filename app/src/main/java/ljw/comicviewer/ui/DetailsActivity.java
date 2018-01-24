@@ -1,7 +1,6 @@
 package ljw.comicviewer.ui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -49,9 +48,10 @@ import ljw.comicviewer.db.CollectionHolder;
 import ljw.comicviewer.db.HistoryHolder;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
-import ljw.comicviewer.ui.dialog.BottomDialog;
 import ljw.comicviewer.others.MyWebView;
 import ljw.comicviewer.store.RuleStore;
+import ljw.comicviewer.ui.dialog.BottomDialog;
+import ljw.comicviewer.ui.dialog.ThemeDialog;
 import ljw.comicviewer.ui.fragment.ChaptersFragment;
 import ljw.comicviewer.util.DialogUtil;
 import ljw.comicviewer.util.DisplayUtil;
@@ -146,18 +146,11 @@ public class DetailsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.activity_details);
-        //状态栏透明化
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//        getWindow().setStatusBarColor(Color.TRANSPARENT);
-        //透明导航栏
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 
         //view绑定代码生成
         ButterKnife.bind(this);
 
         initViewAndData();
-//        initChapterFragment();
         initListener();
     }
 
@@ -213,29 +206,30 @@ public class DetailsActivity extends AppCompatActivity
         txt_title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage(txt_title.getText());
-                builder.setTitle(R.string.dialog_title);
-                builder.setNegativeButton(R.string.dialog_btn_copy, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                        // 创建普通字符型ClipData
-                        ClipData mClipData = ClipData.newPlainText("Label", txt_title.getText());
-                        // 将ClipData内容放到系统剪贴板里。
-                        cm.setPrimaryClip(mClipData);
-                        SnackbarUtil.newAddImageColorfulSnackar(
-                                coordinatorLayout, getString(R.string.alert_copy_success),
-                                R.drawable.icon_ok, ContextCompat.getColor(context,R.color.purple)).show();
-                    }
-                });
-                builder.setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                builder.create().show();
+                ThemeDialog themeDialog = new ThemeDialog(context);
+                themeDialog.setTitle(R.string.dialog_title_comic_name)
+                        .setMessage(txt_title.getText())
+                        .setNegativeButton(R.string.dialog_btn_copy, new ThemeDialog.OnButtonClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface) {
+                                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                // 创建普通字符型ClipData
+                                ClipData mClipData = ClipData.newPlainText("Label", txt_title.getText());
+                                // 将ClipData内容放到系统剪贴板里。
+                                cm.setPrimaryClip(mClipData);
+                                SnackbarUtil.newAddImageColorfulSnackar(
+                                        coordinatorLayout, getString(R.string.alert_copy_success),
+                                        R.drawable.icon_ok, ContextCompat.getColor(context,R.color.purple)).show();
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .setPositiveButton(R.string.dialog_btn_close, new ThemeDialog.OnButtonClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                themeDialog.show();
             }
         });
         //收藏按钮

@@ -2,7 +2,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:key="setting_parent">
-    <PreferenceCategory android:title="@string/setting_title_app">
+    <PreferenceCategory android:title="@string/setting_title_app"
+        android:layout="@layout/preference_category_material">
         <Preference
             android:title="@string/setting_sub_title_source"
             android:summary="@string/setting_sub_summary_source"
