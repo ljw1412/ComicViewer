@@ -27,7 +27,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black_60"
+        android:background="@color/black_pressed"
         />
     <RelativeLayout
         android:id="@+id/layout_my_history"
@@ -58,7 +58,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black_60" />
+        android:background="@color/black_pressed" />
 
     <RelativeLayout
         android:id="@+id/layout_my_setting"
@@ -89,7 +89,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black_60" />
+        android:background="@color/black_pressed" />
 
     <RelativeLayout
         android:id="@+id/layout_my_about"
@@ -120,5 +120,5 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black_60" />
+        android:background="@color/black_pressed" />
 </LinearLayout>

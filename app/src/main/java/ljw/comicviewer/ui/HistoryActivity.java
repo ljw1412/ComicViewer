@@ -1,13 +1,19 @@
 package ljw.comicviewer.ui;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MotionEvent;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
-import android.widget.Scroller;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,6 +26,8 @@ import ljw.comicviewer.bean.History;
 import ljw.comicviewer.db.HistoryHolder;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.HistoryRecyclerViewAdapter;
+import ljw.comicviewer.ui.listeners.OnItemClickListener;
+import ljw.comicviewer.util.DisplayUtil;
 
 /**
  * 历史记录界面
@@ -51,67 +59,77 @@ public class HistoryActivity extends BaseActivity {
     private void initRecyclerView(){
         getHistoriesByDB();
         recyclerViewAdapter = new HistoryRecyclerViewAdapter(context,histories);
+        recyclerView.addItemDecoration(new DividerItemDecoration(context,1));
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(recyclerViewAdapter);
-        recyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener(){
-            private float x,y,dx,lastX,lastY;
-            private View view;
-            private int scrollX;
-            private Scroller mScroller = new Scroller(context, new LinearInterpolator());
-            private int maxLength=400;
+        recyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent event) {
-                x = event.getX();
-                y = event.getY();
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        //获得触摸的view
-                        view = rv.findChildViewUnder(x,y);
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        dx = lastX - x;
-                        scrollX = view.getScrollX();
-                        if (scrollX > 0 && scrollX <= maxLength || (scrollX==0 && dx > 0) ) {//向左滑动
-                            view.scrollBy((int) dx, 0);
-                        }
-                        if(scrollX<0){
-                            view.scrollTo(0,0);
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if(scrollX > maxLength/2 && scrollX != maxLength) {
-                            view.scrollTo(maxLength, 0);
-                            mScroller.startScroll(scrollX,0,maxLength - scrollX,0,200);
-                        } else if(scrollX == 0){
-                            return false;
-                        }else if(scrollX > 0 && x < view.getWidth() - scrollX){
-                            view.scrollTo(0,0);
-                            mScroller.startScroll(scrollX,0,-scrollX,0,200);
-                        }
-                        return true;
-                }
-                lastX = x;
-                lastY = y;
-                return super.onInterceptTouchEvent(rv,event);
+            public void OnItemClick(View view, int position) {
+                History history = histories.get(position);
+                Intent intent = new Intent(context, DetailsActivity.class);
+                intent.putExtra("id",history.getComicId());
+                context.startActivity(intent);
             }
         });
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
-//            @Override
-//            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-//                return makeMovementFlags(0,ItemTouchHelper.START);
-//            }
-//            //上下拖动回调次方法。
-//            @Override
-//            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-//                return false;
-//            }
-//            //左右滑动回调此方法。
-//            @Override
-//            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-//                Log.d(TAG, "onSwiped: "+direction);
-//            }
-//        });
-//        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+            private float viewWidth= DisplayUtil.getScreenWidthPX(context);
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return makeMovementFlags(0,ItemTouchHelper.LEFT);
+            }
+            //上下拖动回调次方法。
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+            //当item视图变化时调用
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                View view = viewHolder.itemView;
+                float width = view.getWidth();
+                float height = view.getHeight();
+                float top = view.getTop();
+                float right = view.getWidth();
+                float bottom = view.getBottom();
+                float alpha = Math.abs(dX)/width;
+                //画背景
+
+                Paint p = new Paint();
+                p.setColor(ContextCompat.getColor(context,R.color.theme_red));
+                p.setAlpha(alpha>=0.5?255: (int) (255 * alpha * 2));
+                RectF rectf = new RectF(width-Math.abs(dX),top,right,bottom);
+                c.drawRect(rectf,p);
+                //写文字
+                Paint textPaint = new Paint();
+                textPaint.setColor(ContextCompat.getColor(context,R.color.white));
+                textPaint.setTextSize(60);
+                textPaint.setTextAlign(Paint.Align.CENTER);
+                Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
+                float x= rectf.centerX();
+                float y = (rectf.bottom + rectf.top - fontMetrics.bottom - fontMetrics.top) / 2;
+                c.drawText(getString(Math.abs(dX)<width/2?R.string.history_delete_hint:R.string.history_delete_up),
+                        x,y,textPaint);
+                viewHolder.itemView.setAlpha(1-alpha);
+            }
+
+            //左右滑动回调此方法。
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                recyclerViewAdapter.remove(viewHolder.getAdapterPosition());
+            }
+            /**
+             * 获取删除方块的宽度
+             */
+            public int getSlideLimitation(RecyclerView.ViewHolder viewHolder){
+                ViewGroup viewGroup = (ViewGroup) viewHolder.itemView;
+                Log.d(TAG, "getSlideLimitation: "+viewGroup.getWidth());
+                return viewGroup.getWidth();
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     private void getHistoriesByDB(){

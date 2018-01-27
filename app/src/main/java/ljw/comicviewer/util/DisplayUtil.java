@@ -27,7 +27,14 @@ public class DisplayUtil {
         return dp*dm.density;
     }
 
-    public static float getScreenWidth(Context context){
+    public static float getScreenWidthPX(Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        //屏幕宽度算法:"屏幕宽度（像素）/屏幕密度"
+        return  dm.widthPixels;//屏幕宽度(dp)
+    }
+
+    public static float getScreenWidthDP(Context context){
         Resources resources = context.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
         //屏幕宽度算法:"屏幕宽度（像素）/屏幕密度"
@@ -36,7 +43,7 @@ public class DisplayUtil {
 
     //根据屏幕大小获取网格列数
     public static int getGridNumColumns(Context context,int itemWidth){
-        float screenWidth = getScreenWidth(context);
+        float screenWidth = getScreenWidthDP(context);
         int columns = Math.round(screenWidth/itemWidth);
         Log.d(TAG, "getGridNumColumns: 屏幕宽度(DP):"+screenWidth+",屏幕列数:"+columns);
         return columns;

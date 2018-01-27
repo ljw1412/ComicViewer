@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.bilibili.magicasakura.widgets.TintTextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -389,7 +390,7 @@ public class DetailsActivity extends AppCompatActivity
         if(authors != null && authors.size() > 0){
             for(final Author author : authors){
                 if(author.getName()!=null){
-                    TextView addView_author = new  TextView(context);
+                    TintTextView addView_author = new  TintTextView(context);
                     //设置style
                     TextViewCompat.setTextAppearance(addView_author,R.style.details_font);
                     //增加下划线
@@ -400,6 +401,7 @@ public class DetailsActivity extends AppCompatActivity
                         result = Html.fromHtml("<u>"+author.getName()+"</u>");
                     }
                     addView_author.setText(result);
+                    addView_author.setMaxLines(1);
                     //添加margin
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);

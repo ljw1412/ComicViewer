@@ -2,30 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="120dp">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/history_body"
         android:background="@drawable/selector_bg_white_to_black_pressed"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
 
         <ImageView
-            android:layout_width="84dp"
+            android:layout_width="86dp"
             app:srcCompat="@drawable/img_load_before"
             android:id="@+id/history_cover"
             android:adjustViewBounds="false"
             android:padding="5dp"
-            android:layout_height="112.7dp" />
+            android:layout_height="match_parent" />
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:padding="5dp"
             android:layout_gravity="center_vertical">
 
@@ -88,13 +87,14 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/history_body"
+            android:id="@+id/history_menu">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:id="@+id/history_line"
-        android:layout_below="@+id/history_body"
-        android:background="@color/black_pressed"
-        android:layout_height="1dp" />
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

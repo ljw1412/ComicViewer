@@ -17,8 +17,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:background="@color/black_shadow"
+        android:layout_height="1dp"
+        android:background="@color/gray"
         android:layout_above="@+id/bottom_tab"
         />
 
@@ -102,12 +102,7 @@
                 android:text="@string/txt_mine" />
         </LinearLayout>
     </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:background="@color/black_pressed"
-        android:layout_alignBottom="@+id/bottom_tab"
-        />
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -36,13 +36,13 @@ public class ThemeDialog {
     private CharSequence mTitle;
     private AlertDialog mAlert;
     private AlertDialog.Builder mBuilder;
-    OnClickListener mItemClickListener;
-    public CharSequence mPositiveButtonText;
-    public OnButtonClickListener mPositiveButtonListener;
-    public CharSequence mNegativeButtonText;
-    public OnButtonClickListener mNegativeButtonListener;
-    public CharSequence mNeutralButtonText;
-    public OnButtonClickListener mNeutralButtonListener;
+    private OnClickListener mItemClickListener;
+    private CharSequence mPositiveButtonText;
+    private OnButtonClickListener mPositiveButtonListener;
+    private CharSequence mNegativeButtonText;
+    private OnButtonClickListener mNegativeButtonListener;
+    private CharSequence mNeutralButtonText;
+    private OnButtonClickListener mNeutralButtonListener;
     private int mCheckedItem;
     private boolean mIsSingleChoice;
     private View mView;
@@ -168,7 +168,7 @@ public class ThemeDialog {
 
     @BindView(R.id.dialog_radio_group_linear)
     LinearLayout radioGroupLinear;
-    public ThemeDialog addRadio(CharSequence text, final int i, final OnClickListener listener){
+    private ThemeDialog addRadio(CharSequence text, final int i, final OnClickListener listener){
         View view = LayoutInflater.from(context).inflate(R.layout.item_radio,null);
         RadioButton radioButton = (RadioButton) view.findViewById(R.id.item_radio);
         radioButton.setText(text);
@@ -184,7 +184,7 @@ public class ThemeDialog {
     }
 
     private int buttonCount = 3;
-    public void setButton(Button button, CharSequence text, final OnButtonClickListener listener){
+    private void setButton(Button button, CharSequence text, final OnButtonClickListener listener){
         if (text != null) {
             button.setText(text);
             button.setVisibility(View.VISIBLE);
@@ -215,16 +215,6 @@ public class ThemeDialog {
                     }
                 });
             }else{
-//                final DialogSingleChoiceAdapter dialogSingleChoiceAdapter = new DialogSingleChoiceAdapter(context,mItems);
-//                vList.setAdapter(dialogSingleChoiceAdapter);
-//                vList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                        mItemClickListener.onClick(mAlert, i);
-//                        dialogSingleChoiceAdapter.changeChecked(i);
-//                        dialogSingleChoiceAdapter.notifyDataSetChanged();
-//                    }
-//                });
                 for (int i = 0 ; i < mItems.length ; i++){
                     addRadio(mItems[i],i,mItemClickListener);
                 }

@@ -120,6 +120,12 @@ public class HistoryHolder {
         }
         return list;
     }
+    public synchronized long delOneHistory(String comicId){
+        int delRows =dbHelper.delete(tableName,"comicId = ?",new String[]{comicId});
+        Log.d(TAG, "addHistory: 删除条目："+delRows);
+        return delRows;
+    }
+
     public synchronized long delHistory(List<String> comicIdList){
         int delRows = 0;
         for (String comicId : comicIdList) {

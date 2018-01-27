@@ -1,17 +1,13 @@
 package ljw.comicviewer.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -19,11 +15,10 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.History;
-import ljw.comicviewer.ui.DetailsActivity;
+import ljw.comicviewer.db.HistoryHolder;
+import ljw.comicviewer.ui.listeners.OnItemClickListener;
 
 /**
  * Created by ljw on 2017-12-04 004.
@@ -33,11 +28,16 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryItem
     private Context context;
     private LayoutInflater inflater;
     private List list;
+    private OnItemClickListener onItemClickListener;
 
     public HistoryRecyclerViewAdapter(Context context, List list) {
         this.list = list;
         this.context = context;
         inflater = LayoutInflater.from(context);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -64,15 +64,14 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryItem
             Glide.with(context).load(history.getImgUrl()).apply(options).into(holder.image);
 
             View view = holder.view;
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    History history = (History) list.get(position);
-                    Intent intent = new Intent(context, DetailsActivity.class);
-                    intent.putExtra("id",history.getComicId());
-                    context.startActivity(intent);
-                }
-            });
+            if(onItemClickListener!=null){
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onItemClickListener.OnItemClick(view,position);
+                    }
+                });
+            }
         }
     }
 
@@ -80,26 +79,13 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryItem
     public int getItemCount() {
         return list != null ? list.size() : 0;
     }
-}
 
-class HistoryItemViewHolder extends RecyclerView.ViewHolder{
-    @BindView(R.id.history_comic_name)
-    TextView comicName;
-    @BindView(R.id.history_cover)
-    ImageView image;
-    @BindView(R.id.history_comic_chapterName)
-    TextView chapterName;
-    @BindView(R.id.history_comic_page)
-    TextView page;
-    @BindView(R.id.history_comic_readTime)
-    TextView readTime;
-    @BindView(R.id.history_comic_is_end)
-    TextView end;
-    View view;
-
-    public HistoryItemViewHolder(View itemView) {
-        super(itemView);
-        ButterKnife.bind(this,itemView);
-        view = itemView;
+    public void remove(int position){
+        History history = (History) list.get(position);
+        Log.d("HistoryRVAdapter", "remove: "+history.getComicName());
+        HistoryHolder historyHolder = new HistoryHolder(context);
+        list.remove(position);
+        historyHolder.delOneHistory(history.getComicId());
+        notifyItemRemoved(position);
     }
 }

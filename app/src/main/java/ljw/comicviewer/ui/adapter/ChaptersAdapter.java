@@ -1,6 +1,7 @@
 package ljw.comicviewer.ui.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +21,13 @@ import ljw.comicviewer.bean.Chapter;
 public class ChaptersAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private List<Chapter> chapters;
+    private Context context;
     //用map防止滚动图片位置乱跑
     public HashMap<Integer, View> viewMap = new HashMap<>();
 
     public ChaptersAdapter(Context context, List<Chapter> chapters)
     {
-        super();
+        this.context = context;
         inflater = LayoutInflater.from(context);
         this.chapters = chapters;
     }
@@ -65,8 +67,10 @@ public class ChaptersAdapter extends BaseAdapter {
         chapterViewHolder.name.setText(chapters.get(position).getChapterName());
         if(chapters.get(position).isReadHere()){
             chapterViewHolder.name.setBackgroundResource(R.drawable.shape_border_read_here);
+            chapterViewHolder.name.setTextColor(ContextCompat.getColor(context,R.color.white));
         }else{
-            chapterViewHolder.name.setBackgroundResource(R.drawable.shape_border);
+            chapterViewHolder.name.setBackgroundResource(R.drawable.shape_border_gray);
+            chapterViewHolder.name.setTextColor(ContextCompat.getColor(context,R.color.black_shadow));
         }
         return convertView;
     }

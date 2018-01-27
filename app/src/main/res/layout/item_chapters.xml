@@ -7,7 +7,7 @@
         android:text="章节"
         android:layout_height="24dp"
         android:id="@+id/chapters_name"
-        android:layout_width="60dp"
+        android:layout_width="match_parent"
         android:maxLines="1"
         android:background="@drawable/shape_border"
         android:textSize="16sp"

@@ -14,7 +14,7 @@
     <!--详细页中文字字体-->
     <style name="details_font">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/selector_font_color</item>
         <item name="android:paddingLeft">1dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
