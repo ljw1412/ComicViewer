@@ -18,7 +18,6 @@
             android:title="@string/setting_sub_title_no_splash"
             android:summary="@string/setting_sub_summary_no_splash"
             android:key="noSplash"
-            android:id="@+id/setting_splash"
-            android:widgetLayout="@layout/preference_widget_switch"/>
+            android:id="@+id/setting_splash"/>
     </PreferenceCategory>
 </PreferenceScreen>

@@ -36,7 +36,6 @@ import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
-import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.ThemeUtil;
@@ -79,7 +78,7 @@ public class NewAddFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = this.getActivity();
-        View rootView = inflater.inflate(R.layout.fragment_comic_gird_top,null);
+        View rootView = inflater.inflate(R.layout.comic_gird_top,null);
         ButterKnife.bind(this,rootView);
         initView();
         return rootView;

@@ -151,7 +151,7 @@
                     android:maxHeight="5.0dp"
                     android:minHeight="5.0dp"
                     android:layout_toRightOf="@id/read_viewer_tools_page"
-                    android:progressDrawable="@drawable/seekbar_bg"
+                    android:progressDrawable="@drawable/seekbar_bg2"
                     android:thumb="@drawable/seekbar_thumb"
                     android:layout_centerInParent="true"
                     android:paddingRight="12dp"

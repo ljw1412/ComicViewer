@@ -2,6 +2,7 @@ package ljw.comicviewer.ui.fragment.setting;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -75,29 +76,6 @@ public class SettingFragment extends PreferenceFragment {
                                 dialog.dismiss();
                             }
                         }).show();
-//                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//                builder.setTitle(R.string.setting_sub_title_source);
-//                builder.setSingleChoiceItems(items,currentSelected,new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        switch (i){
-//                            case 0:
-//                                StoreUtil.initRuleStore(context,R.raw.manhuagui);
-//                                break;
-//                            case 1:
-//                                StoreUtil.initRuleStore(context,R.raw.manhuatai);
-//                                break;
-//                            case 2:
-//                                StoreUtil.initRuleStore(context,R.raw.zymk);
-//                                break;
-//                        }
-//                        preference.setSummary(
-//                                String.format(getString(R.string.setting_sub_summary_source),items[i]));
-//                        PreferenceUtil.modify(context,"sourceId",i);
-//                        dialogInterface.dismiss();
-//                    }
-//                }).setNegativeButton("取消", null);
-//                builder.show();
                 return true;
             }
         });
@@ -110,6 +88,10 @@ public class SettingFragment extends PreferenceFragment {
                 return true;
             }
         });
+        Preference switchPreference = findPreference("noSplash");
+        if(Build.VERSION.SDK_INT >= 24) {
+            switchPreference.setWidgetLayoutResource(R.layout.preference_widget_switch);
+        }
     }
 
 }

@@ -596,7 +596,7 @@ public class DetailsActivity extends AppCompatActivity
 
         @Override
         protected Comic doInBackground(Void... voids) {
-            return ComicFetcher.getComicDetails(data.toString(),comic);
+             return ComicFetcher.getComicDetails(data.toString(),comic);
         }
 
         @Override

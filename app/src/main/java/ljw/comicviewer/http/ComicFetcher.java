@@ -253,18 +253,13 @@ public class ComicFetcher {
         }
         comic.setUpdateStatus("更新至"+(String) getRuleFetcher().parser(doc,map.get("comic-update-status")));
         comic.setUpdate((String) getRuleFetcher().parser(doc,map.get("comic-update")));
-        comic.setEnd((Boolean) getRuleFetcher().parser(doc,map.get("comic-end")));
         comic.setInfo((String) getRuleFetcher().parser(doc,map.get("comic-info")));
-        comic.setBan((Boolean) getRuleFetcher().parser(doc,map.get("comic-is-ban")));
-//        if(doc.select(".detail-list li.status span span").size()>0) {
-//            comic.setUpdateStatus("更新至"+doc.select(".detail-list li.status span a").get(0).text());
-//            comic.setUpdate(doc.select(".detail-list li.status span span").get(1).text());
-//            comic.setEnd(doc.select(".detail-list li.status span span").get(0).text().contains("完结") ? true : false);
-//        }else{
-//            comic.setUpdateStatus("暂未更新。敬请期待！！！");
-//            comic.setUpdate("不详");
-//            comic.setEnd(false);
-//        }
+        try {
+            comic.setEnd((Boolean) getRuleFetcher().parser(doc,map.get("comic-end")));
+            comic.setBan((Boolean) getRuleFetcher().parser(doc,map.get("comic-is-ban")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return comic;
     }
 

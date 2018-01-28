@@ -170,6 +170,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         if (!view.isSelected()){
             setAllBtnNoSelected();
             view.setSelected(true);
+
         }
     }
 

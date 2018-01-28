@@ -75,6 +75,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Default" />
+        <activity android:name=".ui.Filter2Activity"></activity>
     </application>
 
 </manifest>

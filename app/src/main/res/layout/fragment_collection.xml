@@ -17,7 +17,7 @@
         <include
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            layout="@layout/fragment_comic_gird_top"/>
+            layout="@layout/comic_gird_top"/>
     </RelativeLayout>
 
 </RelativeLayout>
