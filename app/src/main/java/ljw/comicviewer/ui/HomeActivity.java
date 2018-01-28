@@ -155,7 +155,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         if(currentFragment == collectionFragment && collectionFragment.isLoading()){
             collectionFragment.initLoad();
         }
-
     }
 
     //让所有底部导航栏为未选中状态

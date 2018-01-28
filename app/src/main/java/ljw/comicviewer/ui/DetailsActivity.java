@@ -238,6 +238,7 @@ public class DetailsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
+                intent.putExtra("comicId",comic_id);
                 CollectionHolder collectionHolder = new CollectionHolder(context);
                 if(!like){
                     collectionHolder.addCollection(comic);
@@ -294,10 +295,12 @@ public class DetailsActivity extends AppCompatActivity
 
     //加载封面
     public void getCover(){
-        RequestOptions options = new RequestOptions();
-        options.placeholder(R.drawable.img_load_before)
-                .error(R.drawable.img_load_failed).centerCrop();
-        Glide.with(context).load(comic.getImageUrl()).apply(options).into(img_cover);
+        if(!isDestroyed()) {
+            RequestOptions options = new RequestOptions();
+            options.placeholder(R.drawable.img_load_before)
+                    .error(R.drawable.img_load_failed).centerCrop();
+            Glide.with(context).load(comic.getImageUrl()).apply(options).into(img_cover);
+        }
     }
 
     private int tryTime = 0;

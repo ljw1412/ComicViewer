@@ -6,9 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,9 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,8 +39,10 @@ import ljw.comicviewer.db.CollectionHolder;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.HomeActivity;
-import ljw.comicviewer.ui.adapter.PictureGridAdapter;
+import ljw.comicviewer.ui.adapter.FilterRecyclerViewAdapter;
 import ljw.comicviewer.ui.dialog.ThemeDialog;
+import ljw.comicviewer.ui.listeners.OnItemClickListener;
+import ljw.comicviewer.ui.listeners.OnItemLongClickListener;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.ThemeUtil;
@@ -55,16 +56,14 @@ public class CollectionFragment extends BaseFragment
     private Context context;
     private List<Comic> comics = new ArrayList<>();
     private List<Comic> searchComics = new ArrayList<>();
-    private List<Comic> allComics;
-    private int currentPage = 1;
-    private PictureGridAdapter pictureGridAdapter;
-    private PictureGridAdapter searchGridAdapter,normalGridAdapter;
+    private FilterRecyclerViewAdapter pictureGridAdapter;
+    private FilterRecyclerViewAdapter searchGridAdapter,normalGridAdapter;
     private boolean loading = false;
     private boolean searching = false;
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
-    @BindView(R.id.grid_view)
-    GridView gridView;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
     @BindView(R.id.grid_net_error)
     TextView txt_netError;
     @BindView(R.id.title)
@@ -122,12 +121,14 @@ public class CollectionFragment extends BaseFragment
     }
 
     public void initGridView() {
-        searchGridAdapter = new PictureGridAdapter(context, searchComics);//搜索用适配器
-        normalGridAdapter = new PictureGridAdapter(context,comics);//平时用适配器
+        //根据屏幕宽度设置列数
+        int columns = DisplayUtil.getGridNumColumns(context,120);
+        int itemWidth = (int) (DisplayUtil.getScreenWidthPX(context)/columns);
+        searchGridAdapter = new FilterRecyclerViewAdapter(context, searchComics,itemWidth);//搜索用适配器
+        normalGridAdapter = new FilterRecyclerViewAdapter(context,comics,itemWidth);//平时用适配器
         pictureGridAdapter = normalGridAdapter;//设置当前适配器为正常
-        gridView.setAdapter(pictureGridAdapter);
-        gridView.setOnScrollListener(this);
-        gridView.setOnItemClickListener(new ItemClickListener());
+        recyclerView.setLayoutManager(new GridLayoutManager(context,columns));
+        recyclerView.setAdapter(pictureGridAdapter);
         pictureGridAdapter.notifyDataSetChanged();
     }
 
@@ -137,14 +138,12 @@ public class CollectionFragment extends BaseFragment
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
                 //上拉
-                add20(++currentPage);
-                Log.d(TAG,"load next page; currentLoadingPage = "+ currentPage);
+
             }
 
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 //下拉
-                currentPage = 1;
                 comics.clear();
                 searchComics.clear();
                 //重新获取当前目录对象
@@ -189,10 +188,9 @@ public class CollectionFragment extends BaseFragment
                 }else{
                     pictureGridAdapter = normalGridAdapter;
                 }
-                gridView.setAdapter(pictureGridAdapter);
+                recyclerView.setAdapter(pictureGridAdapter);
 
                 search(charSequence.toString());
-                clearAndLoadImage();
             }
 
             @Override
@@ -201,9 +199,9 @@ public class CollectionFragment extends BaseFragment
             }
         });
         //设置网格元素长按事件
-        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        normalGridAdapter.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public boolean onItemLongClick(View view, int position) {
                 Comic comic = comics.get(position);
                 if(searching){
                     comic = searchComics.get(position);
@@ -213,10 +211,39 @@ public class CollectionFragment extends BaseFragment
                 return true;
             }
         });
+        searchGridAdapter.setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(View view, int position) {
+                Comic comic = comics.get(position);
+                if(searching){
+                    comic = searchComics.get(position);
+                }
+                showItemDialog(comic);
+                Log.d(TAG, "onItemLongClick: "+comic.getName());
+                return true;
+            }
+        });
+
+        //网格点击事件
+        normalGridAdapter.setOnItemClickListener(new OnItemClickListener(){
+            @Override
+            public void OnItemClick(View view, int position) {
+                Comic comic = searching ? searchComics.get(position) : comics.get(position);
+                goToDetails(comic);
+            }
+        });
+        searchGridAdapter.setOnItemClickListener(new OnItemClickListener(){
+            @Override
+            public void OnItemClick(View view, int position) {
+                Comic comic = searching ? searchComics.get(position) : comics.get(position);
+                goToDetails(comic);
+            }
+        });
+
         btn_toTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                gridView.smoothScrollToPosition(0);
+                recyclerView.smoothScrollToPosition(0);
             }
         });
     }
@@ -238,7 +265,7 @@ public class CollectionFragment extends BaseFragment
                                 //删除收藏
                                 CollectionHolder collectionHolder = new CollectionHolder(context);
                                 collectionHolder.deleteComic(comic.getComicId());
-                                initLoad();
+                                pictureGridAdapter.remove(comic.getComicId());
                                 break;
                         }
                         dialog.dismiss();
@@ -256,12 +283,11 @@ public class CollectionFragment extends BaseFragment
         }
         btn_toTop.setVisibility(View.GONE);
         loading = true;
-        //执行自动刷新,此处不采用动画自动加载
-//        refreshLayout.autoRefresh();
-        currentPage = 1;
+
         comics.clear();
         searchComics.clear();
         getDataFromDB();
+        pictureGridAdapter.notifyDataSetChanged();
     }
 
     //切换为搜索模式
@@ -282,7 +308,7 @@ public class CollectionFragment extends BaseFragment
         //隐藏虚拟键盘
         DisplayUtil.hideKeyboard(edit_search);
         pictureGridAdapter = normalGridAdapter;
-        gridView.setAdapter(pictureGridAdapter);
+        recyclerView.setAdapter(pictureGridAdapter);
         searching = false;
     }
 
@@ -290,98 +316,19 @@ public class CollectionFragment extends BaseFragment
     public void getDataFromDB(){
         //数据库处理，获取对象
         CollectionHolder collectionHolder = new CollectionHolder(context);
-        allComics = collectionHolder.getComics(RuleStore.get().getComeFrom());
+        List<Comic> allComics = collectionHolder.getComics(RuleStore.get().getComeFrom());
         if (getActivity() instanceof HomeActivity)
             ((HomeActivity) getActivity()).setTitle(nav_title,getString(R.string.txt_collection)+"("+allComics.size()+")");
-        maxPage = allComics.size() % 20 > 0 ? (allComics.size() / 20 + 1) : allComics.size() / 20;
-        add20(currentPage);
-        delayedFlushAdapter();
+        comics.addAll(allComics);
         if (allComics.size()>0) btn_toTop.setVisibility(View.VISIBLE);
-    }
-
-    private int maxPage;
-    public void add20(int page){
-        List<Comic> comicList = new ArrayList<>();
-        for(int i = (page-1)*20 ; maxPage != 0 && i <(page == maxPage ? allComics.size() : page*20); i++){
-            comicList.add(allComics.get(i));
-        }
-        comics.addAll(comicList);
-        pictureGridAdapter.notifyDataSetChanged();
         RefreshLayoutUtil.onFinish(refreshLayout);
-        if(currentPage >= maxPage || maxPage == 0)
-            RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Only_Refresh);
-        else
-            RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Both);
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-        switch (scrollState){
-            case SCROLL_STATE_TOUCH_SCROLL:
-                //手指接触状态
-                break;
-            case SCROLL_STATE_FLING:
-                //屏幕处于滑动状态
-//                Glide.with(context).pauseRequests();//暂停请求
-                break;
-            case SCROLL_STATE_IDLE:
-                //停止滑动状态
-//                Glide.with(context).resumeRequests();//重启请求
-                clearAndLoadImage();
-                break;
-        }
-    }
-
-    @Override
-    public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-
-    }
-
-    //延迟刷新适配器，防止第一次加载不显示封面
-    public void delayedFlushAdapter(){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pictureGridAdapter.notifyDataSetChanged();
-                clearAndLoadImage();
-            }
-        },200);
-    }
-
-    //清理不可见是item,加载可见的item。如果是第一次就加载这加载整页
-    public void clearAndLoadImage(){
-        int firstVisiblePosition= gridView.getFirstVisiblePosition();
-        int lastVisiblePosition = gridView.getLastVisiblePosition();
-        if (lastVisiblePosition==-1){
-            delayedFlushAdapter();
-            return;
-        }
-        for(int i = 0; i < gridView.getCount();i++){
-            View view = pictureGridAdapter.getViewMap().get(i);
-            if (view!=null){
-                ImageView image = (ImageView) view.findViewById(R.id.comic_img);
-                ImageView EndTag = (ImageView) view.findViewById(R.id.comic_status);
-                if(i<firstVisiblePosition || i>lastVisiblePosition){
-                    //Log.d(TAG, "clearImage: "+i);
-                    image.setImageBitmap(null);
-                    image.setImageDrawable(null);
-                    EndTag.setImageResource(0);
-                }else{
-                    //Log.d(TAG, "loadImage: "+i);
-                    pictureGridAdapter.loadCover(i, view);
-                }
-            }
-        }
-        System.gc();
-        pictureGridAdapter.notifyDataSetChanged();
     }
 
     //搜索事件
     private void search(String keyword){
         searchComics.clear();
         for(Comic comic:comics){
-            if(comic.getName().contains(keyword)||
-                    (comic.getAuthor()!=null && comic.getAuthor().contains(keyword))){
+            if(comic.getName().toLowerCase().contains(keyword.toLowerCase())){
                 searchComics.add(comic);
             }
         }
@@ -397,17 +344,6 @@ public class CollectionFragment extends BaseFragment
         }
     }
 
-
-
-    //网格对象点击事件
-    class  ItemClickListener implements AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Comic comic = searching ? searchComics.get(position) : comics.get(position);
-            goToDetails(comic);
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
@@ -415,10 +351,23 @@ public class CollectionFragment extends BaseFragment
                 Log.d(TAG, "onActivityResult: "+data);
                 if( data!=null ){
                     if(data.getBooleanExtra("like_change",false)){
-                        initLoad();
+                        String delComicId = data.getStringExtra("comicId");
+                        if(delComicId != null){
+                            pictureGridAdapter.remove(delComicId);
+                        }
                     }
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView absListView, int i) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+
     }
 }

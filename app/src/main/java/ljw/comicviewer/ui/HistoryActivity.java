@@ -11,9 +11,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,7 +25,6 @@ import ljw.comicviewer.db.HistoryHolder;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.HistoryRecyclerViewAdapter;
 import ljw.comicviewer.ui.listeners.OnItemClickListener;
-import ljw.comicviewer.util.DisplayUtil;
 
 /**
  * 历史记录界面
@@ -73,7 +70,6 @@ public class HistoryActivity extends BaseActivity {
         });
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
-            private float viewWidth= DisplayUtil.getScreenWidthPX(context);
             @Override
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 return makeMovementFlags(0,ItemTouchHelper.LEFT);
@@ -119,14 +115,6 @@ public class HistoryActivity extends BaseActivity {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 recyclerViewAdapter.remove(viewHolder.getAdapterPosition());
-            }
-            /**
-             * 获取删除方块的宽度
-             */
-            public int getSlideLimitation(RecyclerView.ViewHolder viewHolder){
-                ViewGroup viewGroup = (ViewGroup) viewHolder.itemView;
-                Log.d(TAG, "getSlideLimitation: "+viewGroup.getWidth());
-                return viewGroup.getWidth();
             }
         });
         itemTouchHelper.attachToRecyclerView(recyclerView);

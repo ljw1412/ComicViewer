@@ -41,6 +41,14 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryItem
     }
 
     @Override
+    public void onViewRecycled(HistoryItemViewHolder holder) {
+        if (holder!=null){
+            Glide.with(context).clear(holder.image);
+        }
+        super.onViewRecycled(holder);
+    }
+
+    @Override
     public HistoryItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = inflater.inflate(R.layout.item_history,parent,false);
         HistoryItemViewHolder historyItemViewHolder = new HistoryItemViewHolder(v);

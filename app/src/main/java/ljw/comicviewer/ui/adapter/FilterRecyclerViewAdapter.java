@@ -3,24 +3,26 @@ package ljw.comicviewer.ui.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
+import com.bumptech.glide.request.target.Target;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.listeners.OnItemClickListener;
+import ljw.comicviewer.ui.listeners.OnItemLongClickListener;
 import ljw.comicviewer.util.DensityUtil;
 
 /**
@@ -32,6 +34,7 @@ public class FilterRecyclerViewAdapter extends RecyclerView.Adapter<FilterItemVi
     private LayoutInflater inflater;
     private List<Comic> comics;
     private OnItemClickListener onItemClickListener;
+    private OnItemLongClickListener onItemLongClickListener;
     private int viewWidth;
 
     public FilterRecyclerViewAdapter(Context context, List<Comic> comics,int viewWidth) {
@@ -43,6 +46,10 @@ public class FilterRecyclerViewAdapter extends RecyclerView.Adapter<FilterItemVi
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
+        this.onItemLongClickListener = onItemLongClickListener;
     }
 
     @Override
@@ -81,12 +88,25 @@ public class FilterRecyclerViewAdapter extends RecyclerView.Adapter<FilterItemVi
                 }
             });
         }
+
+        if (onItemLongClickListener!=null){
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    return onItemLongClickListener.onItemLongClick(view,position);
+                }
+            });
+        }
+
         loadCover(position,holder);
     }
 
     @Override
     public void onViewRecycled(FilterItemViewHolder holder) {
         if(holder!=null){
+            holder.image.setImageResource(0);
+            holder.image.setImageBitmap(null);
+            holder.isEnd.setImageResource(0);
             Glide.with(context).clear(holder.image);
         }
         super.onViewRecycled(holder);
@@ -94,27 +114,24 @@ public class FilterRecyclerViewAdapter extends RecyclerView.Adapter<FilterItemVi
 
     public void loadCover(final int position, final FilterItemViewHolder holder) {
         if (holder != null) {
-            holder.image.setImageResource(0);
-            holder.image.setImageBitmap(null);
-            holder.isEnd.setImageResource(0);
-            RequestOptions options = new RequestOptions();
-            options.placeholder(R.drawable.img_load_before)
-                    .error(R.drawable.img_load_failed)
-                    .centerCrop()
-                    .skipMemoryCache(true);
-            final WeakReference<ImageView> imageViewWeakReference = new WeakReference<>(holder.image);
-            final ImageView target = imageViewWeakReference.get();
-            if (target != null && comics.size() > 0 && !((Activity) context).isDestroyed()) {
+             if ( comics.size() > 0 && !((Activity) context).isDestroyed()) {
+                RequestOptions options = new RequestOptions();
+                options.placeholder(R.color.transparent)
+                        .error(R.drawable.img_load_failed)
+                        .centerCrop()
+                        .skipMemoryCache(true);
                 Glide.with(context)
                         .asBitmap()
                         .load(comics.get(position).getImageUrl())
                         .apply(options)
-                        .into(new SimpleTarget<Bitmap>() {
-
+                        .listener(new RequestListener<Bitmap>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                                return false;
+                            }
 
                             @Override
-                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                target.setImageBitmap(resource);
+                            public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
                                 String no_end_info = null;
                                 if (RuleStore.get().getConfigRule() != null) {
                                     no_end_info = RuleStore.get().getConfigRule().get("no-end-info");
@@ -126,8 +143,10 @@ public class FilterRecyclerViewAdapter extends RecyclerView.Adapter<FilterItemVi
                                 } else {
                                     holder.isEnd.setImageResource(0);
                                 }
+                                return false;
                             }
-                        });
+                        })
+                        .into(holder.image);
             }
         }
     }
@@ -135,5 +154,19 @@ public class FilterRecyclerViewAdapter extends RecyclerView.Adapter<FilterItemVi
     @Override
     public int getItemCount() {
         return comics != null ? comics.size() : 0;
+    }
+
+    public void remove(int position){
+        comics.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public void remove(String comicId){
+        for(int i = 0 ; i< comics.size();i++){
+            if(comics.get(i).getComicId().equals(comicId)){
+                remove(i);
+                break;
+            }
+        }
     }
 }

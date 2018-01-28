@@ -9,16 +9,16 @@ import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,22 +42,21 @@ import ljw.comicviewer.others.MyWebView;
 import ljw.comicviewer.store.FilterStore;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.FilterAdapter;
-import ljw.comicviewer.ui.adapter.PictureGridAdapter;
+import ljw.comicviewer.ui.adapter.FilterRecyclerViewAdapter;
+import ljw.comicviewer.ui.listeners.OnItemClickListener;
+import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.StringUtil;
 import ljw.comicviewer.util.ThemeUtil;
 import retrofit2.Call;
 
-/**
- * 分类界面
- */
 public class FilterActivity extends BaseActivity
         implements ComicService.RequestCallback {
     private String TAG = this.getClass().getSimpleName()+"----";
     private Context context;
     private FilterAdapter filterAdapter;
-    private PictureGridAdapter pictureGridAdapter;
+    private FilterRecyclerViewAdapter filterRecyclerViewAdapter;
     private boolean loadingNext = false;
     private boolean loading = false;
     private int curPage = 1;
@@ -80,8 +79,8 @@ public class FilterActivity extends BaseActivity
     GridView gridView_filter;
     @BindView(R.id.filter_type_shadow)
     RelativeLayout view_shadow;//gridView_filter下面的阴影
-    @BindView(R.id.grid_view)
-    GridView gridView_comics;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
     @BindView(R.id.btn_toTop)
@@ -92,7 +91,7 @@ public class FilterActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_filter);
+        setContentView(R.layout.activity_filter2);
         context = this;
         ButterKnife.bind(this);
         initView();
@@ -179,8 +178,12 @@ public class FilterActivity extends BaseActivity
     private void initGridView(){
         filterAdapter = new FilterAdapter(context,categories);
         gridView_filter.setAdapter(filterAdapter);
-        pictureGridAdapter = new PictureGridAdapter(context,comics);
-        gridView_comics.setAdapter(pictureGridAdapter);
+        //根据屏幕宽度设置列数
+        int columns = DisplayUtil.getGridNumColumns(context,120);
+        int itemWidth = (int) (DisplayUtil.getScreenWidthPX(context)/columns);
+        filterRecyclerViewAdapter = new FilterRecyclerViewAdapter(context,comics, itemWidth);
+        recyclerView.setLayoutManager(new GridLayoutManager(context,columns));
+        recyclerView.setAdapter(filterRecyclerViewAdapter);
     }
 
     private void addListener(){
@@ -247,33 +250,10 @@ public class FilterActivity extends BaseActivity
                 getData();
             }
         });
-        //漫画网格滚动事件
-        gridView_comics.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                switch (scrollState){
-                    case SCROLL_STATE_TOUCH_SCROLL:
-                        //手指接触状态
-                        break;
-                    case SCROLL_STATE_FLING:
-                        //屏幕处于滑动状态
-                        break;
-                    case SCROLL_STATE_IDLE:
-                        //停止滑动状态
-                        clearAndLoadImage();
-                        break;
-                }
-            }
 
+        filterRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-
-            }
-        });
-
-        gridView_comics.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void OnItemClick(View view, int position) {
                 Comic comic = comics.get(position);
                 Intent intent = new Intent(context, DetailsActivity.class);
                 intent.putExtra("id",comic.getComicId());
@@ -284,8 +264,8 @@ public class FilterActivity extends BaseActivity
         btn_toTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(gridView_comics != null && comics.size()>0){
-                    gridView_comics.smoothScrollToPosition(0);
+                if(recyclerView != null && comics.size()>0){
+                    recyclerView.smoothScrollToPosition(0);
                 }
             }
         });
@@ -351,46 +331,6 @@ public class FilterActivity extends BaseActivity
         }
     }
 
-    //延迟刷新适配器，防止第一次加载不显示封面
-    public void delayedFlushAdapter(){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pictureGridAdapter.notifyDataSetChanged();
-                clearAndLoadImage();
-            }
-        },200);
-    }
-
-    //清理不可见是item,加载可见的item。如果是第一次就加载这加载整页
-    public void clearAndLoadImage(){
-        int firstVisiblePosition= gridView_comics.getFirstVisiblePosition();
-        int lastVisiblePosition = gridView_comics.getLastVisiblePosition();
-        if (lastVisiblePosition==-1){
-            delayedFlushAdapter();
-            return;
-        }
-        for(int i = 0; i < gridView_comics.getCount();i++){
-            View view = pictureGridAdapter.getViewMap().get(i);
-            if (view!=null){
-                ImageView image = (ImageView) view.findViewById(R.id.comic_img);
-                ImageView EndTag = (ImageView) view.findViewById(R.id.comic_status);
-                if(i<firstVisiblePosition || i>lastVisiblePosition){
-                    //Log.d(TAG, "clearImage: "+i);
-                    image.setImageBitmap(null);
-                    image.setImageDrawable(null);
-                    EndTag.setImageResource(0);
-                }else{
-                    //Log.d(TAG, "loadImage: "+i);
-                    pictureGridAdapter.loadCover(i,view);
-                }
-            }
-        }
-        System.gc();
-        pictureGridAdapter.notifyDataSetChanged();
-    }
-
-
     class LoadDataTask extends AsyncTask<Void,Void,Object> {
         private String tag;
         private Object obj;
@@ -430,7 +370,6 @@ public class FilterActivity extends BaseActivity
                         }else{
                             RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Only_LoadMore);
                         }
-                        clearAndLoadImage();
                     }else{
                         onError(getString(R.string.data_load_fail),tag);
                     }
@@ -474,11 +413,6 @@ public class FilterActivity extends BaseActivity
         loading = false;
         Log.e(TAG,what + " Error: " + (call_filter!=null && call_filter.isCanceled()?"取消请求":msg));
     }
-
-
-
-
-
 
     //按标题栏返回按钮
     public void onBack(View view) {

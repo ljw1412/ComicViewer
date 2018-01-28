@@ -10,7 +10,9 @@
         android:id="@+id/dialog_title"
         android:textColor="@color/white"
         android:background="@color/theme_color_primary"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:maxLines="1"
+        android:ellipsize="end" />
 
     <LinearLayout android:id="@+id/dialog_contentPanel"
         android:layout_width="match_parent"
