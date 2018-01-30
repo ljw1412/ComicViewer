@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.Date;
@@ -68,7 +69,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryItem
             holder.end.setTextColor(history.isEnd()? Color.rgb(236,19,111):Color.rgb(68,221,0));
             RequestOptions options = new RequestOptions();
             options.placeholder(R.drawable.img_load_before)
-                    .error(R.drawable.img_load_failed).centerCrop();
+                    .error(R.drawable.img_load_failed)
+                    .centerCrop().transform(new RoundedCorners(20));
             Glide.with(context).load(history.getImgUrl()).apply(options).into(holder.image);
 
             View view = holder.view;

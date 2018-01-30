@@ -5,8 +5,7 @@
 	"imghost":"mhpic.xiaomingtaiji.net",
 	"domain":".zymkcdn.com",
 	"config":{
-		"no-end-info":true,
-		"hasAddNew":false
+		"no-end-info":true
 	},
 	"home":{
 		"url":"/",

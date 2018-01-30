@@ -95,17 +95,12 @@ public class HomeFragment extends BaseFragment{
             recommendFragment = new RecommendFragment();
             myFragmentPagerAdapter.addFragment(recommendFragment, getString(R.string.opt_recommend));
         }
-        if(ruleStore.getListRule()!=null){
-            String hasAddNew = null;
-            if(ruleStore.getConfigRule()!=null) {
-                hasAddNew = ruleStore.getConfigRule().get("hasAddNew");
-            }
 
-            if(hasAddNew==null || hasAddNew.equals("true")) {
-                newAddFragment = new NewAddFragment();
-                myFragmentPagerAdapter.addFragment(newAddFragment, getString(R.string.opt_new));
-            }
+        if(ruleStore.getNewAddRule()!=null){
+            newAddFragment = new NewAddFragment();
+            myFragmentPagerAdapter.addFragment(newAddFragment, getString(R.string.opt_new));
         }
+
         if(ruleStore.getUpdateRule()!=null) {
             updateFragment = new UpdateFragment();
             myFragmentPagerAdapter.addFragment(updateFragment, getString(R.string.opt_update));

@@ -33,6 +33,7 @@ import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.adapter.ComicRecyclerViewAdapter;
+import ljw.comicviewer.ui.listeners.OnItemClickListener;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.SnackbarUtil;
@@ -122,6 +123,18 @@ public class NewAddFragment extends BaseFragment
                 pictureGridAdapter.notifyDataSetChanged();
                 // 获取对象，重新获取当前目录对象
                 getListItems(curPage);
+            }
+        });
+
+        pictureGridAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void OnItemClick(View view, int position) {
+                Comic comic = comicList.get(position);
+                Intent intent = new Intent(context, DetailsActivity.class);
+                intent.putExtra("id",comic.getComicId());
+                intent.putExtra("score",comic.getScore());
+                intent.putExtra("title",comic.getName());
+                startActivity(intent);
             }
         });
 

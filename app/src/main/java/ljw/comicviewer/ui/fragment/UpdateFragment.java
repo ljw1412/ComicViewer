@@ -2,6 +2,7 @@ package ljw.comicviewer.ui.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,7 +23,9 @@ import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
+import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.adapter.ComicRecyclerViewAdapter;
+import ljw.comicviewer.ui.listeners.OnItemClickListener;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.ThemeUtil;
@@ -77,6 +80,18 @@ public class UpdateFragment extends NewAddFragment {
                 pictureGridAdapter.notifyDataSetChanged();
                 // 获取对象，重新获取当前目录对象
                 getListItems(2);
+            }
+        });
+
+        pictureGridAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void OnItemClick(View view, int position) {
+                Comic comic = comicList.get(position);
+                Intent intent = new Intent(context, DetailsActivity.class);
+                intent.putExtra("id",comic.getComicId());
+                intent.putExtra("score",comic.getScore());
+                intent.putExtra("title",comic.getName());
+                startActivity(intent);
             }
         });
 
