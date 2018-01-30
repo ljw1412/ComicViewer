@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +22,8 @@ import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
-import ljw.comicviewer.ui.adapter.PictureGridAdapter;
+import ljw.comicviewer.ui.adapter.ComicRecyclerViewAdapter;
+import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.ThemeUtil;
 
@@ -44,9 +47,10 @@ public class UpdateFragment extends NewAddFragment {
         //禁用上拉下拉
         RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
         //设置主题色
-        refreshLayout.setPrimaryColors(ThemeUtil.getThemeColor(context));
+        refreshLayout.setPrimaryColors(ThemeUtil.getThemeColor(context),
+                ContextCompat.getColor(context,R.color.window_background));
         //下拉到底最后不自动加载，需要再拉一下
-        refreshLayout.setEnableAutoLoadmore(false);
+//        refreshLayout.setEnableAutoLoadmore(false);
         //不在加载更多完成之后滚动内容显示新数据
         refreshLayout.setEnableScrollContentWhenLoaded(false);
         //设置回顶按钮颜色
@@ -79,8 +83,8 @@ public class UpdateFragment extends NewAddFragment {
         btn_toTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(gridView != null && comicList.size()>0){
-                    gridView.smoothScrollToPosition(0);
+                if(recyclerView != null && comicList.size()>0){
+                    recyclerView.smoothScrollToPosition(0);
                 }
             }
         });
@@ -88,10 +92,12 @@ public class UpdateFragment extends NewAddFragment {
 
     @Override
     public void initGridView() {
-        pictureGridAdapter = new PictureGridAdapter(context,comicList);
-        gridView.setAdapter(pictureGridAdapter);
-        gridView.setOnScrollListener(this);
-        gridView.setOnItemClickListener(new ItemClickListener());
+        //根据屏幕宽度设置列数
+        int columns = DisplayUtil.getGridNumColumns(context,Global.ITEMVIEWWIDTH);
+        int itemWidth = (int) (DisplayUtil.getScreenWidthPX(context)/columns);
+        pictureGridAdapter = new ComicRecyclerViewAdapter(context,comicList,itemWidth);
+        recyclerView.setLayoutManager(new GridLayoutManager(context,columns));
+        recyclerView.setAdapter(pictureGridAdapter);
         pictureGridAdapter.notifyDataSetChanged();
     }
 
@@ -145,7 +151,6 @@ public class UpdateFragment extends NewAddFragment {
                     RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Both);
                     txt_netError.setVisibility(View.GONE);
                     btn_toTop.setVisibility(View.VISIBLE);
-                    clearAndLoadImage();
                 }else{
                     onError(getString(R.string.data_load_fail), what);
                 }

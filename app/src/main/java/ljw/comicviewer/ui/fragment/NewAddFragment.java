@@ -4,24 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +32,8 @@ import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.DetailsActivity;
-import ljw.comicviewer.ui.adapter.PictureGridAdapter;
+import ljw.comicviewer.ui.adapter.ComicRecyclerViewAdapter;
+import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.ThemeUtil;
@@ -46,20 +44,19 @@ import ljw.comicviewer.util.ThemeUtil;
  */
 
 public class NewAddFragment extends BaseFragment
-        implements AbsListView.OnScrollListener, ComicService.RequestCallback {
+        implements  ComicService.RequestCallback {
     private String TAG = NewAddFragment.class.getSimpleName()+"----";
     private Context context;
-    protected PictureGridAdapter pictureGridAdapter;
+    protected ComicRecyclerViewAdapter pictureGridAdapter;
     List<Comic> comicList = new ArrayList<>();
-    private File myCache;
     private int curPage = 1;
     private int maxPage = -1;
     private boolean isLoadingNext = false;
     RuleStore ruleStore = RuleStore.get();
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
-    @BindView(R.id.grid_view)
-    GridView gridView;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
     @BindView(R.id.grid_net_error)
     TextView txt_netError;
     @BindView(R.id.btn_toTop)
@@ -78,7 +75,7 @@ public class NewAddFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = this.getActivity();
-        View rootView = inflater.inflate(R.layout.comic_gird_top,null);
+        View rootView = inflater.inflate(R.layout.comic_recyclerview_top,null);
         ButterKnife.bind(this,rootView);
         initView();
         return rootView;
@@ -89,9 +86,10 @@ public class NewAddFragment extends BaseFragment
         //只能下拉刷新
         RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
         //设置主题色
-        refreshLayout.setPrimaryColors(ThemeUtil.getThemeColor(context));
+        refreshLayout.setPrimaryColors(ThemeUtil.getThemeColor(context),
+                ContextCompat.getColor(context,R.color.window_background));
         //下拉到底最后不自动加载，需要再拉一下
-        refreshLayout.setEnableAutoLoadmore(false);
+//        refreshLayout.setEnableAutoLoadmore(false);
         //不在加载更多完成之后滚动内容显示新数据
         refreshLayout.setEnableScrollContentWhenLoaded(false);
         //设置回顶按钮颜色
@@ -131,18 +129,20 @@ public class NewAddFragment extends BaseFragment
         btn_toTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(gridView != null && comicList.size()>0){
-                    gridView.smoothScrollToPosition(0);
+                if(recyclerView != null && comicList.size()>0){
+                    recyclerView.smoothScrollToPosition(0);
                 }
             }
         });
     }
 
     public void initGridView() {
-        pictureGridAdapter = new PictureGridAdapter(context,comicList);
-        gridView.setAdapter(pictureGridAdapter);
-        gridView.setOnScrollListener(this);
-        gridView.setOnItemClickListener(new ItemClickListener());
+        //根据屏幕宽度设置列数
+        int columns = DisplayUtil.getGridNumColumns(context,Global.ITEMVIEWWIDTH);
+        int itemWidth = (int) (DisplayUtil.getScreenWidthPX(context)/columns);
+        pictureGridAdapter = new ComicRecyclerViewAdapter(context,comicList,itemWidth);
+        recyclerView.setLayoutManager(new GridLayoutManager(context,columns));
+        recyclerView.setAdapter(pictureGridAdapter);
         pictureGridAdapter.notifyDataSetChanged();
     }
 
@@ -155,70 +155,7 @@ public class NewAddFragment extends BaseFragment
     //获得漫画列表对象并存入comicList
     public void getListItems(int page){
         ComicService.get().getHTML(this, Global.REQUEST_COMIC_NEWADD,
-                ruleStore.getListRule().get("url"),page);
-    }
-
-
-    //TODO:滑动事件--------
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        switch (scrollState){
-            case SCROLL_STATE_TOUCH_SCROLL:
-                //手指接触状态
-                break;
-            case SCROLL_STATE_FLING:
-                //屏幕处于滑动状态
-                break;
-            case SCROLL_STATE_IDLE:
-                //停止滑动状态
-                clearAndLoadImage();
-                break;
-        }
-    }
-
-    @Override
-    public void onScroll(AbsListView absListView, int firstItem, int visibleItem, int totalItem) {
-        //firstItem 为第一个可见对象的下标, visibleItem可见对象的数量, totalItem 可见对象的总数
-//        Log.d(TAG, "onScroll: "+firstItem+","+visibleItem+","+totalItem);
-    }
-
-    //延迟刷新适配器，防止第一次加载不显示封面
-    public void delayedFlushAdapter(){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pictureGridAdapter.notifyDataSetChanged();
-                clearAndLoadImage();
-            }
-        },200);
-    }
-
-    //清理不可见是item,加载可见的item。如果是第一次就加载这加载整页
-    public void clearAndLoadImage(){
-        int firstVisiblePosition= gridView.getFirstVisiblePosition();
-        int lastVisiblePosition = gridView.getLastVisiblePosition();
-        if (lastVisiblePosition==-1){
-            delayedFlushAdapter();
-            return;
-        }
-        for(int i = 0; i < gridView.getCount();i++){
-            View view = pictureGridAdapter.getViewMap().get(i);
-            if (view!=null){
-                ImageView image = (ImageView) view.findViewById(R.id.comic_img);
-                ImageView EndTag = (ImageView) view.findViewById(R.id.comic_status);
-                if(i<firstVisiblePosition || i>lastVisiblePosition){
-                    //Log.d(TAG, "clearImage: "+i);
-                    image.setImageBitmap(null);
-                    image.setImageDrawable(null);
-                    EndTag.setImageResource(0);
-                }else{
-                    //Log.d(TAG, "loadImage: "+i);
-                    pictureGridAdapter.loadCover(i,view);
-                }
-            }
-        }
-        System.gc();
-        pictureGridAdapter.notifyDataSetChanged();
+                ruleStore.getNewAddRule().get("url"),page);
     }
 
     @Override
@@ -250,7 +187,6 @@ public class NewAddFragment extends BaseFragment
                     }else{
                         RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Both);
                     }
-                    clearAndLoadImage();
                 }else{
                     onError(getString(R.string.data_load_fail),what);
                 }

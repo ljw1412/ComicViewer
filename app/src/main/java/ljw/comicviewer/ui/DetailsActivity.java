@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.bilibili.magicasakura.widgets.TintTextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
@@ -298,7 +299,8 @@ public class DetailsActivity extends AppCompatActivity
         if(!isDestroyed()) {
             RequestOptions options = new RequestOptions();
             options.placeholder(R.drawable.img_load_before)
-                    .error(R.drawable.img_load_failed).centerCrop();
+                    .error(R.drawable.img_load_failed)
+                    .centerCrop().transform(new RoundedCorners(20));
             Glide.with(context).load(comic.getImageUrl()).apply(options).into(img_cover);
         }
     }

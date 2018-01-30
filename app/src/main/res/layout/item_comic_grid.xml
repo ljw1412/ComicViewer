@@ -9,8 +9,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_gravity="center_horizontal"
-        android:layout_height="160dp"
-        android:background="@drawable/shape_border_gray">
+        android:layout_height="160dp">
 
         <ImageView
             android:layout_width="40dp"
@@ -24,14 +23,12 @@
             android:adjustViewBounds="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:layout_marginRight="1dp"
-            android:layout_marginLeft="1dp" />
+            android:scaleType="centerCrop" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:background="@color/black_shadow"
+            android:background="@drawable/shape_rectangle_bottom_round_corner_color_gray_trans"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom">
 

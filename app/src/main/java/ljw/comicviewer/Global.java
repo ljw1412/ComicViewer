@@ -22,4 +22,5 @@ public class Global {
     //参数
     public static final int SNACKBAR_DURATION = 2000;//SNACKBAR的延迟
 
+    public static final int ITEMVIEWWIDTH = 120; //DIP
 }

@@ -25,6 +25,7 @@ public class RuleStore {
     private Map<String,List<Category>> typeRule;
     private Map<String,String> homeRule;
     private Map<String,String> listRule;
+    private Map<String,String> newAddRule;
     private Map<String,String> updateRule;
     private Map<String,String> detailsRule;
     private Map<String,String> searchRule;
@@ -127,6 +128,14 @@ public class RuleStore {
 
     public void setListRule(Map<String, String> listRule) {
         this.listRule = listRule;
+    }
+
+    public Map<String, String> getNewAddRule() {
+        return newAddRule;
+    }
+
+    public void setNewAddRule(Map<String, String> newAddRule) {
+        this.newAddRule = newAddRule;
     }
 
     public Map<String, String> getUpdateRule() {

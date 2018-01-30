@@ -154,6 +154,20 @@
 			]
 		}
 	},
+	"new_add_page": {
+		"url": "/list/index_p{page:}.html",
+		"cssQuery": {
+			"items": "$('.book-list #contList li')",
+			"comic-id": "$('a.bcover').attr('href').match('/(\\d+)/')[1]",
+			"comic-name": "$('p.ell').text()",
+			"comic-image-url": "$('a.bcover img').attr('src').match('http[s]?:.+.(?:jpg|jpeg|png|gif|bmp)')[0]",
+			"comic-score": "$('span.updateon em').text()",
+			"comic-update": "$('span.updateon').html().match('\\w+-\\w+-\\w+')[0]",
+			"comic-update-status": "$('a.bcover span.tt').text()",
+			"comic-end": "$('a.bcover span').last().attr('class')!='sl'",
+			"max-page": "$('.pager a').last().attr('href').match('/.*_p(\\w+).html')[1]"
+		}
+	},
 	"update_page":{
 		"url":"/update/d{page:}.html",
 		"cssQuery":{
@@ -212,8 +226,7 @@
 	},
 	"read_page":{
 		"url":"/comic/{comic:}/{chapter:}/",
-		"wv-js":"var res = [];var path='http://lt.hamreus.com:8080'+cInfo.path;for(var i = 0;i<cInfo.files.length;i++){res.push(path+cInfo.files[i]);}res;"
-		,
+		"wv-js":"var res = [];var path='http://lt.hamreus.com:8080'+cInfo.path;for(var i = 0;i<cInfo.files.length;i++){res.push(path+cInfo.files[i]);}res;",
 		"items":{
 			"imghost":"http://lt.hamreus.com:8080"
 		}

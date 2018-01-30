@@ -142,7 +142,7 @@ public class SearchActivity extends BaseActivity
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 //按下回车键
-                if(actionId == EditorInfo.IME_ACTION_DONE){
+                if(actionId == EditorInfo.IME_ACTION_SEARCH){
                     searching(textView);
                 }
                 return true;

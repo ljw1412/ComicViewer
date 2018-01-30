@@ -122,7 +122,7 @@ public class CollectionFragment extends BaseFragment
 
     public void initGridView() {
         //根据屏幕宽度设置列数
-        int columns = DisplayUtil.getGridNumColumns(context,120);
+        int columns = DisplayUtil.getGridNumColumns(context,Global.ITEMVIEWWIDTH);
         int itemWidth = (int) (DisplayUtil.getScreenWidthPX(context)/columns);
         searchGridAdapter = new ComicRecyclerViewAdapter(context, searchComics,itemWidth);//搜索用适配器
         normalGridAdapter = new ComicRecyclerViewAdapter(context,comics,itemWidth);//平时用适配器

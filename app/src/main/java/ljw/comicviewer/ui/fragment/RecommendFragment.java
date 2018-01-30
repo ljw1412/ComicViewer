@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
@@ -176,7 +177,8 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
             itemViewHolder.update.setVisibility(View.GONE);
             //图片网络
             RequestOptions options = new RequestOptions();
-            options.skipMemoryCache(true).centerCrop().override(300,400);
+//            options.skipMemoryCache(true).centerCrop().override(300,400);
+            options.centerCrop().transform(new RoundedCorners(20));
             if(!((Activity)context).isDestroyed()) {
                 Glide.with(context)
                         .asBitmap()

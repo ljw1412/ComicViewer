@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
@@ -104,8 +105,8 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<ComicItemView
     @Override
     public void onViewRecycled(ComicItemViewHolder holder) {
         if(holder!=null){
-            holder.image.setImageResource(0);
-            holder.image.setImageBitmap(null);
+//            holder.image.setImageResource(0);
+//            holder.image.setImageBitmap(null);
             holder.isEnd.setImageResource(0);
             Glide.with(context).clear(holder.image);
         }
@@ -119,6 +120,7 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<ComicItemView
                 options.placeholder(R.color.transparent)
                         .error(R.drawable.img_load_failed)
                         .centerCrop()
+                        .transform(new RoundedCorners(30))
                         .skipMemoryCache(true);
                 Glide.with(context)
                         .asBitmap()
