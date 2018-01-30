@@ -21,4 +21,5 @@ public class Global {
     public static final int HomeToSetting = 10002;
     //参数
     public static final int SNACKBAR_DURATION = 2000;//SNACKBAR的延迟
+
 }

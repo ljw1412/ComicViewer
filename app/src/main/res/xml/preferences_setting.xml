@@ -13,11 +13,18 @@
             android:summary="@string/setting_sub_summary_theme"
             android:key="setting_theme">
         </PreferenceScreen>
-        <SwitchPreference
+        <ljw.comicviewer.ui.preference.MySwitchPreference
             android:defaultValue="false"
             android:title="@string/setting_sub_title_no_splash"
             android:summary="@string/setting_sub_summary_no_splash"
             android:key="noSplash"
             android:id="@+id/setting_splash"/>
+        <ljw.comicviewer.ui.preference.MySwitchPreference
+            android:defaultValue="false"
+            android:title="@string/setting_sub_title_skip_network_hint"
+            android:summaryOn="@string/setting_sub_summary_on_skip_network_hint"
+            android:summaryOff="@string/setting_sub_summary_off_skip_network_hint"
+            android:key="skipNetworkHint"
+            android:id="@+id/setting_skip_network_hint"/>
     </PreferenceCategory>
 </PreferenceScreen>

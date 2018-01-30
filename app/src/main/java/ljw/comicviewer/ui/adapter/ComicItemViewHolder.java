@@ -13,7 +13,7 @@ import ljw.comicviewer.R;
  * Created by ljw on 2018-01-28 028.
  */
 
-public class FilterItemViewHolder extends RecyclerView.ViewHolder{
+public class ComicItemViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.comic_score)
     TextView score;
     @BindView(R.id.comic_updateDate)
@@ -27,7 +27,7 @@ public class FilterItemViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.comic_status)
     ImageView isEnd;
 
-    public FilterItemViewHolder(View view) {
+    public ComicItemViewHolder(View view) {
         super(view);
         ButterKnife.bind(this,view);
     }

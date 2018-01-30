@@ -39,7 +39,7 @@ import ljw.comicviewer.db.CollectionHolder;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.DetailsActivity;
 import ljw.comicviewer.ui.HomeActivity;
-import ljw.comicviewer.ui.adapter.FilterRecyclerViewAdapter;
+import ljw.comicviewer.ui.adapter.ComicRecyclerViewAdapter;
 import ljw.comicviewer.ui.dialog.ThemeDialog;
 import ljw.comicviewer.ui.listeners.OnItemClickListener;
 import ljw.comicviewer.ui.listeners.OnItemLongClickListener;
@@ -56,8 +56,8 @@ public class CollectionFragment extends BaseFragment
     private Context context;
     private List<Comic> comics = new ArrayList<>();
     private List<Comic> searchComics = new ArrayList<>();
-    private FilterRecyclerViewAdapter pictureGridAdapter;
-    private FilterRecyclerViewAdapter searchGridAdapter,normalGridAdapter;
+    private ComicRecyclerViewAdapter pictureGridAdapter;
+    private ComicRecyclerViewAdapter searchGridAdapter,normalGridAdapter;
     private boolean loading = false;
     private boolean searching = false;
     @BindView(R.id.refreshLayout)
@@ -124,8 +124,8 @@ public class CollectionFragment extends BaseFragment
         //根据屏幕宽度设置列数
         int columns = DisplayUtil.getGridNumColumns(context,120);
         int itemWidth = (int) (DisplayUtil.getScreenWidthPX(context)/columns);
-        searchGridAdapter = new FilterRecyclerViewAdapter(context, searchComics,itemWidth);//搜索用适配器
-        normalGridAdapter = new FilterRecyclerViewAdapter(context,comics,itemWidth);//平时用适配器
+        searchGridAdapter = new ComicRecyclerViewAdapter(context, searchComics,itemWidth);//搜索用适配器
+        normalGridAdapter = new ComicRecyclerViewAdapter(context,comics,itemWidth);//平时用适配器
         pictureGridAdapter = normalGridAdapter;//设置当前适配器为正常
         recyclerView.setLayoutManager(new GridLayoutManager(context,columns));
         recyclerView.setAdapter(pictureGridAdapter);

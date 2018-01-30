@@ -29,7 +29,7 @@ import ljw.comicviewer.util.DensityUtil;
  * Created by ljw on 2018-01-28 028.
  */
 
-public class FilterRecyclerViewAdapter extends RecyclerView.Adapter<FilterItemViewHolder>{
+public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<ComicItemViewHolder>{
     private Context context;
     private LayoutInflater inflater;
     private List<Comic> comics;
@@ -37,7 +37,7 @@ public class FilterRecyclerViewAdapter extends RecyclerView.Adapter<FilterItemVi
     private OnItemLongClickListener onItemLongClickListener;
     private int viewWidth;
 
-    public FilterRecyclerViewAdapter(Context context, List<Comic> comics,int viewWidth) {
+    public ComicRecyclerViewAdapter(Context context, List<Comic> comics, int viewWidth) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.comics = comics;
@@ -53,7 +53,7 @@ public class FilterRecyclerViewAdapter extends RecyclerView.Adapter<FilterItemVi
     }
 
     @Override
-    public FilterItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ComicItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_comic_grid,parent,false);
         ViewGroup.LayoutParams lp = view.getLayoutParams();
         lp.width = viewWidth;
@@ -61,12 +61,12 @@ public class FilterRecyclerViewAdapter extends RecyclerView.Adapter<FilterItemVi
         view.setPadding(padding,padding,padding,padding);
         view.setLayoutParams(lp);
         view.setBackgroundResource(R.drawable.selector_bg_null_to_black_pressed);
-        FilterItemViewHolder filterItemViewHolder = new FilterItemViewHolder(view);
+        ComicItemViewHolder filterItemViewHolder = new ComicItemViewHolder(view);
         return filterItemViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(final FilterItemViewHolder holder, final int position) {
+    public void onBindViewHolder(final ComicItemViewHolder holder, final int position) {
         holder.name.setText(comics.get(position).getName());
         if(comics.get(position).getScore()!=null) {
             holder.score.setText(comics.get(position).getScore());
@@ -102,7 +102,7 @@ public class FilterRecyclerViewAdapter extends RecyclerView.Adapter<FilterItemVi
     }
 
     @Override
-    public void onViewRecycled(FilterItemViewHolder holder) {
+    public void onViewRecycled(ComicItemViewHolder holder) {
         if(holder!=null){
             holder.image.setImageResource(0);
             holder.image.setImageBitmap(null);
@@ -112,7 +112,7 @@ public class FilterRecyclerViewAdapter extends RecyclerView.Adapter<FilterItemVi
         super.onViewRecycled(holder);
     }
 
-    public void loadCover(final int position, final FilterItemViewHolder holder) {
+    public void loadCover(final int position, final ComicItemViewHolder holder) {
         if (holder != null) {
              if ( comics.size() > 0 && !((Activity) context).isDestroyed()) {
                 RequestOptions options = new RequestOptions();

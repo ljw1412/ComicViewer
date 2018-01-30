@@ -154,7 +154,7 @@
 			]
 		}
 	},
-	"latest-list-url":{
+	"update_page":{
 		"url":"/update/d{page:}.html",
 		"cssQuery":{
 			"latest-list":"$('.latest-list')",

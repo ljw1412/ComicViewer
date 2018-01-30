@@ -22,7 +22,6 @@ import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.FilterActivity;
 import ljw.comicviewer.ui.SearchActivity;
 import ljw.comicviewer.ui.adapter.MyFragmentPagerAdapter;
-import ljw.comicviewer.util.ThemeUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -107,7 +106,7 @@ public class HomeFragment extends BaseFragment{
                 myFragmentPagerAdapter.addFragment(newAddFragment, getString(R.string.opt_new));
             }
         }
-        if(ruleStore.getLatestRule()!=null) {
+        if(ruleStore.getUpdateRule()!=null) {
             updateFragment = new UpdateFragment();
             myFragmentPagerAdapter.addFragment(updateFragment, getString(R.string.opt_update));
         }

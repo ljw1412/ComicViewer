@@ -140,7 +140,7 @@ public class ThemeDialog {
     }
 
     public ThemeDialog setCancelable(boolean cancelable) {
-        mBuilder.setCancelable(true);
+        mBuilder.setCancelable(cancelable);
         return this;
     }
 
@@ -232,6 +232,16 @@ public class ThemeDialog {
     public void show(){
         create();
         mAlert.show();
+    }
+
+    public boolean isShowing(){
+        if(mAlert!=null)
+            return mAlert.isShowing();
+        return false;
+    }
+
+    public void dismiss(){
+        if (isShowing()) mAlert.dismiss();
     }
 
     public interface OnClickListener {

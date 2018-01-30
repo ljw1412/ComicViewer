@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.ui.adapter.PictureGridAdapter;
-import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.ThemeUtil;
 
@@ -108,7 +106,7 @@ public class UpdateFragment extends NewAddFragment {
         btn_toTop.setVisibility(View.GONE);
 //        ComicService.get().getUpdateList(this,days);
         ComicService.get().getHTML(this,Global.REQUEST_COMICS_UPDATE,
-                ruleStore.getLatestRule().get("url"),days);
+                ruleStore.getUpdateRule().get("url"),days);
     }
 
 

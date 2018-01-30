@@ -2,7 +2,6 @@ package ljw.comicviewer.ui.fragment.setting;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -88,10 +87,6 @@ public class SettingFragment extends PreferenceFragment {
                 return true;
             }
         });
-        Preference switchPreference = findPreference("noSplash");
-        if(Build.VERSION.SDK_INT >= 24) {
-            switchPreference.setWidgetLayoutResource(R.layout.preference_widget_switch);
-        }
     }
 
 }

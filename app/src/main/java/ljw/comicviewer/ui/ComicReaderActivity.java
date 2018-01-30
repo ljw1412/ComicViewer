@@ -1,6 +1,7 @@
 package ljw.comicviewer.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -46,8 +47,11 @@ import ljw.comicviewer.others.MyWebView;
 import ljw.comicviewer.store.ComicReadStore;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.PicturePagerAdapter;
+import ljw.comicviewer.ui.dialog.ThemeDialog;
 import ljw.comicviewer.util.AnimationUtil;
 import ljw.comicviewer.util.AreaClickHelper;
+import ljw.comicviewer.util.NetworkUtil;
+import ljw.comicviewer.util.PreferenceUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.WebViewUtil;
 import uk.co.senab.photoview.PhotoView;
@@ -83,6 +87,8 @@ public class ComicReaderActivity extends AppCompatActivity {
     TextView txtPage;
     @BindView(R.id.read_viewer_time)
     TextView txtTime;
+    @BindView(R.id.read_viewer_network)
+    TextView txtNetwork;
     @BindView(R.id.read_viewer_head)
     RelativeLayout viewHead;
     @BindView(R.id.read_viewer_tools)
@@ -127,7 +133,7 @@ public class ComicReaderActivity extends AppCompatActivity {
         ruleStore = RuleStore.get();
         initView();
         initWebView();
-        setTime();
+        setTimeAndNetwork();
         addListener();
     }
 
@@ -150,8 +156,48 @@ public class ComicReaderActivity extends AppCompatActivity {
                 "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36");
         webView.loadUrl(parseUrl());
         webView.setWebViewClient(new MyWebView());
-        getInfo();
+        checkNetwork();
     }
+
+    ThemeDialog themeDialog;
+    private void checkNetwork(){
+        if (NetworkUtil.getNetworkType(context)== NetworkUtil.NETWORK_MOBILE &&
+                !PreferenceUtil.getSharedPreferences(context).getBoolean("skipNetworkHint",false)){
+            themeDialog = new ThemeDialog(context);
+            themeDialog.setTitle(R.string.dialog_title_warming)
+                    .setMessage(R.string.dialog_content_warming_network)
+                    .setPositiveButton(R.string.dialog_btn_ok, new ThemeDialog.OnButtonClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface) {
+                            getInfo();
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .setNegativeButton(R.string.dialog_btn_cancel, new ThemeDialog.OnButtonClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface) {
+                            dialogInterface.dismiss();
+                            finish();
+                        }
+                    });
+            themeDialog.show();
+        }else if(NetworkUtil.getNetworkType(context)== NetworkUtil.NETWORK_NONE){
+            themeDialog = new ThemeDialog(context);
+            themeDialog.setTitle(R.string.dialog_title_warming)
+                    .setMessage(R.string.dialog_content_warming_no_network)
+                    .setPositiveButton(R.string.dialog_btn_close, new ThemeDialog.OnButtonClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface) {
+                            dialogInterface.dismiss();
+                            finish();
+                        }
+                    }).setCancelable(false);
+            themeDialog.show();
+        }else{
+            getInfo();
+        }
+    }
+
 
     private void initData(){
         picturePagerAdapter = new PicturePagerAdapter(this, imgUrls);
@@ -163,7 +209,7 @@ public class ComicReaderActivity extends AppCompatActivity {
         txtChapterName.setText(chapter_name);
 
         mySeekBar.setMax(imgUrls.size() - 1);
-        mySeekBar.setProgress(currPos);
+        updateSeekBar(currPos);
         mySeekBar.setSecondaryProgress(0);
         txtSeekBarTips.setText((currPos+1) + "/" + imgUrls.size());
         setPageText((currPos+1)+"",""+imgUrls.size());
@@ -172,6 +218,7 @@ public class ComicReaderActivity extends AppCompatActivity {
     private void initView(){
         viewPager.setVisibility(View.VISIBLE);
         rvPicture.setVisibility(View.GONE);
+        viewBottomStatus.setVisibility(View.GONE);
         viewPager.setOffscreenPageLimit(2);//TODO:之后改为可以设置的
     }
 
@@ -408,13 +455,12 @@ public class ComicReaderActivity extends AppCompatActivity {
                 pictureViewHolder.progressBar.setVisibility(View.GONE);
                 pictureViewHolder.btnRefresh.setVisibility(View.GONE);
                 pictureViewHolder.txtPageNum.setVisibility(View.GONE);
-//                pic.setImageBitmap();
                 mAttacher.update();
-
                 mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
                     @Override
                     public void onViewTap(View view, float x, float y) {
-                        if (mAttacher.getScale() <= 1 && !isScroll) {
+//                        if (mAttacher.getScale() <= 1 && !isScroll) {
+                        if (!isScroll) {
                             Log.d(TAG,"onViewTap :"+x+" "+y);
                             areaClickHelper.onClick(x, y);
                         }
@@ -511,6 +557,7 @@ public class ComicReaderActivity extends AppCompatActivity {
         setResult(Global.REQUEST_COMIC_HISTORY,intent);
     }
 
+    //更新进度条进度
     private void updateSeekBar(int progress){
         mySeekBar.setProgress(progress);
         Log.d(TAG, "updateSeekBar: "+progress);
@@ -540,25 +587,47 @@ public class ComicReaderActivity extends AppCompatActivity {
         }
     }
 
-
-
     //1秒刷新一次时间
-    public void updateTime(){
+    public void updateTimeAndNetwork(){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                setTime();
+                setTimeAndNetwork();
             }
         },1000);
     }
 
-    public void setTime(){
+    private int currentNetworkType = -1;
+    public void setTimeAndNetwork(){
+        //修改右下角的时间
         long sysTime = System.currentTimeMillis();//获取系统时间
         CharSequence sysTimeStr = DateFormat.format("HH:mm", sysTime);//时间显示格式
         txtTime.setText(sysTimeStr);
-        updateTime();
+        //修改右下角的网络状态
+        if(currentNetworkType != NetworkUtil.getNetworkType(context)) {
+            currentNetworkType = NetworkUtil.getNetworkType(context);
+            String networkType;
+            switch (currentNetworkType) {
+                case NetworkUtil.NETWORK_WIFI:
+                    networkType = "WIFI";
+                    break;
+                case NetworkUtil.NETWORK_MOBILE:
+                    networkType = "MOBILE";
+                    break;
+                default:
+                    networkType = "NONE";
+                    break;
+            }
+            txtNetwork.setText(networkType);
+            if(themeDialog!=null && themeDialog.isShowing()){
+                themeDialog.dismiss();
+                checkNetwork();
+            }
+        }
+        //循环
+        updateTimeAndNetwork();
     }
-
+    //设置页数文字
     private void setPageText(String current,String total){
         txtPage.setText(current+"/"+total);
         txtToolsPage.setText(current+"/"+total);
@@ -568,12 +637,12 @@ public class ComicReaderActivity extends AppCompatActivity {
         finish();
     }
 
-
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (webView!=null){
             webView.destroy();
         }
+        super.onDestroy();
     }
+
 }

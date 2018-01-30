@@ -14,6 +14,8 @@
     <string name="details_del_collection">取关</string>
     <string name="details_txt_chapters">漫画章节</string>
     <string name="dialog_title_warming">警告</string>
+    <string name="dialog_content_warming_network">您正在使用移动网络，是否观看？</string>
+    <string name="dialog_content_warming_no_network">没有网络！</string>
     <string name="dialog_content_warming">该漫画中有部份章节可能含有暴力、血腥、色情或不当的语言等内容，根据中国法律法规，我们将对其进行屏蔽。</string>
     <string name="dialog_text_ok">我就是要看啊</string>
     <string name="dialog_title_comic_name">漫画标题</string>
@@ -68,4 +70,7 @@
     <string name="setting_sub_nav_no_auto">虚拟导航栏跟随变色</string>
     <string name="setting_sub_title_no_splash">缩短启动动画</string>
     <string name="setting_sub_summary_no_splash">快速进入主界面</string>
+    <string name="setting_sub_title_skip_network_hint">关闭移动数据提示</string>
+    <string name="setting_sub_summary_on_skip_network_hint">使用数据流量时不提示</string>
+    <string name="setting_sub_summary_off_skip_network_hint">使用数据流量时会提示</string>
 </resources>

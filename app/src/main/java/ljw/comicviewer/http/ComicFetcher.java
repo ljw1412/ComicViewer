@@ -185,7 +185,7 @@ public class ComicFetcher {
         return backData;
     }
 
-    //漫画搜索(规则版)
+    //作者相关漫画(规则版)
     public static CallBackData getAuthorResults(String html){
         Map<String,String> map = getRuleStore().getSearchRule();
 
@@ -347,7 +347,7 @@ public class ComicFetcher {
 
     //获取最新（规则版）
     public static List<Comic> getLatestList(String html){
-        Map<String,String> map = getRuleStore().getLatestRule();
+        Map<String,String> map = getRuleStore().getUpdateRule();
         if (map==null) return null;
         List<Comic> comics = new ArrayList<>();
         Document doc = Jsoup.parse(html);

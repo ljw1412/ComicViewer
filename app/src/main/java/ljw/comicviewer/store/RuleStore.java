@@ -25,7 +25,7 @@ public class RuleStore {
     private Map<String,List<Category>> typeRule;
     private Map<String,String> homeRule;
     private Map<String,String> listRule;
-    private Map<String,String> latestRule;
+    private Map<String,String> updateRule;
     private Map<String,String> detailsRule;
     private Map<String,String> searchRule;
     private Map<String,String> detailsChapterRule;
@@ -129,12 +129,12 @@ public class RuleStore {
         this.listRule = listRule;
     }
 
-    public Map<String, String> getLatestRule() {
-        return latestRule;
+    public Map<String, String> getUpdateRule() {
+        return updateRule;
     }
 
-    public void setLatestRule(Map<String, String> latestRule) {
-        this.latestRule = latestRule;
+    public void setUpdateRule(Map<String, String> updateRule) {
+        this.updateRule = updateRule;
     }
 
     public Map<String, String> getDetailsRule() {
@@ -180,13 +180,13 @@ public class RuleStore {
     public void clearAll(){
         comeFrom = host = domain = cookie = imgHost = null;
         typeRule = null;
-        configRule=homeRule=listRule=latestRule=detailsRule=searchRule=detailsChapterRule=readRule=authorRule = null;
+        configRule=homeRule=listRule= updateRule =detailsRule=searchRule=detailsChapterRule=readRule=authorRule = null;
     }
 
     public void printRules(){
         Log.d(TAG, "RuleStore情况:typeRule:" + (typeRule==null?"null":"exits") +
                 " , listRule:" + (listRule==null?"null":"exits") +
-                " , latestRule:" + (latestRule==null?"null":"exits") +
+                " , updateRule:" + (updateRule ==null?"null":"exits") +
                 " , detailsRule:" + (detailsRule==null?"null":"exits") +
                 " , searchRule:" + (searchRule==null?"null":"exits") +
                 " , detailsChapterRule:" + (detailsChapterRule==null?"null":"exits") +

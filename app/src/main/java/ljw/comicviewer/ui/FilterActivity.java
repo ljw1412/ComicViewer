@@ -42,7 +42,7 @@ import ljw.comicviewer.others.MyWebView;
 import ljw.comicviewer.store.FilterStore;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.FilterAdapter;
-import ljw.comicviewer.ui.adapter.FilterRecyclerViewAdapter;
+import ljw.comicviewer.ui.adapter.ComicRecyclerViewAdapter;
 import ljw.comicviewer.ui.listeners.OnItemClickListener;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
@@ -56,7 +56,7 @@ public class FilterActivity extends BaseActivity
     private String TAG = this.getClass().getSimpleName()+"----";
     private Context context;
     private FilterAdapter filterAdapter;
-    private FilterRecyclerViewAdapter filterRecyclerViewAdapter;
+    private ComicRecyclerViewAdapter filterRecyclerViewAdapter;
     private boolean loadingNext = false;
     private boolean loading = false;
     private int curPage = 1;
@@ -105,7 +105,7 @@ public class FilterActivity extends BaseActivity
         //设置主题色
         refreshLayout.setPrimaryColors(ThemeUtil.getThemeColor(context));
         //下拉到底最后不自动加载，需要再拉一下
-        refreshLayout.setEnableAutoLoadmore(false);
+//        refreshLayout.setEnableAutoLoadmore(false);
         //不在加载更多完成之后滚动内容显示新数据
         refreshLayout.setEnableScrollContentWhenLoaded(false);
         //设置回顶按钮颜色
@@ -181,7 +181,7 @@ public class FilterActivity extends BaseActivity
         //根据屏幕宽度设置列数
         int columns = DisplayUtil.getGridNumColumns(context,120);
         int itemWidth = (int) (DisplayUtil.getScreenWidthPX(context)/columns);
-        filterRecyclerViewAdapter = new FilterRecyclerViewAdapter(context,comics, itemWidth);
+        filterRecyclerViewAdapter = new ComicRecyclerViewAdapter(context,comics, itemWidth);
         recyclerView.setLayoutManager(new GridLayoutManager(context,columns));
         recyclerView.setAdapter(filterRecyclerViewAdapter);
     }

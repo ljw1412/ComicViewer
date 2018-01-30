@@ -57,7 +57,7 @@ public class RuleParser {
         parseRuleInfo();
         parseHomePage();
         parseListPage();
-        parseLatestPage();
+        parseUpdatePage();
         parseDetailsPage();
         parseDetailsChapter();
         parseSearchPage();
@@ -112,10 +112,10 @@ public class RuleParser {
         ruleStore.setListRule(parsePage("list"));
     }
 
-    private void parseLatestPage(){
+    private void parseUpdatePage(){
         if(ruleStr == null)
             throw new NullPointerException("规则没有定义！");
-        ruleStore.setLatestRule(parsePage("latest-list-url"));
+        ruleStore.setUpdateRule(parsePage("update_page"));
     }
 
     private void parseDetailsPage(){
