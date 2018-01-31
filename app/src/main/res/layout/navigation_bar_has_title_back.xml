@@ -13,10 +13,10 @@
         android:layout_centerVertical="true"
         android:onClick="onBack"
         android:layout_width="36dp"
-        android:elevation="1dp"
         app:srcCompat="@drawable/img_back_white"
         android:alpha="0.75"
-        android:padding="6dp" />
+        android:padding="6dp"
+        style="@style/ActionBarButton" />
 
     <TextView
         android:id="@+id/title"

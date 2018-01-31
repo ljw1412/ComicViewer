@@ -359,34 +359,18 @@ public class DetailsActivity extends AppCompatActivity
     }
     //更新界面收藏状态
     private void updateLikeStatus(){
-        if(isLike()){
-            like = true;
-            btn_like.setBackgroundResource(R.drawable.shape_border_rounded_rectangle_star_color);
-            btn_like_icon.setImageResource(R.drawable.icon_collection_on);
-            btn_like_txt.setTextColor(ContextCompat.getColor(context,R.color.star_yellow));
-            btn_like_txt.setText(R.string.details_del_collection);
-        }else{
-            like = false;
-            btn_like.setBackgroundResource(R.drawable.shape_border_rounded_rectangle);
-            btn_like_icon.setImageResource(R.drawable.icon_collection_off);
-            btn_like_txt.setTextColor(ContextCompat.getColor(context,R.color.white));
-            btn_like_txt.setText(R.string.details_add_collection);
-        }
+        like = isLike();
+        btn_like_icon.setSelected(like);
+        btn_like_txt.setSelected(like);
+        btn_like_txt.setText(like?R.string.details_del_collection:R.string.details_add_collection);
     }
 
     private void updateReadStatus(){
         History history = getHistory();
-        if (history != null){
-            btn_read.setBackgroundResource(R.drawable.shape_border_rounded_rectangle_red_color);
-            btn_read_icon.setImageResource(R.drawable.icon_read_on);
-            btn_read_txt.setTextColor(ContextCompat.getColor(context,R.color.holo_red_light));
-            btn_read_txt.setText(R.string.details_continue_read);
-        }else{
-            btn_read.setBackgroundResource(R.drawable.shape_border_rounded_rectangle);
-            btn_read_icon.setImageResource(R.drawable.icon_read_off);
-            btn_read_txt.setTextColor(ContextCompat.getColor(context,R.color.white));
-            btn_read_txt.setText(R.string.details_to_read);
-        }
+        boolean read = (history != null);
+        btn_read_icon.setSelected(read);
+        btn_read_txt.setSelected(read);
+        btn_read_txt.setText(read?R.string.details_continue_read:R.string.details_to_read);
     }
     //添加可点击作者
     private void setAuthor(List<Author> authors){

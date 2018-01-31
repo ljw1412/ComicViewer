@@ -226,7 +226,7 @@
 	},
 	"read_page":{
 		"url":"/comic/{comic:}/{chapter:}/",
-		"wv-js":"var res = [];var path='http://lt.hamreus.com:8080'+cInfo.path;for(var i = 0;i<cInfo.files.length;i++){res.push(path+cInfo.files[i]);}res;",
+		"wv-js":"var res=[];var path='http://lt.hamreus.com:8080'+cInfo.path;for(var i=0;i<cInfo.files.length;i++){var url=path+cInfo.files[i]+'?cid='+cInfo.cid;for(t in cInfo.sl){url+='&'+t+'='+cInfo.sl[t]}res.push(url)}res;",
 		"items":{
 			"imghost":"http://lt.hamreus.com:8080"
 		}

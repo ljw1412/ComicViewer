@@ -8,12 +8,13 @@
     android:elevation="5dp">
 
     <ImageView
-        android:layout_height="match_parent"
+        android:layout_height="36dp"
         app:srcCompat="@drawable/img_back_white"
-        android:id="@+id/search_back"
+        android:id="@+id/nav_back"
         android:layout_width="36dp"
+        android:onClick="onBack"
         android:padding="6dp"
-        android:onClick="onBack" />
+        style="@style/ActionBarButton" />
 
     <TextView
         android:id="@+id/nav_child_title"

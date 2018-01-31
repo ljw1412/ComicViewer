@@ -61,7 +61,7 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<ComicItemView
         int padding = DensityUtil.dp2px(context,2);
         view.setPadding(padding,padding,padding,padding);
         view.setLayoutParams(lp);
-        view.setBackgroundResource(R.drawable.selector_bg_null_to_black_pressed);
+//        view.setBackgroundResource(R.drawable.selector_bg_null_to_black_pressed);
         ComicItemViewHolder filterItemViewHolder = new ComicItemViewHolder(view);
         return filterItemViewHolder;
     }

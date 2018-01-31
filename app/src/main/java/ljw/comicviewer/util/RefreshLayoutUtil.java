@@ -1,6 +1,12 @@
 package ljw.comicviewer.util;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
+
+import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+
+import ljw.comicviewer.R;
 
 /**
  * 刷新界面工具类
@@ -44,5 +50,19 @@ public class RefreshLayoutUtil {
         if (refreshLayout.isLoading()){
             refreshLayout.finishLoadmore();
         }
+    }
+
+    public static void init(Context context, RefreshLayout refreshLayout,
+                                   int mode,boolean autoLoadMore){
+        //设置下拉模式
+        RefreshLayoutUtil.setMode(refreshLayout, mode);
+        //设置主题色
+        refreshLayout.setPrimaryColors(
+                ThemeUtils.getColorById(context, R.color.theme_color_primary),
+                ContextCompat.getColor(context,R.color.window_background));
+        //下拉到底最后是否自动加载，否：需要再拉一下
+        refreshLayout.setEnableAutoLoadmore(autoLoadMore);
+        //不在加载更多完成之后滚动内容显示新数据
+        refreshLayout.setEnableScrollContentWhenLoaded(false);
     }
 }

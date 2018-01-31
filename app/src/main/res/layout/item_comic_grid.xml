@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="125.4dp"
     android:layout_height="wrap_content"
-    android:paddingTop="2dp">
+    android:paddingTop="2dp"
+    android:background="@drawable/selector_bg_null_to_black_pressed"
+    >
 
     <FrameLayout
         android:layout_width="match_parent"

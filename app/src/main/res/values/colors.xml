@@ -93,10 +93,11 @@
 
 
     <color name="text_primary_color">#2d2d2d</color>
+    <color name="text_tertiary_color">#808080</color>
     <color name="window_background">#eaeaea</color>
     <color name="window_night_background">#ff757575</color>
 
-
+    #808080
 
 
 

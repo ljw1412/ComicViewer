@@ -1,111 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/search_body"
+    android:layout_centerInParent="true"
+    android:padding="5dp"
+    android:background="@drawable/selector_search_item_bg"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp">
+
+    <ImageView
+        android:layout_width="84dp"
+        app:srcCompat="@drawable/img_load_before"
+        android:id="@+id/search_cover"
+        android:adjustViewBounds="false"
+        android:padding="5dp"
+        android:layout_height="112.7dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp" />
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:id="@+id/search_body"
-        android:paddingBottom="2.5dp"
-        android:elevation="5dp"
-        android:layout_marginBottom="2.5dp"
-        android:layout_marginTop="2.5dp"
-        android:background="@drawable/selector_search_item_bg">
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical">
 
-        <ImageView
-            android:layout_width="84dp"
-            app:srcCompat="@drawable/img_load_before"
-            android:id="@+id/search_cover"
-            android:adjustViewBounds="false"
-            android:padding="5dp"
-            android:layout_height="112.7dp"
-            android:layout_gravity="center_vertical" />
-
-        <LinearLayout
-            android:orientation="vertical"
+        <TextView
+            android:text="search_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="5dp"
-            android:layout_gravity="center_vertical">
+            android:id="@+id/search_comic_name"
+            android:textSize="18sp"
+            android:maxLines="1"/>
+
+        <TextView
+            android:text="author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_comic_author"
+            android:textSize="16sp"
+            android:maxLines="1"/>
+
+        <TextView
+            android:text="info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_comic_info"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
-                android:text="search_name"
+                android:text="update_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/search_comic_name"
-                android:textSize="18sp"
-                android:maxLines="1"/>
+                android:id="@+id/search_comic_update_status"
+                android:maxLines="1"
+                android:layout_weight="1" />
 
             <TextView
-                android:text="author"
+                android:text="is_end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/search_comic_author"
-                android:textSize="16sp"
-                android:maxLines="1"/>
-
-            <TextView
-                android:text="info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/search_comic_info"
-                android:ellipsize="end"
-                android:maxLines="1"/>
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:text="update_status"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/search_comic_update_status"
-                    android:maxLines="1"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:text="is_end"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/search_comic_is_end"
-                    android:maxLines="1"
-                    android:layout_weight="3"
-                    android:gravity="right|center_vertical"
-                    android:layout_marginRight="5dp" />
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:text="tags"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/search_comic_type"
-                    android:maxLines="1"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:text="update_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/search_comic_update"
-                    android:maxLines="1"
-                    android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:layout_marginRight="5dp" />
-
-            </LinearLayout>
+                android:id="@+id/search_comic_is_end"
+                android:maxLines="1"
+                android:layout_weight="3"
+                android:gravity="right|center_vertical"
+                android:layout_marginRight="5dp" />
         </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <TextView
+                android:text="tags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/search_comic_type"
+                android:maxLines="1"
+                android:layout_weight="1" />
+
+            <TextView
+                android:text="update_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/search_comic_update"
+                android:maxLines="1"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:layout_marginRight="5dp" />
+
+        </LinearLayout>
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

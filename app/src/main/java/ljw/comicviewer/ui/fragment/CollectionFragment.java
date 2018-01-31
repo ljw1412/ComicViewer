@@ -4,7 +4,6 @@ package ljw.comicviewer.ui.fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -24,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bilibili.magicasakura.utils.ThemeUtils;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
 
@@ -45,7 +45,6 @@ import ljw.comicviewer.ui.listeners.OnItemClickListener;
 import ljw.comicviewer.ui.listeners.OnItemLongClickListener;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
-import ljw.comicviewer.util.ThemeUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -104,15 +103,11 @@ public class CollectionFragment extends BaseFragment
     @Override
     public void initView() {
         //只允许刷新，以便初次启动时自动刷新
-        RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
-        //设置主题色
-        refreshLayout.setPrimaryColors(ThemeUtil.getThemeColor(context));
-        //下拉到底最后不自动加载，需要再拉一下
-        refreshLayout.setEnableAutoLoadmore(false);
-        //不在加载更多完成之后滚动内容显示新数据
-        refreshLayout.setEnableScrollContentWhenLoaded(false);
+        RefreshLayoutUtil.init(context,refreshLayout,
+                RefreshLayoutUtil.Mode.Only_Refresh,false);
         //设置回顶按钮颜色
-        btn_toTop.setBackgroundTintList(ColorStateList.valueOf(ThemeUtil.getThemeColor(context)));
+        btn_toTop.setBackgroundTintList(
+                ThemeUtils.getThemeColorStateList(context,R.color.theme_color_primary));
 
         if (getActivity() instanceof HomeActivity)
              ((HomeActivity) getActivity()).setTitle(nav_title,getString(R.string.txt_collection));

@@ -43,16 +43,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="10dp"
-                    android:paddingTop="10dp">
+                    android:paddingTop="10dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="16dp">
 
                     <ImageView
                         app:srcCompat="@drawable/img_load_before"
                         android:id="@+id/details_cover"
-                        android:layout_marginRight="7dp"
+                        android:layout_marginRight="10dp"
                         android:layout_marginLeft="10dp"
-                        android:layout_height="169dp"
-                        android:layout_width="126.75dp"
-                        android:adjustViewBounds="false" />
+                        android:layout_width="110dp"
+                        android:adjustViewBounds="false"
+                        android:layout_height="140dp" />
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -172,7 +174,6 @@
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
                             android:id="@+id/updateDate">
 
                             <ImageView
@@ -186,111 +187,121 @@
                                 style="@style/details_font"/>
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:id="@+id/read_favorite">
-
-                            <LinearLayout
-                                android:orientation="horizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/btn_add_collection"
-                                android:background="@drawable/shape_border_rounded_rectangle"
-                                android:layout_marginRight="10dp"
-                                android:paddingLeft="5dp"
-                                android:paddingRight="5dp">
-
-                                <ImageView
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    app:srcCompat="@drawable/icon_collection_off"
-                                    android:id="@+id/icon_collection"
-                                    android:layout_weight="1"
-                                    android:layout_gravity="center" />
-
-                                <TextView
-                                    android:text="@string/details_add_collection"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/txt_add_collection"
-                                    android:textSize="20sp"
-                                    android:textColor="@color/white"
-                                    android:layout_marginLeft="2dp"
-                                    android:layout_marginRight="2dp"
-                                    android:layout_gravity="center" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:orientation="horizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/btn_to_reading"
-                                android:background="@drawable/shape_border_rounded_rectangle"
-                                android:paddingLeft="5dp"
-                                android:paddingRight="5dp">
-
-                                <ImageView
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    app:srcCompat="@drawable/icon_read_off"
-                                    android:id="@+id/icon_to_reading"
-                                    android:layout_weight="1"
-                                    android:adjustViewBounds="false"
-                                    android:layout_gravity="center" />
-
-                                <TextView
-                                    android:text="@string/details_to_read"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/txt_to_reading"
-                                    android:textSize="20sp"
-                                    android:textColor="@color/white"
-                                    android:layout_marginLeft="2dp"
-                                    android:layout_marginRight="2dp"
-                                    android:layout_gravity="center" />
-                            </LinearLayout>
-
-                        </LinearLayout>
 
                     </LinearLayout>
                 </RelativeLayout>
 
-                <LinearLayout
-                    android:orientation="vertical"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/details_instruction"
-                    android:background="@android:color/background_light">
+                    android:layout_height="match_parent">
 
-                    <TextView
-                        android:id="@+id/details_info"
+                    <LinearLayout
+                        android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="info"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:layout_marginRight="5dp" />
+                        android:id="@+id/details_instruction"
+                        android:background="@android:color/background_light"
+                        android:layout_marginTop="30dp"
+                        android:paddingTop="30dp">
 
-                    <ImageView
+                        <TextView
+                            android:id="@+id/details_info"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="info"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="5dp"
+                            android:maxLines="2"
+                            android:ellipsize="end"
+                            android:layout_marginRight="5dp" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            app:srcCompat="@drawable/arrowhead_down"
+                            android:id="@+id/details_info_arrow"
+                            android:layout_marginTop="2.5dp" />
+
+                        <ImageView
+                            android:layout_width="fill_parent"
+                            android:layout_height="1dp"
+                            app:srcCompat="@android:color/darker_gray"
+                            android:scaleType="fitXY"
+                            android:layout_marginTop="2.5dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="10dp"
-                        app:srcCompat="@drawable/arrowhead_down"
-                        android:id="@+id/details_info_arrow"
-                        android:layout_marginTop="2.5dp" />
+                        android:layout_height="60dp"
+                        android:id="@+id/read_favorite"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:background="@drawable/card_white_no_padding_2dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp">
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:id="@+id/btn_add_collection"
+                            android:gravity="center"
+                            android:layout_weight="1">
 
-                    <ImageView
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        app:srcCompat="@android:color/darker_gray"
-                        android:scaleType="fitXY"
-                        android:layout_marginTop="2.5dp" />
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                app:srcCompat="@drawable/icon_following_star"
+                                android:id="@+id/icon_collection"
+                                android:layout_marginRight="2dp"
+                                android:tint="@color/selector_details_following_button" />
 
-                </LinearLayout>
+                            <TextView
+                                android:text="@string/details_add_collection"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/txt_add_collection"
+                                android:textSize="18sp"
+                                android:textColor="@color/selector_details_following_button"
+                                android:gravity="center" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black_pressed"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"/>
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:id="@+id/btn_to_reading"
+                            android:gravity="center"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:text="@string/details_to_read"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:id="@+id/txt_to_reading"
+                                android:textSize="18sp"
+                                android:textColor="@color/selector_details_reading_button"
+                                android:gravity="center" />
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                app:srcCompat="@drawable/icon_reading"
+                                android:id="@+id/icon_to_reading"
+                                android:layout_marginLeft="2dp"
+                                android:tint="@color/selector_details_reading_button" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </FrameLayout>
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -421,9 +432,12 @@
         android:layout_height="300dp"
         android:visibility="gone">
     </WebView>
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/details_coordinatorLayout">
+        android:id="@+id/details_coordinatorLayout"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
     </android.support.design.widget.CoordinatorLayout>
 </RelativeLayout>

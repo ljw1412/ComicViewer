@@ -33,10 +33,10 @@
         android:layout_alignParentEnd="false"
         android:layout_alignParentRight="true"
         android:layout_height="34dp"
-        android:background="@drawable/selector_btn_circle_bg"
         android:layout_width="34dp"
         android:padding="5dp"
-        android:layout_marginRight="2dp" />
+        android:layout_marginRight="2dp"
+        style="@style/ActionBarButton"/>
 
     <com.bilibili.magicasakura.widgets.TintRelativeLayout
         android:layout_width="match_parent"
@@ -67,9 +67,9 @@
             android:id="@+id/nav_btn_cancel"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/selector_btn_circle_bg"
             android:padding="5dp"
-            android:layout_marginRight="2dp" />
+            android:layout_marginRight="2dp"
+            style="@style/ActionBarButton" />
 
     </com.bilibili.magicasakura.widgets.TintRelativeLayout>
 

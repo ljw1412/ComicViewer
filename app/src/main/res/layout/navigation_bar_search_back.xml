@@ -13,7 +13,8 @@
         android:id="@+id/search_back"
         android:layout_width="36dp"
         android:padding="6dp"
-        android:onClick="onBack" />
+        android:onClick="onBack"
+        style="@style/ActionBarButton" />
 
     <LinearLayout
         android:orientation="horizontal"

@@ -8,10 +8,10 @@
     <string name="txt_search">搜索</string>
     <string name="title_activity_settings">设置</string>
     <string name="title_activity_details">详细页</string>
-    <string name="details_to_read">阅读</string>
-    <string name="details_continue_read">续读</string>
-    <string name="details_add_collection">收藏</string>
-    <string name="details_del_collection">取关</string>
+    <string name="details_to_read">开始阅读</string>
+    <string name="details_continue_read">继续阅读</string>
+    <string name="details_add_collection">收藏漫画</string>
+    <string name="details_del_collection">取消收藏</string>
     <string name="details_txt_chapters">漫画章节</string>
     <string name="dialog_title_warming">警告</string>
     <string name="dialog_content_warming_network">您正在使用移动网络，是否观看？</string>

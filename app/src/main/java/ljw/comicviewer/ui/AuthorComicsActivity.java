@@ -30,7 +30,6 @@ import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.SearchListAdapter;
 import ljw.comicviewer.util.RefreshLayoutUtil;
-import ljw.comicviewer.util.ThemeUtil;
 import retrofit2.Call;
 
 /**
@@ -87,10 +86,9 @@ public class AuthorComicsActivity extends BaseActivity
     private void initView(){
         initListView();
         setTitle(String.format(getString(R.string.title_author_comics),aName));
-        //未加载时，禁用上拉下拉界面
-        RefreshLayoutUtil.setMode(refreshLayout, RefreshLayoutUtil.Mode.Only_Refresh);
-        //设置主题色
-        refreshLayout.setPrimaryColors(ThemeUtil.getThemeColor(context));
+        //只允许刷新，以便初次启动时自动刷新
+        RefreshLayoutUtil.init(context,refreshLayout,
+                RefreshLayoutUtil.Mode.Only_Refresh,true);
         //设置头部主题
         RefreshHeader refreshHeader = new ClassicsHeader(context);//使用经典主题
         refreshLayout.setRefreshHeader(refreshHeader);
