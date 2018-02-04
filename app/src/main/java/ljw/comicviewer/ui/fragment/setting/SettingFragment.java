@@ -52,17 +52,7 @@ public class SettingFragment extends PreferenceFragment {
                         .setSingleChoiceItems(items, currentSelected, new ThemeDialog.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int i) {
-                                switch (i){
-                                    case 0:
-                                        StoreUtil.initRuleStore(context,R.raw.manhuagui);
-                                        break;
-                                    case 1:
-                                        StoreUtil.initRuleStore(context,R.raw.manhuatai);
-                                        break;
-                                    case 2:
-                                        StoreUtil.initRuleStore(context,R.raw.zymk);
-                                        break;
-                                }
+                                StoreUtil.switchSource(context,i);
                                 preference.setSummary(
                                         String.format(getString(R.string.setting_sub_summary_source),items[i]));
                                 PreferenceUtil.modify(context,"sourceId",i);

@@ -179,7 +179,7 @@ public class ComicReaderActivity extends AppCompatActivity {
                             dialogInterface.dismiss();
                             finish();
                         }
-                    });
+                    }).setCancelable(false);
             themeDialog.show();
         }else if(NetworkUtil.getNetworkType(context)== NetworkUtil.NETWORK_NONE){
             themeDialog = new ThemeDialog(context);
@@ -437,7 +437,8 @@ public class ComicReaderActivity extends AppCompatActivity {
                 .asBitmap()
                 .load(new GlideUrl(url
                         ,new LazyHeaders.Builder().addHeader("Referer",ruleStore.getHost()).build()
-                )).into(new BitmapImageViewTarget(pic){
+                ))
+                .into(new BitmapImageViewTarget(pic){
             @Override
             public void onLoadStarted(@Nullable Drawable placeholder) {
                 super.onLoadStarted(placeholder);

@@ -31,7 +31,8 @@
         />
     <RelativeLayout
         android:id="@+id/layout_my_history"
-        android:background="@drawable/selector_bg_white_to_black_pressed"
+        android:background="@color/white"
+        android:foreground="?attr/selectableItemBackground"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/long_line_option_button_height">
         <TextView
@@ -62,7 +63,8 @@
 
     <RelativeLayout
         android:id="@+id/layout_my_setting"
-        android:background="@drawable/selector_bg_white_to_black_pressed"
+        android:background="@color/white"
+        android:foreground="?attr/selectableItemBackground"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/long_line_option_button_height">
         <TextView
@@ -93,7 +95,8 @@
 
     <RelativeLayout
         android:id="@+id/layout_my_about"
-        android:background="@drawable/selector_bg_white_to_black_pressed"
+        android:background="@color/white"
+        android:foreground="?attr/selectableItemBackground"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/long_line_option_button_height">
         <TextView

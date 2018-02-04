@@ -37,4 +37,18 @@ public class StoreUtil {
         }
         RuleStore.get().printRules();
     }
+
+    public static void switchSource(Context context,int i){
+        switch (i){
+            case 0:
+                StoreUtil.initRuleStore(context,R.raw.manhuagui);
+                break;
+            case 1:
+                StoreUtil.initRuleStore(context,R.raw.manhuatai);
+                break;
+            case 2:
+                StoreUtil.initRuleStore(context,R.raw.zymk);
+                break;
+        }
+    }
 }

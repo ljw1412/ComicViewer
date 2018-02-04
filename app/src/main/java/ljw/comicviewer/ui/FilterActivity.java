@@ -279,7 +279,7 @@ public class FilterActivity extends BaseActivity
                 lp.gravity = Gravity.CENTER;
                 addView.setLayoutParams(lp);
                 addView.setTextSize(20);
-                addView.setTextColor(ContextCompat.getColor(context,R.color.black_60));
+                addView.setTextColor(ContextCompat.getColor(context,R.color.black_888));
                 addView.setGravity(Gravity.CENTER);
                 addView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -290,7 +290,7 @@ public class FilterActivity extends BaseActivity
                             //设置选中状态为true
                             view.setTag(true);
                             //设置选中父类型的颜色
-                            ((TextView) view).setTextColor(ContextCompat.getColor(context,R.color.smmcl_green));
+                            ((TextView) view).setTextColor(ThemeUtils.getColorById(context,R.color.theme_color_primary));
                             //清空并重新加载数据
                             categories.clear();
                             categories.addAll(ruleStore.getTypeRule().get(typeName));

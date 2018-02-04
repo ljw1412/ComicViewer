@@ -83,6 +83,7 @@ public class PicturePagerAdapter extends PagerAdapter {
                 if (PVAMap.get(position)!=null){
                     //回收PhotoViewAttacher产生的资源，防止溢出
                     PVAMap.get(position).cleanup();
+                    PVAMap.put(position,null);
                 }
                 viewHolders.get(position).ivPicture.setImageBitmap(null);
                 viewHolders.get(position).ivPicture.setImageDrawable(null);

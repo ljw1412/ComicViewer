@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.0"
     defaultConfig {
         applicationId "ljw.comicviewer"
-        minSdkVersion 21 //4.4.4
+        minSdkVersion 21 //5.0
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"

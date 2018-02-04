@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -45,12 +44,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     LinearLayout myBtn_collection;
     @BindView(R.id.goto_mine)
     LinearLayout myBtn_mine;
-    @BindView(R.id.img_comic)
-    ImageView img_comic;
-    @BindView(R.id.img_collection)
-    ImageView img_collection;
-    @BindView(R.id.img_mine)
-    ImageView img_mine;
     @BindView(R.id.home_coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
@@ -77,21 +70,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         setCurrentFragment(homeFragment);
 
         //默认漫画标签
-        img_comic.setSelected(true);
+        setBtnSelected(myBtn_comic);
 
         //初始化ruleStore
         int currentSelected = PreferenceUtil.getSharedPreferences(context).getInt("sourceId",0);
-        switch (currentSelected){
-            case 0:
-                StoreUtil.initRuleStore(context,R.raw.manhuagui);
-                break;
-            case 1:
-                StoreUtil.initRuleStore(context,R.raw.manhuatai);
-                break;
-            case 2:
-                StoreUtil.initRuleStore(context,R.raw.zymk);
-                break;
-        }
+        StoreUtil.switchSource(context,currentSelected);
     }
 
     public void resetView(){
@@ -159,9 +142,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
     //让所有底部导航栏为未选中状态
     private void setAllBtnNoSelected(){
-        img_comic.setSelected(false);
-        img_collection.setSelected(false);
-        img_mine.setSelected(false);
+        myBtn_comic.setSelected(false);
+        myBtn_collection.setSelected(false);
+        myBtn_mine.setSelected(false);
     }
 
     //让点击的导航栏为选中状态
@@ -169,7 +152,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         if (!view.isSelected()){
             setAllBtnNoSelected();
             view.setSelected(true);
-
         }
     }
 
@@ -179,21 +161,21 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.goto_comic:
-                setBtnSelected(img_comic);
+                setBtnSelected(myBtn_comic);
                 if(homeFragment ==null){
                     homeFragment = new HomeFragment();
                 }
                 setCurrentFragment(homeFragment);
                 break;
             case R.id.goto_collection:
-                setBtnSelected(img_collection);
+                setBtnSelected(myBtn_collection);
                 if(collectionFragment == null){
                     collectionFragment = new CollectionFragment();
                 }
                 setCurrentFragment(collectionFragment);
                 break;
             case R.id.goto_mine:
-                setBtnSelected(img_mine);
+                setBtnSelected(myBtn_mine);
                 if(mineFragment == null){
                     mineFragment = new MineFragment();
                 }

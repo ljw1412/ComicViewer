@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="125.4dp"
     android:layout_height="wrap_content"
     android:paddingTop="2dp"
-    android:background="@drawable/selector_bg_null_to_black_pressed"
+    android:background="?attr/selectableItemBackground"
     >
 
     <FrameLayout

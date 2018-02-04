@@ -50,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:textColor="@color/black_shadow"
+                android:textColor="@color/selector_home_bottom_nav_popular"
                 android:text="@string/txt_comic"
                 android:elevation="0dp" />
         </LinearLayout>
@@ -76,7 +76,7 @@
                 android:layout_height="match_parent"
                 android:drawablePadding="3dp"
                 android:gravity="center"
-                android:textColor="@color/black_shadow"
+                android:textColor="@color/selector_home_bottom_nav_collection"
                 android:text="@string/txt_collection" />
         </LinearLayout>
 
@@ -101,7 +101,7 @@
                 android:layout_height="match_parent"
                 android:drawablePadding="3dp"
                 android:gravity="center"
-                android:textColor="@color/black_shadow"
+                android:textColor="@color/selector_home_bottom_nav_mine"
                 android:text="@string/txt_mine" />
         </LinearLayout>
     </LinearLayout>
