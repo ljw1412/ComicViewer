@@ -9,7 +9,7 @@ import java.util.List;
 import ljw.comicviewer.ui.fragment.BaseFragment;
 
 /**
- * Created by ljw on 2017-10-10 010.
+ * 主页分页适配器
  */
 
 public class MyFragmentPagerAdapter extends FragmentPagerAdapter {

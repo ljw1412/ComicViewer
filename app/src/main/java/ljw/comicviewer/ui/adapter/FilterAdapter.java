@@ -16,7 +16,7 @@ import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Category;
 
 /**
- * Created by ljw on 2017-12-12 012.
+ * 分类条目适配器
  */
 
 public class FilterAdapter extends BaseAdapter {

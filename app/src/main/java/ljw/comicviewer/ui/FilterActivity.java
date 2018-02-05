@@ -90,7 +90,7 @@ public class FilterActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_filter2);
+        setContentView(R.layout.activity_filter);
         context = this;
         ButterKnife.bind(this);
         initView();

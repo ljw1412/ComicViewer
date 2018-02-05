@@ -43,6 +43,7 @@ public class ThemeDialog {
     private int mCheckedItem;
     private boolean mIsSingleChoice;
     private View mView;
+    private View innerView;
     @BindView(R.id.dialog_title)
     TextView vTitle;
     @BindView(R.id.dialog_message)
@@ -59,6 +60,8 @@ public class ThemeDialog {
     Button vButton2;
     @BindView(R.id.dialog_button3)
     Button vButton3;
+    @BindView(R.id.dialog_view)
+    ViewGroup vView;
 
     public ThemeDialog(Context context) {
         this.context = context;
@@ -207,6 +210,20 @@ public class ThemeDialog {
         return this;
     }
 
+    public ThemeDialog setView(View view){
+        innerView = view;
+        try {
+            vView.addView(view);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this;
+    }
+
+    public ThemeDialog setView(int layoutResId){
+        View view = LayoutInflater.from(context).inflate(layoutResId,vView);
+        return setView(view);
+    }
 
 
     public AlertDialog create(){

@@ -12,6 +12,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -47,6 +48,7 @@ import ljw.comicviewer.others.MyWebView;
 import ljw.comicviewer.store.ComicReadStore;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.PicturePagerAdapter;
+import ljw.comicviewer.ui.adapter.PictureRecyclerViewAdapter;
 import ljw.comicviewer.ui.dialog.ThemeDialog;
 import ljw.comicviewer.util.AnimationUtil;
 import ljw.comicviewer.util.AreaClickHelper;
@@ -64,13 +66,14 @@ public class ComicReaderActivity extends AppCompatActivity {
     private String TAG = getClass().getSimpleName()+"----";
     private Context context;
     private PicturePagerAdapter picturePagerAdapter;
+    private PictureRecyclerViewAdapter pictureRecyclerViewAdapter;
     private String comic_id,comic_name,chapter_id,chapter_name;
     private int tryTime = 0, currPos;
     private List<String> imgUrls = new ArrayList<>();
     private boolean isShowTools = true, isScroll = false;
     Intent intent = new Intent();
     private WebView webView;
-    private RuleStore ruleStore;
+    private RuleStore ruleStore = RuleStore.get();
     @BindView(R.id.reader_loading_view)
     View view_loading;
     @BindView(R.id.load_fail)
@@ -93,8 +96,6 @@ public class ComicReaderActivity extends AppCompatActivity {
     RelativeLayout viewHead;
     @BindView(R.id.read_viewer_tools)
     RelativeLayout viewBottomTools;
-    @BindView(R.id.read_viewer_can_not_click)
-    RelativeLayout viewNotClick;
     @BindView(R.id.read_viewer_status)
     LinearLayout viewBottomStatus;
     @BindView(R.id.read_viewer_comic_name)
@@ -130,11 +131,39 @@ public class ComicReaderActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: "+currPos);
         //store数据打印
         ComicReadStore.get().printList();
-        ruleStore = RuleStore.get();
+        initData();
         initView();
         initWebView();
         setTimeAndNetwork();
         addListener();
+    }
+
+    //预加载页数
+    private int preloadPageNumber = 2;
+    private int readMode = 0;
+    //数据初始化
+    private void initData(){
+        preloadPageNumber = PreferenceUtil
+                .getSharedPreferences(context).getInt("preloadPageNumber",2);
+        readMode = PreferenceUtil
+                .getSharedPreferences(context).getInt("readMode",0);
+    }
+
+    //初始化界面
+    private void initView(){
+        switch (readMode){
+            case 0:
+            case 1:
+                viewPager.setVisibility(View.VISIBLE);
+                rvPicture.setVisibility(View.GONE);
+                viewPager.setOffscreenPageLimit(preloadPageNumber);//TODO:之后改为可以设置的
+                break;
+            case 2:
+                viewPager.setVisibility(View.GONE);
+                rvPicture.setVisibility(View.VISIBLE);
+                break;
+        }
+        viewBottomStatus.setVisibility(View.GONE);
     }
 
     private String parseUrl(){
@@ -198,11 +227,23 @@ public class ComicReaderActivity extends AppCompatActivity {
         }
     }
 
+    //漫画数据载入
+    private void loadData(){
+        switch (readMode){
+            case 0:
+            case 1:
+                picturePagerAdapter = new PicturePagerAdapter(this, imgUrls);
+                viewPager.setAdapter(picturePagerAdapter);
+                viewPager.setCurrentItem(currPos);//跳页
+                break;
+            case 2:
+                pictureRecyclerViewAdapter = new PictureRecyclerViewAdapter(this, imgUrls);
+                rvPicture.setLayoutManager(new LinearLayoutManager(context));
+                rvPicture.setAdapter(pictureRecyclerViewAdapter);
+                rvPicture.smoothScrollToPosition(currPos);
+                break;
+        }
 
-    private void initData(){
-        picturePagerAdapter = new PicturePagerAdapter(this, imgUrls);
-        viewPager.setAdapter(picturePagerAdapter);
-        viewPager.setCurrentItem(currPos);//跳页
 
         txtComicName.setText(comic_name);
         txtComicChapterName.setText(chapter_name);
@@ -215,17 +256,9 @@ public class ComicReaderActivity extends AppCompatActivity {
         setPageText((currPos+1)+"",""+imgUrls.size());
     }
 
-    private void initView(){
-        viewPager.setVisibility(View.VISIBLE);
-        rvPicture.setVisibility(View.GONE);
-        viewBottomStatus.setVisibility(View.GONE);
-        viewPager.setOffscreenPageLimit(2);//TODO:之后改为可以设置的
-    }
+
 
     private void addListener(){
-        view_loading.setOnClickListener(null);
-        viewMask.setOnClickListener(null);
-        viewNotClick.setOnClickListener(null);
         viewPager.setAreaClickListener(new AreaClickHelper.OnLeftRightClickListener() {
             @Override
             public void left() {
@@ -363,7 +396,6 @@ public class ComicReaderActivity extends AppCompatActivity {
                         break;
                 }
             }
-
         });
     }
 
@@ -397,7 +429,7 @@ public class ComicReaderActivity extends AppCompatActivity {
                                     imgUrls.add(obj.toString());
                                 }
                                 webView.loadUrl("about:blank");
-                                initData();
+                                loadData();
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
@@ -419,9 +451,7 @@ public class ComicReaderActivity extends AppCompatActivity {
 
     //再次请求，如果有备用图片host修改url
     public void loadImageAgain(String url, Object viewHolder, int position){
-        if(ruleStore.getComeFrom().equals("manhuagui")) {
-            url = url.replaceAll(ruleStore.getReadRule().get("imghost"), ruleStore.getImgHost());
-        }
+        url = url.replaceAll(ruleStore.getReadRule().get("imghost"), ruleStore.getImgHost());
         loadImage(url, viewHolder, position,false);
     }
 
@@ -475,7 +505,7 @@ public class ComicReaderActivity extends AppCompatActivity {
             public void onLoadFailed(@Nullable Drawable errorDrawable) {
                 super.onLoadFailed(errorDrawable);
                 Log.e(TAG, "onLoadFailed: "+url+"加载失败！");
-                if (!first) {
+                if (!first || ruleStore.getReadRule().get("imghost")==null) {
                     PicturePagerAdapter.PictureViewHolder pictureViewHolder = (PicturePagerAdapter.PictureViewHolder) viewHolder;
                     pictureViewHolder.progressBar.setVisibility(View.GONE);
                     pictureViewHolder.btnRefresh.setVisibility(View.VISIBLE);

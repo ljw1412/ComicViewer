@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:fitsSystemWindows="false"
         android:id="@+id/read_viewer_container">
 
         <ljw.comicviewer.others.MyViewPager
@@ -40,7 +39,8 @@
         android:id="@+id/read_viewer_head"
         android:layout_alignParentTop="true"
         android:elevation="20dp"
-        android:background="@color/black_b2">
+        android:background="@color/black_b2"
+        android:clickable="true">
 
         <ImageView
             android:layout_width="48dp"
@@ -111,14 +111,9 @@
         android:layout_alignParentBottom="true"
         android:elevation="12dp"
         android:id="@+id/read_viewer_tools"
-        android:layout_height="40dp">
+        android:layout_height="40dp"
+        android:clickable="true">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/read_viewer_can_not_click">
-
-        </RelativeLayout>
 
         <LinearLayout
             android:orientation="vertical"
@@ -218,7 +213,8 @@
         android:layout_height="match_parent"
         android:id="@+id/read_viewer_mask"
         android:elevation="24dp"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:clickable="true">
 
     </RelativeLayout>
 

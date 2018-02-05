@@ -15,7 +15,7 @@ import ljw.comicviewer.R;
 import ljw.comicviewer.bean.Chapter;
 
 /**
- * Created by ljw on 2017-09-19 019.
+ * 章节按钮gridView适配器
  */
 
 public class ChaptersAdapter extends BaseAdapter {

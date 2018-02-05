@@ -36,7 +36,7 @@
     <color name="gray_trans">#44999999</color>
     <color name="gray_light">#dcdcdc</color>
 
-
+    <!-- theme color -->
     <color name="theme_red">#fff44336</color>
     <color name="theme_red_dark">#C62828</color>
     <color name="theme_red_trans">#99F44336</color>
@@ -85,54 +85,12 @@
     <color name="theme_night_dark">#ff000000</color>
     <color name="theme_night_trans">#99000000</color>
 
-
-
-
     <color name="accent_material_dark">@color/material_deep_teal_200</color>
     <color name="accent_material_light">@color/material_deep_teal_500</color>
-
 
     <color name="text_primary_color">#2d2d2d</color>
     <color name="text_tertiary_color">#808080</color>
     <color name="window_background">#eaeaea</color>
     <color name="window_night_background">#ff757575</color>
 
-    #808080
-
-
-
-
-    <!-- theme color -->
-    <!--
-    <color name="pink">#fb7299</color>
-    <color name="pink_dark">#b85671</color>
-    <color name="pink_trans">#99f0486c</color>
-
-    <color name="blue">#2196F3</color>
-    <color name="blue_dark">#1565C0</color>
-    <color name="blue_trans">#B41A78C3</color>
-
-    <color name="purple">#673AB7</color>
-    <color name="purple_dark">#311B92</color>
-    <color name="purple_trans">#99673AB7</color>
-
-    <color name="green">#4CAF50</color>
-    <color name="green_dark">#2E7D32</color>
-    <color name="green_trans">#994CAF50</color>
-
-    <color name="green_light">#8BC34A</color>
-    <color name="green_light_dark">#558B2F</color>
-    <color name="green_light_trans">#998BC34A</color>
-
-    <color name="yellow">#FDD835</color>
-    <color name="yellow_dark">#FBC02D</color>
-    <color name="yellow_trans">#99FDD835</color>
-
-    <color name="orange">#FF9800</color>
-    <color name="orange_dark">#EF6C00</color>
-    <color name="orange_trans">#99FF9800</color>
-
-    <color name="red">#F44336</color>
-    <color name="red_dark">#C62828</color>
-    <color name="red_trans">#99F44336</color>-->
 </resources>

@@ -23,6 +23,7 @@
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:textColorPrimary">@color/text_primary_color</item>
         <item name="android:textColorTertiary">@color/text_tertiary_color</item>
+        <item name="android:colorControlHighlight">@color/black_pressed</item>
     </style>
 
     <style name="AppTheme.NoActionBar.Transparent">
