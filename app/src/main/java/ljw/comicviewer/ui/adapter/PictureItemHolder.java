@@ -9,7 +9,6 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
-import uk.co.senab.photoview.PhotoView;
 
 /**
  * Created by ljw on 2018-02-05 005.
@@ -17,7 +16,7 @@ import uk.co.senab.photoview.PhotoView;
 
 public class PictureItemHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.iv_picture)
-    public PhotoView ivPicture;
+    public ImageView ivPicture;
     @BindView(R.id.progress_bar)
     public ProgressBar progressBar;
     @BindView(R.id.btn_refresh)

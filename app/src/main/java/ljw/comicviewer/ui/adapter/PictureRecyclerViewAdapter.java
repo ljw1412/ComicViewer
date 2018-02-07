@@ -3,7 +3,6 @@ package ljw.comicviewer.ui.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,18 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.transition.Transition;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 
 import ljw.comicviewer.R;
 import ljw.comicviewer.store.RuleStore;
-import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.PhotoViewAttacher;
+import ljw.comicviewer.util.AreaClickHelper;
 
 /**
  * Created by ljw on 2018-02-05 005.
@@ -34,15 +34,20 @@ public class PictureRecyclerViewAdapter extends RecyclerView.Adapter<PictureItem
     private Context context;
     private List<String> imgUrls;
     private RuleStore ruleStore = RuleStore.get();
+    private AreaClickHelper areaClickHelper;
 
     public PictureRecyclerViewAdapter(Context context, List<String> imgUrls) {
         this.context = context;
         this.imgUrls = imgUrls;
+        areaClickHelper = new AreaClickHelper(context);
     }
 
     @Override
     public void onViewRecycled(PictureItemHolder holder) {
         if (holder!=null){
+            ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
+            lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            holder.itemView.setLayoutParams(lp);
             Glide.with(context).clear(holder.ivPicture);
         }
         super.onViewRecycled(holder);
@@ -51,15 +56,21 @@ public class PictureRecyclerViewAdapter extends RecyclerView.Adapter<PictureItem
 
     @Override
     public PictureItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.item_read_viewer,parent,false);
+        View v = LayoutInflater.from(context).inflate(R.layout.item_read_viewer_vertical,parent,false);
         return new PictureItemHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(PictureItemHolder holder, int position) {
+    public void onBindViewHolder(final PictureItemHolder holder, int position) {
         if (getItemCount()<=0) return;
+        final String url = imgUrls.get(position);
         holder.txtPageNum.setText((position+1)+"");
-        String url = imgUrls.get(position);
+        holder.btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadImage(holder,url,true);
+            }
+        });
         loadImage(holder,url,true);
     }
 
@@ -69,10 +80,13 @@ public class PictureRecyclerViewAdapter extends RecyclerView.Adapter<PictureItem
     }
 
     public void loadImage(final PictureItemHolder holder, final String url, final boolean first){
-        final PhotoView pic = holder.ivPicture;
-        final PhotoViewAttacher mAttacher = new PhotoViewAttacher(pic);
+//        final ImageView pic = holder.ivPicture;
+//        final PhotoViewAttacher mAttacher = new PhotoViewAttacher(pic);
 
 //        final AreaClickHelper areaClickHelper = viewPager.getAreaClickHelper();
+        holder.txtPageNum.setVisibility(View.VISIBLE);
+        holder.progressBar.setVisibility(View.VISIBLE);
+        holder.btnRefresh.setVisibility(View.GONE);
 
         RequestOptions options = new RequestOptions();
         if(!((Activity) context).isDestroyed())
@@ -81,42 +95,9 @@ public class PictureRecyclerViewAdapter extends RecyclerView.Adapter<PictureItem
                 .load(new GlideUrl(url
                         ,new LazyHeaders.Builder().addHeader("Referer",ruleStore.getHost()).build()
                 ))
-                .into(new BitmapImageViewTarget(pic){
+                .listener(new RequestListener<Bitmap>() {
                     @Override
-                    public void onLoadStarted(@Nullable Drawable placeholder) {
-                        super.onLoadStarted(placeholder);
-                        Log.d(TAG,url+" 开始加载");
-                        holder.txtPageNum.setVisibility(View.VISIBLE);
-                        holder.progressBar.setVisibility(View.VISIBLE);
-                        holder.btnRefresh.setVisibility(View.GONE);
-                    }
-
-
-                    @Override
-                    public void onResourceReady(Bitmap bitmap, @Nullable Transition<? super Bitmap> transition) {
-                        super.onResourceReady(bitmap, transition);
-                        holder.progressBar.setVisibility(View.GONE);
-                        holder.btnRefresh.setVisibility(View.GONE);
-                        holder.txtPageNum.setVisibility(View.GONE);
-                        mAttacher.update();
-
-                        mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                            @Override
-                            public void onViewTap(View view, float x, float y) {
-//                        if (mAttacher.getScale() <= 1 && !isScroll) {
-//                                if (!isScroll) {
-//                                    Log.d(TAG,"onViewTap :"+x+" "+y);
-//                                    areaClickHelper.onClick(x, y);
-//                                }
-                            }
-                        });
-
-                        Log.d(TAG,"OK");
-                    }
-
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        super.onLoadFailed(errorDrawable);
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
                         Log.e(TAG, "onLoadFailed: "+url+"加载失败！");
                         if (!first || ruleStore.getReadRule().get("imghost")==null) {
                             holder.progressBar.setVisibility(View.GONE);
@@ -124,8 +105,37 @@ public class PictureRecyclerViewAdapter extends RecyclerView.Adapter<PictureItem
                         }else {
                             loadImageAgain(holder,url);
                         }
+                        return false;
                     }
-                });
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                        holder.progressBar.setVisibility(View.GONE);
+                        holder.btnRefresh.setVisibility(View.GONE);
+                        holder.txtPageNum.setVisibility(View.GONE);
+                        ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
+                        lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                        holder.itemView.setLayoutParams(lp);
+
+//                        mAttacher.update();
+//
+//                        mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+//                            @Override
+//                            public void onViewTap(View view, float x, float y) {
+//                                if (mAttacher.getScale() <= 1 && !isScroll) {
+//                                    if (!isScroll) {
+//                                        Log.d(TAG, "onViewTap :" + x + " " + y);
+//                                        areaClickHelper.onClick(x, y);
+//                                    }
+//                                }
+//                            }
+//                        });
+
+                        Log.d(TAG,"OK:"+url);
+                        return false;
+                    }
+                })
+                .into(holder.ivPicture);
     }
     //再次请求，如果有备用图片host修改url
     public void loadImageAgain(PictureItemHolder holder,String url){
@@ -136,5 +146,13 @@ public class PictureRecyclerViewAdapter extends RecyclerView.Adapter<PictureItem
             holder.progressBar.setVisibility(View.GONE);
             holder.btnRefresh.setVisibility(View.VISIBLE);
         }
+    }
+
+    public AreaClickHelper getAreaClickHelper() {
+        return areaClickHelper;
+    }
+
+    public void setAreaClickListener(AreaClickHelper.OnAreaClickListener onAreaClickListener) {
+        areaClickHelper.setAreaClickListener(onAreaClickListener);
     }
 }

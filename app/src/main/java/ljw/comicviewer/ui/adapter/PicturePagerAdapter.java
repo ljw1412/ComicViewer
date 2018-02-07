@@ -50,6 +50,10 @@ public class PicturePagerAdapter extends PagerAdapter {
         areaClickHelper.setAreaClickListener(onAreaClickListener);
     }
 
+    public AreaClickHelper getAreaClickHelper() {
+        return areaClickHelper;
+    }
+
     @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();

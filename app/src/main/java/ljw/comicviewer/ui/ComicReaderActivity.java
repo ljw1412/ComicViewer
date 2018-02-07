@@ -59,6 +59,8 @@ import ljw.comicviewer.util.WebViewUtil;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
+
 /**
  * 阅读界面
  */
@@ -147,6 +149,8 @@ public class ComicReaderActivity extends AppCompatActivity {
                 .getSharedPreferences(context).getInt("preloadPageNumber",2);
         readMode = PreferenceUtil
                 .getSharedPreferences(context).getInt("readMode",0);
+        picturePagerAdapter = new PicturePagerAdapter(this, imgUrls);
+        pictureRecyclerViewAdapter = new PictureRecyclerViewAdapter(this, imgUrls);
     }
 
     //初始化界面
@@ -232,15 +236,12 @@ public class ComicReaderActivity extends AppCompatActivity {
         switch (readMode){
             case 0:
             case 1:
-                picturePagerAdapter = new PicturePagerAdapter(this, imgUrls);
                 viewPager.setAdapter(picturePagerAdapter);
                 viewPager.setCurrentItem(currPos);//跳页
                 break;
             case 2:
-                pictureRecyclerViewAdapter = new PictureRecyclerViewAdapter(this, imgUrls);
-                rvPicture.setLayoutManager(new LinearLayoutManager(context));
                 rvPicture.setAdapter(pictureRecyclerViewAdapter);
-                rvPicture.smoothScrollToPosition(currPos);
+                moveToPosition(rvPicture, currPos);
                 break;
         }
 
@@ -259,7 +260,8 @@ public class ComicReaderActivity extends AppCompatActivity {
 
 
     private void addListener(){
-        viewPager.setAreaClickListener(new AreaClickHelper.OnLeftRightClickListener() {
+        AreaClickHelper.OnLeftRightClickListener onLeftRightClickListener=
+                new AreaClickHelper.OnLeftRightClickListener() {
             @Override
             public void left() {
                 if(isShowTools){
@@ -289,7 +291,8 @@ public class ComicReaderActivity extends AppCompatActivity {
                     Log.d(TAG,"center");
                 }
             }
-        });
+        };
+
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -314,11 +317,18 @@ public class ComicReaderActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 txtSeekBarTips.setVisibility(View.GONE);
-                gotoPage(seekBar.getProgress());
-
+                switch (readMode){
+                    case 0:
+                    case 1:
+                        gotoPage(seekBar.getProgress());
+                        break;
+                    case 2:
+                        moveToPosition(rvPicture,seekBar.getProgress());
+                        break;
+                }
             }
         });
-
+        viewPager.setAreaClickListener(onLeftRightClickListener);
         viewPager.setOnTouchListener(new View.OnTouchListener() {
             //TIPS:PhotoViewAttacher加载时会拦截此监听
             @Override
@@ -395,6 +405,61 @@ public class ComicReaderActivity extends AppCompatActivity {
                         isScroll = false;
                         break;
                 }
+            }
+        });
+        pictureRecyclerViewAdapter.setAreaClickListener(onLeftRightClickListener);
+        rvPicture.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int state) {
+                super.onScrollStateChanged(recyclerView, state);
+                switch (state){
+                    case SCROLL_STATE_IDLE:
+                        intent.putExtra("page",currPos+1);
+                        break;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                currPos = linearLayoutManager.findFirstVisibleItemPosition();
+                if (recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset()
+                        >= recyclerView.computeVerticalScrollRange()) {
+                    currPos = linearLayoutManager.findLastVisibleItemPosition();
+                }
+                setPageText((currPos+1)+"",""+imgUrls.size());
+                updateSeekBar(currPos);
+            }
+        });
+        rvPicture.setOnTouchListener(new View.OnTouchListener() {
+            float DownX,DownY,MoveX,MoveY;
+            boolean cancel;
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN://0
+                        DownX = motionEvent.getX();
+                        DownY = motionEvent.getY();
+                        cancel = false;
+//                        Log.d(TAG, "onTouch: "+motionEvent.getAction()+" "+DownX+","+DownY);
+                        break;
+                    case MotionEvent.ACTION_MOVE://2
+                        MoveX = DownX - motionEvent.getX();
+                        MoveY = DownY - motionEvent.getY();
+                        if(Math.abs(MoveX)>20 || Math.abs(MoveY)>20){
+                            cancel = true;
+                        }
+//                        Log.d(TAG, "onTouch: "+motionEvent.getAction()+" "+MoveX+","+MoveY);
+                        break;
+                    case MotionEvent.ACTION_UP://1
+//                        Log.d(TAG, "onTouch: "+motionEvent.getAction()+" "+MoveX+","+MoveY);
+                        if(!cancel){
+                            pictureRecyclerViewAdapter.getAreaClickHelper().onClick(DownX,DownY);
+                        }
+                        break;
+                }
+                return false;
             }
         });
     }
@@ -516,29 +581,79 @@ public class ComicReaderActivity extends AppCompatActivity {
         });
     }
 
+    private void moveToPosition(RecyclerView recyclerView, int n) {
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        //先从RecyclerView的LayoutManager中获取第一项和最后一项的Position
+        int firstItem = linearLayoutManager.findFirstVisibleItemPosition();
+        int lastItem = linearLayoutManager.findLastVisibleItemPosition();
+        //然后区分情况
+        if (n <= firstItem) {
+            //当要置顶的项在当前显示的第一个项的前面时
+            recyclerView.scrollToPosition(n);
+        } else if (n <= lastItem) {
+            //当要置顶的项已经在屏幕上显示时
+            int top = recyclerView.getChildAt(n - firstItem).getTop();
+            recyclerView.scrollBy(0, top);
+        } else {
+            //当要置顶的项在当前显示的最后一项的后面时
+            recyclerView.scrollToPosition(n);
+        }
+        currPos = n;
+        setPageText((currPos+1)+"",""+imgUrls.size());
+        intent.putExtra("page",currPos + 1);
+    }
+
     private void gotoPage(int page){
         currPos = page + 1;
         viewPager.setCurrentItem(page);
+        intent.putExtra("page",currPos + 1);
     }
 
     private void prevPage(){
-        int currItem = viewPager.getCurrentItem();
-        if (currItem > 0) {
-            currPos = currItem - 1;
-            viewPager.setCurrentItem(currItem - 1);
-            updateSeekBar(currPos);
+        int currItem;
+        switch (readMode){
+            case 0:
+            case 1:
+                currItem = viewPager.getCurrentItem();
+                if (currItem > 0) {
+                    currPos = currItem - 1;
+                    viewPager.setCurrentItem(currPos);
+                    updateSeekBar(currPos);
+                }
+                else gotoLoading(false);
+                break;
+            case 2:
+                 if (currPos > 0) {
+                     currPos --;
+                     moveToPosition(rvPicture,currPos);
+                     updateSeekBar(currPos);
+                } else gotoLoading(false);
+                break;
         }
-        else gotoLoading(false);
     }
 
     private void nextPage(){
-        int currItem = viewPager.getCurrentItem();
-        if (currItem + 1 < viewPager.getAdapter().getCount()){
-            currPos = currItem;
-            viewPager.setCurrentItem(currItem + 1);
-            updateSeekBar(currPos);
+        switch (readMode){
+            case 0:
+            case 1:
+                int currItem = viewPager.getCurrentItem();
+                if (currItem + 1 < viewPager.getAdapter().getCount()){
+                    currPos = currItem;
+                    viewPager.setCurrentItem(currItem + 1);
+                    updateSeekBar(currPos);
+                }
+                else gotoLoading(true);
+                break;
+            case 2:
+                if (currPos + 1 < rvPicture.getAdapter().getItemCount()) {
+                    currPos ++;
+                    moveToPosition(rvPicture,currPos);
+                    updateSeekBar(currPos);
+                }
+                else gotoLoading(true);
+                break;
         }
-        else gotoLoading(true);
+
     }
 
     //进行加载 isAdd是下一章为true，上一章为false
@@ -578,6 +693,7 @@ public class ComicReaderActivity extends AppCompatActivity {
 
     private void loadChapter(){
         currPos = 0;
+        intent.putExtra("page",currPos+1);
         webView.loadUrl(parseUrl());
         getInfo();
     }
@@ -591,7 +707,7 @@ public class ComicReaderActivity extends AppCompatActivity {
     //更新进度条进度
     private void updateSeekBar(int progress){
         mySeekBar.setProgress(progress);
-        Log.d(TAG, "updateSeekBar: "+progress);
+//        Log.d(TAG, "updateSeekBar: "+progress);
     }
 
     //显示工具栏
