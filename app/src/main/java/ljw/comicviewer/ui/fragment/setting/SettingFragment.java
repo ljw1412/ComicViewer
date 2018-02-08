@@ -28,6 +28,7 @@ public class SettingFragment extends PreferenceFragment {
         context = getActivity();
         getPreferenceManager().setSharedPreferencesName(PreferenceUtil.PreferenceName);
         addPreferencesFromResource(R.xml.preferences_setting);
+        initData();
         initView();
         addListener();
     }
@@ -37,28 +38,35 @@ public class SettingFragment extends PreferenceFragment {
     private Preference preference_preload;
     private Preference preference_readMode;
     private int currentSelected,preloadNum,readMode;
-    private void initView(){
+    private void initData(){
+        //对象绑定
         preference_source = findPreference("setting_source");
         preference_theme = findPreference("setting_theme");
         preference_preload = findPreference("preloadPageNumber");
         preference_readMode = findPreference("readMode");
-
+        //获取数组
+        items = getResources().getStringArray(R.array.source_name);
+        //获取首选项
         currentSelected = getPreferenceManager()
                 .getSharedPreferences().getInt("sourceId",0);
         if(currentSelected>items.length) currentSelected = 0;
-        preference_source.setSummary(
-                String.format(getString(R.string.setting_sub_summary_source),items[currentSelected]));
         preloadNum = getPreferenceManager()
                 .getSharedPreferences().getInt("preloadPageNumber",2);
-        preference_preload.setSummary(
-                String.format(getString(R.string.setting_sub_summary_preload),preloadNum));
         readMode = getPreferenceManager()
                 .getSharedPreferences().getInt("readMode",0);
+
+    }
+
+    private void initView(){
+        preference_source.setSummary(
+                String.format(getString(R.string.setting_sub_summary_source),items[currentSelected]));
+        preference_preload.setSummary(
+                String.format(getString(R.string.setting_sub_summary_preload),preloadNum));
         preference_readMode.setSummary(
                 String.format(getString(R.string.setting_sub_summary_read_mode),modes[readMode]));
     }
 
-    private String[] items = {"漫画柜","漫画台","知音漫客"};
+    private String[] items /*= {"漫画柜","漫画台","知音漫客","比比猴"}*/;
     private String[] numbers = {"1","2","3","4"};
     private String[] modes = {"从左往右","从右往左","竖屏阅读"};
     private void addListener(){

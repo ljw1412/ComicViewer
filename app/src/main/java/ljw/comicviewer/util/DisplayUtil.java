@@ -45,7 +45,7 @@ public class DisplayUtil {
     public static int getGridNumColumns(Context context,int itemWidth){
         float screenWidth = getScreenWidthDP(context);
         int columns = Math.round(screenWidth/itemWidth);
-        Log.d(TAG, "getGridNumColumns: 屏幕宽度(DP):"+screenWidth+",屏幕列数:"+columns);
+        Log.d(TAG, context.getClass().getSimpleName()+"(getGridNumColumns): 屏幕宽度(DP):"+screenWidth+",屏幕列数:"+columns);
         return columns;
     }
 

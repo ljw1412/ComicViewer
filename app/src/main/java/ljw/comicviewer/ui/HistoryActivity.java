@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.TextView;
+
+import com.bilibili.magicasakura.utils.ThemeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,7 @@ import ljw.comicviewer.db.HistoryHolder;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.adapter.HistoryRecyclerViewAdapter;
 import ljw.comicviewer.ui.listeners.OnItemClickListener;
+import ljw.comicviewer.util.ThemeUtil;
 
 /**
  * 历史记录界面
@@ -48,6 +52,13 @@ public class HistoryActivity extends BaseActivity {
         initView();
     }
 
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        ThemeUtil.setEdgeGlowColor(recyclerView,
+                ThemeUtils.getColorById(context,R.color.theme_color_primary));
+    }
+
     private void initView(){
         title.setText(R.string.mine_history);
         initRecyclerView();
@@ -68,7 +79,7 @@ public class HistoryActivity extends BaseActivity {
                 context.startActivity(intent);
             }
         });
-
+        //左划删除
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--主题相关-->
     <string-array name="theme_name">
         <item>热情红</item>
         <item>哔哩粉</item>
@@ -41,5 +42,12 @@
         <item>theme_indigo</item>
         <item>theme_blue_grey</item>
         <item>theme_night</item>
+    </string-array>
+    <!--漫画源相关-->
+    <string-array name="source_name">
+        <item>漫画柜</item>
+        <item>漫画台</item>
+        <item>知音漫客</item>
+        <item>比比猴</item>
     </string-array>
 </resources>

@@ -37,6 +37,7 @@ import ljw.comicviewer.ui.listeners.OnItemClickListener;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.SnackbarUtil;
+import ljw.comicviewer.util.ThemeUtil;
 
 
 /**
@@ -89,7 +90,9 @@ public class NewAddFragment extends BaseFragment
         //设置回顶按钮颜色
         btn_toTop.setBackgroundTintList(
                 ThemeUtils.getThemeColorStateList(context,R.color.theme_color_primary));
-
+        //修改RecyclerView边缘颜色
+        ThemeUtil.setEdgeGlowColor(recyclerView,
+                ThemeUtils.getColorById(context,R.color.theme_color_primary));
         initGridView();
         addListener();
         //数据首次加载
@@ -145,7 +148,7 @@ public class NewAddFragment extends BaseFragment
 
     public void initGridView() {
         //根据屏幕宽度设置列数
-        int columns = DisplayUtil.getGridNumColumns(context,Global.ITEMVIEWWIDTH);
+        int columns = DisplayUtil.getGridNumColumns(context,Global.ITEM_COMIC_VIEW_WIDTH);
         int itemWidth = (int) (DisplayUtil.getScreenWidthPX(context)/columns);
         pictureGridAdapter = new ComicRecyclerViewAdapter(context,comicList,itemWidth);
         recyclerView.setLayoutManager(new GridLayoutManager(context,columns));

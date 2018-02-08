@@ -22,5 +22,7 @@ public class Global {
     //参数
     public static final int SNACKBAR_DURATION = 2000;//SNACKBAR的延迟
 
-    public static final int ITEMVIEWWIDTH = 120; //DIP
+    public static final int ITEM_COMIC_VIEW_WIDTH = 120; //漫画宽度DIP
+    public static final int ITEM_CHAPTER_VIEW_WIDTH = 80; //章节视图宽度DIP
+
 }

@@ -49,6 +49,9 @@ public class StoreUtil {
             case 2:
                 StoreUtil.initRuleStore(context,R.raw.zymk);
                 break;
+            case 3:
+                StoreUtil.initRuleStore(context,R.raw.bbhou);
+                break;
         }
     }
 }

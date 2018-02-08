@@ -1,0 +1,174 @@
+{
+	"title":"比比猴",
+	"comeFrom":"bbhou",
+	"host":"http://www.bbhou.com",
+	"imghost":"http://hicomic.bbhou.com/",
+	"domain":".bbhou.com/",
+	"config":{
+		"no-end-info":true
+	},
+	"home":{
+		"url":"/",
+		"cssQuery":{
+			"comic-id":"$('a').attr('href').match('/manhua/(\\w+)/')[1]",
+			"comic-name":"$('a em').text()",
+			"comic-image-url":"$('a img').attr('src').match('http[s]?:.+.(?:jpg|jpeg|png|gif|bmp)-{0,}[0-9x]*')[0]",
+			"comic-update-status":"$('a span').text()"
+		},
+		"items":{
+			"titles":["$('#tab1 .mod-tabs-hd h3.title')","$('#tab3 .mod-tabs-hd ul.mod-tabs-trigger li')"],
+			"title":["$('h3').text()","$('li').text()"],
+			"items-list":["$('#tab1 .mod-tabs-bd ul li')","$('#tab3 .mod-tabs-bd ul')"],
+			"items":["$('li')","$('li')"]
+		}
+	},
+	"list":{
+		"url":"/list/all/{type:}/bid/p/{page:}/",
+		"cssQuery":{
+			"items":"$('#sa-comic_show_list ul li.list_item')",
+			"comic-id":"$('.pic a').attr('href').match('/manhua/(\\w+)/')[1]",
+			"comic-name":"$('.pic a').attr('title')",
+			"comic-image-url":"$('.pic a img').attr('src').match('http[s]?:.+.(?:jpg|jpeg|png|gif|bmp)-{0,}[0-9x]*')[0]",
+			"comic-score":"",
+			"comic-update":"$(.info .date').text().match('\\w+-\\w+-\\w+')[0]",
+			"comic-update-status":"$('.wrapleft span.a').text()",
+			"comic-end":"$('.main').size()!=-1",
+			"max-page":"$('#last_page').attr('href').match('/p/(\\d+)/')[1]"
+		},
+		"type":{
+			"order":[
+				{"name":"separate","value":"/"},
+				{"name":"endStr","value":""},
+				{"name":0,"value":"类型"},
+				{"name":1,"value":"题材"},
+				{"name":2,"value":"字母"},
+				{"name":3,"value":"地区"},
+				{"name":4,"value":"状态"}
+			],
+			"类型":[
+				{"name":"全部漫画","value":"0"},
+				{"name":"少年漫画","value":"1"},
+				{"name":"青年漫画","value":"2"},
+				{"name":"少女漫画","value":"3"}
+			],
+			"题材":[
+				{"name":"全部","value":"0"},
+				{"name":"冒险","value":"1"},
+				{"name":"搞笑","value":"3"},
+				{"name":"格斗","value":"5"},
+				{"name":"科幻","value":"6"},
+				{"name":"爱情","value":"7"},
+				{"name":"侦探","value":"10"},
+				{"name":"竞技","value":"15"},
+				{"name":"魔法","value":"17"},
+				{"name":"东方神鬼","value":"21"},
+				{"name":"校园","value":"9"},
+				{"name":"恐怖","value":"41"},
+				{"name":"四格","value":"24"},
+				{"name":"生活亲情","value":"35"},
+				{"name":"百合","value":"29"},
+				{"name":"伪娘","value":"31"},
+				{"name":"悬疑","value":"28"},
+				{"name":"耽美","value":"22"},
+				{"name":"热血","value":"2"},
+				{"name":"后宫","value":"8"},
+				{"name":"历史","value":"33"},
+				{"name":"战争","value":"34"},
+				{"name":"萌系","value":"19"},
+				{"name":"宅男腐女","value":"30"},
+				{"name":"治愈","value":"25"},
+				{"name":"励志","value":"36"},
+				{"name":"武侠","value":"16"},
+				{"name":"仙侠","value":"23"},
+				{"name":"机战","value":"37"},
+				{"name":"音乐舞蹈","value":"38"},
+				{"name":"美食","value":"11"},
+				{"name":"职场","value":"18"},
+				{"name":"西方魔幻","value":"43"},
+				{"name":"高清单行本","value":"4"},
+				{"name":"性转换","value":"12"},
+				{"name":"东方","value":"20"},
+				{"name":"扶她","value":"45"},
+				{"name":"魔幻","value":"39"},
+				{"name":"奇幻","value":"13"},
+				{"name":"节操","value":"32"},
+				{"name":"轻小说","value":"26"},
+				{"name":"颜艺","value":"27"},
+				{"name":"欢乐向","value":"14"},
+				{"name":"生活","value":"44"},
+				{"name":"其他","value":"42"}
+			],
+			"字母":[
+				{"name":"全部","value":"0"},
+				{"name":"A","value":"a"},
+				{"name":"B","value":"b"},
+				{"name":"C","value":"c"},
+				{"name":"D","value":"d"},
+				{"name":"E","value":"e"},
+				{"name":"F","value":"f"},
+				{"name":"G","value":"g"},
+				{"name":"H","value":"h"},
+				{"name":"I","value":"i"},
+				{"name":"J","value":"j"},
+				{"name":"K","value":"k"},
+				{"name":"L","value":"l"},
+				{"name":"M","value":"m"},
+				{"name":"N","value":"n"},
+				{"name":"O","value":"o"},
+				{"name":"P","value":"p"},
+				{"name":"Q","value":"q"},
+				{"name":"R","value":"r"},
+				{"name":"S","value":"s"},
+				{"name":"T","value":"t"},
+				{"name":"U","value":"u"},
+				{"name":"V","value":"v"},
+				{"name":"W","value":"w"},
+				{"name":"X","value":"x"},
+				{"name":"Y","value":"y"},
+				{"name":"Z","value":"z"},
+				{"name":"其他","value":"1"}
+			],
+			"地区":[
+				{"name":"全部","value":"0"},
+				{"name":"日本","value":"1"},
+				{"name":"港台","value":"4"},
+				{"name":"欧美","value":"3"},
+				{"name":"内地","value":"5"},
+				{"name":"其他","value":"2"}
+			],
+			"状态":[
+				{"name":"全部","value":"0"},
+				{"name":"已完结","value":"1"},
+				{"name":"连载中","value":"2"}
+			]
+		}
+	},
+	"details_page":{
+		"url":"/manhua/{comic:}/",
+		"wv-js":"document.getElementsByTagName('html')[0].outerHTML;",
+		"cssQuery":{
+			"comic-name":"$('.cartoon-intro p').eq(0).text()",
+			"comic-image-url":"$('.cartoon-intro .pic').attr('src')",
+			"comic-tag":"$('.cartoon-intro p').eq(5).find('a').text()",
+			"comic-author":"$('.cartoon-intro p').eq(2).find('a').text()",
+			"comic-update":"$('.cartoon-intro p').eq(7).text().replace('更新时间：','')",
+			"comic-update-status":"$('.cartoon-intro p').eq(3).text().replace('漫画状态：','')",
+			"comic-end":"$('.cartoon-intro p').eq(3).text().indexOf('完结')!=-1",
+			"comic-info":"$('.cartoon-intro #cartoon_digest2').text().replace('收起','')",
+			"comic-is-ban":"$('.nononono').size()!=0"
+		}
+	},
+	"details_page_chapter":{
+		"cssQuery":{
+			"chapter-lists":"$('.section-list .hover a')",
+			"chapter-list":"$('a')",
+			"chapter-items":"$('a')",
+			"chapter-id":"$('a').attr('href').match('/(\\w+).html')[1]",
+			"chapter-name":"$('a').attr('title')"
+		}
+	},
+	"read_page":{
+		"url":"/manhua/{comic:}/{chapter:}.html",
+		"wv-js":"var res = [];for(var i = 0;i<picTree.length;i++){res.push(pic_base+picTree[i]);}res;"
+	}
+}

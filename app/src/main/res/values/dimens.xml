@@ -13,4 +13,6 @@
     <dimen name="toolbar_font_size">18sp</dimen>
     <dimen name="toolbar_height">36dp</dimen>
     <dimen name="long_line_option_button_height">45dp</dimen>
+
+    <dimen name="item_chapter_view_width">80dp</dimen>
 </resources>

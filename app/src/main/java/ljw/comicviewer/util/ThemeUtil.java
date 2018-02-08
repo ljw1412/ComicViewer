@@ -3,15 +3,24 @@ package ljw.comicviewer.util;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.EdgeEffectCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
+import android.widget.EdgeEffect;
 
 import com.bilibili.magicasakura.utils.ThemeUtils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import ljw.comicviewer.R;
@@ -106,4 +115,69 @@ public class ThemeUtil {
         }
     }
 
+    //设置ViewPager边缘颜色
+    public static void setEdgeGlowColor(@NonNull ViewPager viewPager, @ColorInt int color) {
+        if(Build.VERSION.SDK_INT >= 21) {
+            try {
+                String[] edgeStr={"mLeftEdge", "mRightEdge"};
+                for (String edge:edgeStr) {
+                    Field field = ViewPager.class.getDeclaredField(edge);
+                    field.setAccessible(true);
+                    EdgeEffectCompat ee = (EdgeEffectCompat)field.get(viewPager);
+                    if (ee != null) {
+                        setEdgeGlowColor(ee, color);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //设置ViewPager边缘颜色
+    public static void setEdgeGlowColor(@NonNull RecyclerView recyclerView, @ColorInt final int color) {
+        //修改RecyclerView边缘颜色
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                try {
+                    for (final String name : new String[] {"ensureLeftGlow","ensureTopGlow", "ensureRightGlow","ensureBottomGlow"}) {
+                        Method method = RecyclerView.class.getDeclaredMethod(name);
+                        method.setAccessible(true);
+                        method.invoke(recyclerView);
+                    }
+                    for (String edge:new String[] {"mLeftGlow", "mTopGlow", "mRightGlow", "mBottomGlow"}) {
+                        Field field = RecyclerView.class.getDeclaredField(edge);
+                        field.setAccessible(true);
+                        EdgeEffectCompat ee = (EdgeEffectCompat)field.get(recyclerView);
+                        if (ee != null) {
+                            setEdgeGlowColor(ee, color);
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+    private static void setEdgeGlowColor(@NonNull EdgeEffectCompat edgeEffect, @ColorInt int color) throws Exception {
+        if(Build.VERSION.SDK_INT >= 21) {
+            Field field = EdgeEffectCompat.class.getDeclaredField("mEdgeEffect");
+            field.setAccessible(true);
+            EdgeEffect effect = (EdgeEffect) field.get(edgeEffect);
+            if (effect != null) {
+                effect.setColor(color);
+                return;
+            }
+        }
+        for(String name : new String[]{"mEdge", "mGlow"}){
+            final Field field = EdgeEffect.class.getDeclaredField(name);
+            field.setAccessible(true);
+            final Drawable drawable = (Drawable) field.get(edgeEffect);
+            drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            drawable.setCallback(null);
+        }
+    }
 }

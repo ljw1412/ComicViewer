@@ -24,7 +24,6 @@ import ljw.comicviewer.others.MyGridView;
 import ljw.comicviewer.store.ComicReadStore;
 import ljw.comicviewer.ui.ComicReaderActivity;
 import ljw.comicviewer.ui.adapter.ChaptersAdapter;
-import ljw.comicviewer.util.DisplayUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,8 +52,8 @@ public class ChaptersFragment extends Fragment  {
         grid_chapters_list = (MyGridView) rootView.findViewById(R.id.details_chapters_list);
 
 //        //根据屏幕宽度设置列数
-        int columns = DisplayUtil.getGridNumColumns(context,80);
-        grid_chapters_list.setNumColumns(columns);
+//        int columns = DisplayUtil.getGridNumColumns(context,Global.ITEM_CHAPTER_VIEW_WIDTH);
+//        grid_chapters_list.setNumColumns(columns);
         if (chapters == null) chapters = new ArrayList<>();
         chaptersAdapter = new ChaptersAdapter(context,chapters);
         grid_chapters_list.setAdapter(chaptersAdapter);

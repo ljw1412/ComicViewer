@@ -60,7 +60,7 @@ public class ComicFetcher {
                 int len = titlesJ.size() > itemsListJ.size() ? itemsListJ.size() : titlesJ.size();
                 for(int i = 0 ;i < len ; i++){
                     Elements itemsList = (Elements) getRuleFetcher().parser(doc , (String) itemsListJ.get(i));
-                    Elements titles = (Elements) getRuleFetcher().parser(doc, (String) titlesJ.get(i));
+                    Elements titleList = (Elements) getRuleFetcher().parser(doc, (String) titlesJ.get(i));
                     for(int j = 0 ; j< itemsList.size() ;j++){
                         List<Comic> comics = new ArrayList<>();
                         Elements items = (Elements) getRuleFetcher().parser(itemsList.get(j), (String) itemsJ.get(i));
@@ -75,15 +75,16 @@ public class ComicFetcher {
                         }
 
                         String title = "";
-                        if(titles.size()==0){
+                        if(titleList.size()==0){
                             title = "其他漫画";
-                        }else if(j>=titles.size()){
+                        }else if(j>=titleList.size()){
                             //如果没有标题则使用最后一个标题
-                            title = (String) getRuleFetcher().parser(titles.last(), (String) titleJ.get(i));
+                            title = (String) getRuleFetcher().parser(titleList.last(), (String) titleJ.get(i));
                         }else{
-                            title = (String) getRuleFetcher().parser(titles.get(j), (String) titleJ.get(i));
+                            title = (String) getRuleFetcher().parser(titleList.get(j), (String) titleJ.get(i));
                             order.add(title);
                         }
+
 
                         if(parseMap.containsKey(title)){
                             //如果包含该标题则追加

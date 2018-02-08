@@ -115,7 +115,7 @@ public class DBHelper {
             db.execSQL("CREATE TABLE `history`(`id` integer primary key autoincrement," +
                     "`comicId`,`name`,`imageUrl`,`isEnd`,`chapterId`,`chapterName`,`readTime`,`page`,`comeFrom`)");
             db.execSQL("CREATE TABLE `rule`(`id` integer primary key autoincrement," +
-                    "`name`,`rule` text)");
+                    "`name`,`rule` text,`version`)");
             db.execSQL("CREATE TABLE `section`(`id` integer primary key autoincrement," +
                     "`comeFrom`,`list` text)");
         }

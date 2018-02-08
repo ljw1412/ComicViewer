@@ -15,7 +15,8 @@
             android:horizontalSpacing="5dp"
             android:verticalSpacing="5dp"
             android:stretchMode="columnWidth"
-            android:numColumns="5"
+            android:columnWidth="@dimen/item_chapter_view_width"
+            android:numColumns="auto_fit"
             android:scrollbars="none">
         </ljw.comicviewer.others.MyGridView>
 

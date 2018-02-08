@@ -141,7 +141,7 @@ public class RecommendFragment extends BaseFragment implements ComicService.Requ
 
     private void addSectionViews(){
         //根据屏幕宽度设置列数
-        int columns = DisplayUtil.getGridNumColumns(context,115);
+        int columns = DisplayUtil.getGridNumColumns(context,Global.ITEM_COMIC_VIEW_WIDTH);
         for(Section section : sections){
             if(section.getComics() != null && section.getComics().size()>0) {
                 addSectionView(section.getTitle(), section.getComics(),columns,115f);

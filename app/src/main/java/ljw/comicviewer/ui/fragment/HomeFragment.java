@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bilibili.magicasakura.utils.ThemeUtils;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ljw.comicviewer.R;
@@ -22,6 +24,7 @@ import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.FilterActivity;
 import ljw.comicviewer.ui.SearchActivity;
 import ljw.comicviewer.ui.adapter.MyFragmentPagerAdapter;
+import ljw.comicviewer.util.ThemeUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -70,8 +73,11 @@ public class HomeFragment extends BaseFragment{
 
     @Override
     public void initView() {
-        if(RuleStore.get().getSearchRule()==null){
+        if(ruleStore.getSearchRule()==null){
             btn_search.setVisibility(View.GONE);
+        }
+        if(ruleStore.getTypeRule()==null){
+            btn_filter.setVisibility(View.GONE);
         }
         initViewPager();
         //tab标题栏绑定viewpager
@@ -81,6 +87,8 @@ public class HomeFragment extends BaseFragment{
         }else{
             nav_title.setText(R.string.app_name);
         }
+        ThemeUtil.setEdgeGlowColor(viewPager,
+                ThemeUtils.getColorById(context,R.color.theme_color_primary));
     }
 
 

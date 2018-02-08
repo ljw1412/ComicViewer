@@ -436,6 +436,7 @@ public class DetailsActivity extends AppCompatActivity
             for(int i=0 ; i< TYPE_MAX ; i++){
                 if(chapterTypeMap.get(i)!=null && chapterTypeMap.get(i).size()>0){
                     chaptersFragment_map.get(i).continueReadingClick(0);
+                    return;
                 }
             }
         }
