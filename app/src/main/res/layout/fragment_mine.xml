@@ -31,7 +31,7 @@
         />
     <RelativeLayout
         android:id="@+id/layout_my_history"
-        android:background="@color/white"
+        android:background="?sectionBackground"
         android:foreground="?attr/selectableItemBackground"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/long_line_option_button_height">
@@ -63,7 +63,7 @@
 
     <RelativeLayout
         android:id="@+id/layout_my_setting"
-        android:background="@color/white"
+        android:background="?sectionBackground"
         android:foreground="?attr/selectableItemBackground"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/long_line_option_button_height">
@@ -95,7 +95,7 @@
 
     <RelativeLayout
         android:id="@+id/layout_my_about"
-        android:background="@color/white"
+        android:background="?sectionBackground"
         android:foreground="?attr/selectableItemBackground"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/long_line_option_button_height">

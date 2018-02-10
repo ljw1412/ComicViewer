@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="themeColorSecondary" format="color"></attr>
+    <attr name="sectionBackground" format="color"></attr>
+    <attr name="bottomNavBackground" format="color"></attr>
 </resources>

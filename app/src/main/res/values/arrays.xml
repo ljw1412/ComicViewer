@@ -43,6 +43,20 @@
         <item>theme_blue_grey</item>
         <item>theme_night</item>
     </string-array>
+    <array name="theme_style">
+        <item>@style/MyTheme.Red</item>
+        <item>@style/MyTheme.Pink</item>
+        <item>@style/MyTheme.Orange</item>
+        <item>@style/MyTheme.Blue</item>
+        <item>@style/MyTheme.Cyan</item>
+        <item>@style/MyTheme.Green</item>
+        <item>@style/MyTheme.Teal</item>
+        <item>@style/MyTheme.Brown</item>
+        <item>@style/MyTheme.Deep_purple</item>
+        <item>@style/MyTheme.Indigo</item>
+        <item>@style/MyTheme.Blue_grey</item>
+        <item>@style/MyTheme.Night</item>
+    </array>
     <!--漫画源相关-->
     <string-array name="source_name">
         <item>漫画柜</item>

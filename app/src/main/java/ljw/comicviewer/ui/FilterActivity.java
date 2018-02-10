@@ -48,7 +48,6 @@ import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.SnackbarUtil;
 import ljw.comicviewer.util.StringUtil;
-import ljw.comicviewer.util.ThemeUtil;
 import retrofit2.Call;
 
 public class FilterActivity extends BaseActivity
@@ -56,7 +55,7 @@ public class FilterActivity extends BaseActivity
     private String TAG = this.getClass().getSimpleName()+"----";
     private Context context;
     private FilterAdapter filterAdapter;
-    private ComicRecyclerViewAdapter filterRecyclerViewAdapter;
+    private ComicRecyclerViewAdapter comicRecyclerViewAdapter;
     private boolean loadingNext = false;
     private boolean loading = false;
     private int curPage = 1;
@@ -106,9 +105,6 @@ public class FilterActivity extends BaseActivity
         //设置回顶按钮颜色
         btn_toTop.setBackgroundTintList(
                 ThemeUtils.getThemeColorStateList(context,R.color.theme_color_primary));
-        //修改RecyclerView边缘颜色
-        ThemeUtil.setEdgeGlowColor(recyclerView,
-                ThemeUtils.getColorById(context,R.color.theme_color_primary));
         initGridView();
         addTypeBtn();
         addListener();
@@ -179,9 +175,9 @@ public class FilterActivity extends BaseActivity
         //根据屏幕宽度设置列数
         int columns = DisplayUtil.getGridNumColumns(context,Global.ITEM_COMIC_VIEW_WIDTH);
         int itemWidth = (int) (DisplayUtil.getScreenWidthPX(context)/columns);
-        filterRecyclerViewAdapter = new ComicRecyclerViewAdapter(context,comics, itemWidth);
+        comicRecyclerViewAdapter = new ComicRecyclerViewAdapter(context,comics, itemWidth);
         recyclerView.setLayoutManager(new GridLayoutManager(context,columns));
-        recyclerView.setAdapter(filterRecyclerViewAdapter);
+        recyclerView.setAdapter(comicRecyclerViewAdapter);
     }
 
     private void addListener(){
@@ -243,13 +239,14 @@ public class FilterActivity extends BaseActivity
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 comics.clear();
+                comicRecyclerViewAdapter.notifyDataSetChanged();
                 maxPage = -1;
                 curPage = 1;
                 getData();
             }
         });
 
-        filterRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+        comicRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void OnItemClick(View view, int position) {
                 Comic comic = comics.get(position);

@@ -7,14 +7,14 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -35,7 +35,8 @@ import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.store.RuleStore;
-import ljw.comicviewer.ui.adapter.SearchListAdapter;
+import ljw.comicviewer.ui.adapter.SearchRecyclerViewAdapter;
+import ljw.comicviewer.ui.listeners.OnItemClickListener;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import ljw.comicviewer.util.SnackbarUtil;
@@ -55,7 +56,7 @@ public class SearchActivity extends BaseActivity
     private int maxPage = -1;
     private boolean loading = false;
     RuleStore ruleStore = RuleStore.get();
-    private SearchListAdapter searchListAdapter;
+    private SearchRecyclerViewAdapter searchListAdapter;
     private RefreshHeader refreshHeader;
     private Call<String> searchCall;
     private Snackbar notEmptySnackBar;
@@ -65,8 +66,8 @@ public class SearchActivity extends BaseActivity
     EditText edit_search;
     @BindView(R.id.search_SmartRefreshLayout)
     RefreshLayout refreshLayout;
-    @BindView(R.id.search_listView)
-    ListView listview;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
     @BindView(R.id.search_not_found)
     RelativeLayout tipsView;
     @BindView(R.id.tips_search_by_id)
@@ -81,8 +82,8 @@ public class SearchActivity extends BaseActivity
         context = this;
         ButterKnife.bind(this);
         initView();
-        addListener();
         initListView();
+        addListener();
     }
 
     private void initView(){
@@ -124,9 +125,9 @@ public class SearchActivity extends BaseActivity
             }
         });
         //列表对象点击事件
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        searchListAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void OnItemClick(View view, int position) {
                 Comic comic = comics.get(position);
                 Intent intent = new Intent(context, DetailsActivity.class);
                 intent.putExtra("id",comic.getComicId());
@@ -156,8 +157,9 @@ public class SearchActivity extends BaseActivity
     }
 
     private void initListView() {
-        searchListAdapter = new SearchListAdapter(context,comics);
-        listview.setAdapter(searchListAdapter);
+        searchListAdapter = new SearchRecyclerViewAdapter(context,comics);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(searchListAdapter);
         searchListAdapter.notifyDataSetChanged();
     }
 

@@ -45,7 +45,6 @@ import ljw.comicviewer.ui.listeners.OnItemClickListener;
 import ljw.comicviewer.ui.listeners.OnItemLongClickListener;
 import ljw.comicviewer.util.DisplayUtil;
 import ljw.comicviewer.util.RefreshLayoutUtil;
-import ljw.comicviewer.util.ThemeUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -109,9 +108,6 @@ public class CollectionFragment extends BaseFragment
         //设置回顶按钮颜色
         btn_toTop.setBackgroundTintList(
                 ThemeUtils.getThemeColorStateList(context,R.color.theme_color_primary));
-        //修改RecyclerView边缘颜色
-        ThemeUtil.setEdgeGlowColor(recyclerView,
-                ThemeUtils.getColorById(context,R.color.theme_color_primary));
         if (getActivity() instanceof HomeActivity)
              ((HomeActivity) getActivity()).setTitle(nav_title,getString(R.string.txt_collection));
         initGridView();

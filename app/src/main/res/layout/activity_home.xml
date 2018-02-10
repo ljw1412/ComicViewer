@@ -15,18 +15,12 @@
         android:id="@+id/content_home"
         android:layout_above="@+id/bottom_tab"></LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/gray_light"
-        android:layout_above="@+id/bottom_tab"
-        />
 
     <LinearLayout
         android:id="@+id/bottom_tab"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:background="@android:color/background_light"
+        android:background="?bottomNavBackground"
         android:layout_alignParentBottom="true"
         android:layout_height="56dp">
 

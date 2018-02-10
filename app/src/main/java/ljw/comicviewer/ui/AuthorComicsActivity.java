@@ -4,10 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,7 +28,8 @@ import ljw.comicviewer.bean.Comic;
 import ljw.comicviewer.http.ComicFetcher;
 import ljw.comicviewer.http.ComicService;
 import ljw.comicviewer.store.RuleStore;
-import ljw.comicviewer.ui.adapter.SearchListAdapter;
+import ljw.comicviewer.ui.adapter.SearchRecyclerViewAdapter;
+import ljw.comicviewer.ui.listeners.OnItemClickListener;
 import ljw.comicviewer.util.RefreshLayoutUtil;
 import retrofit2.Call;
 
@@ -36,23 +37,23 @@ import retrofit2.Call;
  * 作者相关界面
  */
 public class AuthorComicsActivity extends BaseActivity
-        implements ComicService.RequestCallback{
-    private String TAG = this.getClass().getSimpleName()+"----";
+        implements ComicService.RequestCallback {
+    private String TAG = this.getClass().getSimpleName() + "----";
     private Context context;
     private List<Comic> comics = new ArrayList<>();
-    private String aName,aMark;
+    private String aName, aMark;
     private int curPage = 1;
     private int maxPage = -1;
     private boolean flag = false;//是否调用备用方法
     RuleStore ruleStore = RuleStore.get();
-    private SearchListAdapter searchListAdapter;
+    private SearchRecyclerViewAdapter searchListAdapter;
     private Call loadCall;
     @BindView(R.id.nav_child_title)
     TextView nav_title;
     @BindView(R.id.author_comics_SmartRefreshLayout)
     RefreshLayout refreshLayout;
-    @BindView(R.id.author_comics_listView)
-    ListView listview;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
     @BindView(R.id.search_not_found)
     RelativeLayout tipsView;
 
@@ -67,35 +68,33 @@ public class AuthorComicsActivity extends BaseActivity
         aMark = getIntent().getStringExtra("aMark");
         initView();
         addListener();
-
-
     }
 
-    public void loadAuthorComics(){
-        if(aMark!=null && !flag){
-            loadCall = ComicService.get().getHTML(this,Global.REQUEST_AUTHOR_COMICS,
-                    ruleStore.getAuthorRule().get("url"),aMark,curPage);
-        }else {
+    public void loadAuthorComics() {
+        if (aMark != null && !flag) {
+            loadCall = ComicService.get().getHTML(this, Global.REQUEST_AUTHOR_COMICS,
+                    ruleStore.getAuthorRule().get("url"), aMark, curPage);
+        } else {
             //备用方法：使用搜索功能来找作者相关漫画
-            loadCall = ComicService.get().getHTML(this,Global.REQUEST_COMICS_SEARCH,
+            loadCall = ComicService.get().getHTML(this, Global.REQUEST_COMICS_SEARCH,
                     ruleStore.getSearchRule().get("url"), aName, curPage);
         }
     }
 
 
-    private void initView(){
+    private void initView() {
         initListView();
-        setTitle(String.format(getString(R.string.title_author_comics),aName));
+        setTitle(String.format(getString(R.string.title_author_comics), aName));
         //只允许刷新，以便初次启动时自动刷新
-        RefreshLayoutUtil.init(context,refreshLayout,
-                RefreshLayoutUtil.Mode.Only_Refresh,true);
+        RefreshLayoutUtil.init(context, refreshLayout,
+                RefreshLayoutUtil.Mode.Only_Refresh, true);
         //设置头部主题
         RefreshHeader refreshHeader = new ClassicsHeader(context);//使用经典主题
         refreshLayout.setRefreshHeader(refreshHeader);
-        ((ClassicsHeader)refreshHeader).REFRESH_HEADER_REFRESHING =
-                String.format(getString(R.string.title_author_comics),aName);
-        ((ClassicsHeader)refreshHeader).REFRESH_HEADER_PULLDOWN =
-                String.format(getString(R.string.title_author_comics),aName);
+        ((ClassicsHeader) refreshHeader).REFRESH_HEADER_REFRESHING =
+                String.format(getString(R.string.title_author_comics), aName);
+        ((ClassicsHeader) refreshHeader).REFRESH_HEADER_PULLDOWN =
+                String.format(getString(R.string.title_author_comics), aName);
         refreshLayout.autoRefresh();
     }
 
@@ -107,7 +106,7 @@ public class AuthorComicsActivity extends BaseActivity
                 //上拉
                 ++curPage;
                 loadAuthorComics();
-                Log.d(TAG,"load next page; currentLoadingPage = "+curPage);
+                Log.d(TAG, "load next page; currentLoadingPage = " + curPage);
             }
 
             @Override
@@ -122,12 +121,12 @@ public class AuthorComicsActivity extends BaseActivity
     }
 
     private void initListView() {
-        searchListAdapter = new SearchListAdapter(context,comics);
-        listview.setAdapter(searchListAdapter);
-//        listview.setOnScrollListener(this);
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        searchListAdapter = new SearchRecyclerViewAdapter(context, comics);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(searchListAdapter);
+        searchListAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void OnItemClick(View view, int position) {
                 Comic comic = comics.get(position);
                 Intent intent = new Intent(context, DetailsActivity.class);
                 intent.putExtra("id",comic.getComicId());
@@ -135,9 +134,9 @@ public class AuthorComicsActivity extends BaseActivity
                 intent.putExtra("title",comic.getName());
                 startActivity(intent);
             }
-        });
-        searchListAdapter.notifyDataSetChanged();
-    }
+    });
+    searchListAdapter.notifyDataSetChanged();
+}
 
     //按标题栏返回按钮
     public void onBack(View view) {
@@ -185,13 +184,13 @@ public class AuthorComicsActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(loadCall!=null && !loadCall.isCanceled()){
+        if (loadCall != null && !loadCall.isCanceled()) {
             loadCall.cancel();
-            Log.d(TAG, "onDestroy: "+"取消网络请求！");
+            Log.d(TAG, "onDestroy: " + "取消网络请求！");
         }
     }
 
-    class AuthorComicsDataTask extends AsyncTask<Void,Void,Boolean>{
+class AuthorComicsDataTask extends AsyncTask<Void,Void,Boolean>{
         private Object data;
         private CallBackData callbackdata;
 

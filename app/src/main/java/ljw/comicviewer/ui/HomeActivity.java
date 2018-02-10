@@ -1,6 +1,7 @@
 package ljw.comicviewer.ui;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -102,6 +103,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     public void changeTheme(){
         ThemeUtil.updateTheme(this,
                 ThemeUtils.getColorById(this, R.color.theme_color_primary));
+        //设置系统级别主题色
+        TypedArray styles = getResources().obtainTypedArray(R.array.theme_style);
+        int index = ThemeUtil.getTheme(context);
+        context.setTheme(styles.getResourceId(index,0));
     }
 
 

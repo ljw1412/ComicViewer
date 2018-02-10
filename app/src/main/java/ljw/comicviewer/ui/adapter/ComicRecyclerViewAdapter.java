@@ -56,6 +56,7 @@ public class ComicRecyclerViewAdapter extends RecyclerView.Adapter<ComicItemView
     @Override
     public ComicItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_comic_grid,parent,false);
+        //设置设定的宽度
         ViewGroup.LayoutParams lp = view.getLayoutParams();
         lp.width = viewWidth;
         int padding = DensityUtil.dp2px(context,2);

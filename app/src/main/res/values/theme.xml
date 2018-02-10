@@ -21,6 +21,7 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:fitsSystemWindows">true</item>
+        <item name="android:textColor">@color/text_color</item>
         <item name="android:textColorPrimary">@color/text_primary_color</item>
         <item name="android:textColorTertiary">@color/text_tertiary_color</item>
         <item name="android:colorControlHighlight">@color/black_pressed</item>
@@ -36,18 +37,80 @@
     <style name="AppTheme.NoActionBar.Default">
         <item name="themeColorSecondary">@color/theme_color_secondary</item>
         <item name="android:windowBackground">@color/window_background</item>
+        <item name="sectionBackground">@color/white</item>
+        <item name="bottomNavBackground">@color/white</item>
         <!--<item name="colorAccent">@android:color/black</item>-->
         <!--<item name="colorPrimary">@color/theme_color_secondary</item>-->
         <!--<item name="colorPrimaryDark">@color/theme_color_secondary</item>-->
         <!--<item name="android:statusBarColor">@color/theme_color_secondary</item>-->
     </style>
-
-    <!--<style name="AppTheme.NoActionBar.Default">-->
-        <!--<item name="themeColorSecondary">@color/theme_color_secondary</item>-->
-
-        <!--<item name="android:windowBackground">@color/window_background</item>-->
-        <!--<item name="android:textColorPrimary">@color/text_primary_color</item>-->
-    <!--</style>-->
+    <!--主题色-->
+    <style name="MyTheme.Red" parent="AppTheme.NoActionBar.Default">
+        <item name="android:colorPrimary">@color/theme_red</item>
+        <item name="android:colorPrimaryDark">@color/theme_red_dark</item>
+        <item name="android:colorAccent">@color/theme_red</item>
+    </style>
+    <style name="MyTheme.Pink" parent="AppTheme.NoActionBar.Default">
+        <item name="android:colorPrimary">@color/theme_pink</item>
+        <item name="android:colorPrimaryDark">@color/theme_pink_dark</item>
+        <item name="android:colorAccent">@color/theme_pink</item>
+    </style>
+    <style name="MyTheme.Orange" parent="AppTheme.NoActionBar.Default">
+        <item name="android:colorPrimary">@color/theme_orange</item>
+        <item name="android:colorPrimaryDark">@color/theme_orange_dark</item>
+        <item name="android:colorAccent">@color/theme_orange</item>
+    </style>
+    <style name="MyTheme.Blue" parent="AppTheme.NoActionBar.Default">
+        <item name="android:colorPrimary">@color/theme_blue</item>
+        <item name="android:colorPrimaryDark">@color/theme_blue_dark</item>
+        <item name="android:colorAccent">@color/theme_blue</item>
+    </style>
+    <style name="MyTheme.Cyan" parent="AppTheme.NoActionBar.Default">
+        <item name="android:colorPrimary">@color/theme_cyan</item>
+        <item name="android:colorPrimaryDark">@color/theme_cyan_dark</item>
+        <item name="android:colorAccent">@color/theme_cyan</item>
+    </style>
+    <style name="MyTheme.Green" parent="AppTheme.NoActionBar.Default">
+        <item name="android:colorPrimary">@color/theme_green</item>
+        <item name="android:colorPrimaryDark">@color/theme_green_dark</item>
+        <item name="android:colorAccent">@color/theme_green</item>
+    </style>
+    <style name="MyTheme.Teal" parent="AppTheme.NoActionBar.Default">
+        <item name="android:colorPrimary">@color/theme_teal</item>
+        <item name="android:colorPrimaryDark">@color/theme_teal_dark</item>
+        <item name="android:colorAccent">@color/theme_teal</item>
+    </style>
+    <style name="MyTheme.Brown" parent="AppTheme.NoActionBar.Default">
+        <item name="android:colorPrimary">@color/theme_brown</item>
+        <item name="android:colorPrimaryDark">@color/theme_brown_dark</item>
+        <item name="android:colorAccent">@color/theme_brown</item>
+    </style>
+    <style name="MyTheme.Deep_purple" parent="AppTheme.NoActionBar.Default">
+        <item name="android:colorPrimary">@color/theme_deep_purple</item>
+        <item name="android:colorPrimaryDark">@color/theme_deep_purple_dark</item>
+        <item name="android:colorAccent">@color/theme_deep_purple</item>
+    </style>
+    <style name="MyTheme.Indigo" parent="AppTheme.NoActionBar.Default">
+        <item name="android:colorPrimary">@color/theme_indigo</item>
+        <item name="android:colorPrimaryDark">@color/theme_indigo_dark</item>
+        <item name="android:colorAccent">@color/theme_indigo</item>
+    </style>
+    <style name="MyTheme.Blue_grey" parent="AppTheme.NoActionBar.Default">
+        <item name="android:colorPrimary">@color/theme_blue_grey</item>
+        <item name="android:colorPrimaryDark">@color/theme_blue_grey_dark</item>
+        <item name="android:colorAccent">@color/theme_blue_grey</item>
+    </style>
+    <style name="MyTheme.Night" parent="AppTheme.NoActionBar.Default">
+        <item name="android:colorPrimary">@color/theme_night</item>
+        <item name="android:colorPrimaryDark">@color/theme_night_dark</item>
+        <item name="android:colorAccent">@color/theme_night</item>
+        <item name="android:windowBackground">@color/theme_night_light</item>
+        <item name="bottomNavBackground">@color/theme_night</item>
+        <item name="sectionBackground">@color/gray_dark</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorPrimary">@color/gray</item>
+        <item name="android:textColorTertiary">@color/gray_light</item>
+    </style>
 
     <style name="Theme.NoTitleBar.Fullscreen" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowFullscreen">true</item>

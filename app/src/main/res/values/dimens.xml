@@ -14,5 +14,5 @@
     <dimen name="toolbar_height">36dp</dimen>
     <dimen name="long_line_option_button_height">45dp</dimen>
 
-    <dimen name="item_chapter_view_width">80dp</dimen>
+    <dimen name="item_chapter_view_width">60dp</dimen>
 </resources>
