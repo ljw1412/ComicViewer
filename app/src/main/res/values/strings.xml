@@ -74,6 +74,7 @@
     <string name="setting_sub_summary_on_skip_network_hint">使用数据流量时不提示</string>
     <string name="setting_sub_summary_off_skip_network_hint">使用数据流量时会提示</string>
     <string name="setting_title_read">阅读设置</string>
+    <string name="setting_sub_title_use_volume_key">使用音量键翻页</string>
     <string name="setting_sub_title_preload">预加载页数</string>
     <string name="setting_sub_summary_preload">%1$d页</string>
     <string name="setting_preload_tip">实际同时加载页数为(选择数*2+1)</string>

@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/search_comic_name"
-            android:textColor="@android:color/black"
+            android:textColor="@color/text_tertiary_color"
             android:textSize="18sp"
             android:maxLines="1"/>
 
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/search_comic_author"
             android:textSize="16sp"
-            android:textColor="@android:color/black"
+            android:textColor="@color/text_tertiary_color"
             android:maxLines="1"/>
 
         <TextView
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/search_comic_info"
             android:ellipsize="end"
-            android:textColor="@android:color/black"
+            android:textColor="@color/text_tertiary_color"
             android:maxLines="1"/>
         <LinearLayout
             android:orientation="horizontal"
@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/search_comic_update_status"
                 android:maxLines="1"
-                android:textColor="@android:color/black"
+                android:textColor="@color/text_tertiary_color"
                 android:layout_weight="1" />
 
             <TextView
@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/search_comic_type"
                 android:maxLines="1"
-                android:textColor="@android:color/black"
+                android:textColor="@color/text_tertiary_color"
                 android:layout_weight="1" />
 
             <TextView
@@ -100,7 +100,7 @@
                 android:id="@+id/search_comic_update"
                 android:maxLines="1"
                 android:layout_weight="1"
-                android:textColor="@android:color/black"
+                android:textColor="@color/text_tertiary_color"
                 android:gravity="right|center_vertical"
                 android:layout_marginRight="5dp" />
 

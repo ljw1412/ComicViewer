@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.ValueCallback;
@@ -143,12 +144,15 @@ public class ComicReaderActivity extends AppCompatActivity {
     //预加载页数
     private int preloadPageNumber = 2;
     private int readMode = 0;
+    private boolean useVolumeKey;
     //数据初始化
     private void initData(){
         preloadPageNumber = PreferenceUtil
                 .getSharedPreferences(context).getInt("preloadPageNumber",2);
         readMode = PreferenceUtil
                 .getSharedPreferences(context).getInt("readMode",0);
+        useVolumeKey = PreferenceUtil
+                .getSharedPreferences(context).getBoolean("useVolumeKey",false);
         picturePagerAdapter = new PicturePagerAdapter(this, imgUrls);
         pictureRecyclerViewAdapter = new PictureRecyclerViewAdapter(this, imgUrls);
     }
@@ -778,6 +782,33 @@ public class ComicReaderActivity extends AppCompatActivity {
     private void setPageText(String current,String total){
         txtPage.setText(current+"/"+total);
         txtToolsPage.setText(current+"/"+total);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(useVolumeKey){
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_VOLUME_UP:
+                    prevPage();
+                    return true;
+                case KeyEvent.KEYCODE_VOLUME_DOWN:
+                    nextPage();
+                    return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if(useVolumeKey) {
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                return true;
+            } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                return true;
+            }
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
     public void onBack(View view){

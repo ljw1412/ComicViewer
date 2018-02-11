@@ -31,6 +31,11 @@
     <PreferenceCategory
         android:title="@string/setting_title_read"
         android:layout="@layout/preference_category_material">
+        <ljw.comicviewer.ui.preference.MySwitchPreference
+            android:defaultValue="false"
+            android:title="@string/setting_sub_title_use_volume_key"
+            android:key="useVolumeKey"
+            android:id="@+id/use_volume_key"/>
         <PreferenceScreen
             android:defaultValue="2"
             android:title="@string/setting_sub_title_preload"
