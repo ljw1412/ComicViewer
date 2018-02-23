@@ -48,4 +48,12 @@
             android:key="readMode">
         </PreferenceScreen>
     </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/setting_title_read"
+        android:layout="@layout/preference_category_material">
+        <ljw.comicviewer.ui.preference.MyTextPreference
+            android:title="@string/setting_sub_title_clear_image_cache"
+            android:key="clear_image_cache">
+        </ljw.comicviewer.ui.preference.MyTextPreference>
+    </PreferenceCategory>
 </PreferenceScreen>

@@ -86,4 +86,22 @@ public class DisplayUtil {
         return color;
     }
 
+    // 文件大小信息
+    private static final String[] sizeSuffixes = { "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
+    /**
+     * 转换文件大小bytes到可以读格式。
+     *
+     * @param bytes  文件大小
+     * @return
+     */
+    public static String bytesToHumanReadable(long bytes) {
+        double result = bytes;
+        int attachedsuff = 0;
+        while (result > 1024 && attachedsuff < sizeSuffixes.length) {
+            result /= 1024.;
+            attachedsuff++;
+        }
+        result = ((int) (result * 100)) / 100.0;
+        return result + " " + sizeSuffixes[attachedsuff];
+    }
 }

@@ -80,4 +80,8 @@
     <string name="setting_preload_tip">实际同时加载页数为(选择数*2+1)</string>
     <string name="setting_sub_title_read_mode">阅读模式</string>
     <string name="setting_sub_summary_read_mode">当前模式:%1$s</string>
+    <string name="setting_title_storage_cache">缓存设置</string>
+    <string name="setting_sub_title_clear_image_cache">清理图片缓存</string>
+    <string name="tips_calculating">计算中</string>
+    <string name="tips_clear_success">清理成功</string>
 </resources>

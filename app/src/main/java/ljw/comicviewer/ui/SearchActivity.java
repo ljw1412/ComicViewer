@@ -9,12 +9,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -72,6 +75,8 @@ public class SearchActivity extends BaseActivity
     RelativeLayout tipsView;
     @BindView(R.id.tips_search_by_id)
     TextView txt_searchById;
+    @BindView(R.id.edit_clear)
+    ImageView btn_clear;
     @BindView(R.id.search_coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
@@ -101,6 +106,7 @@ public class SearchActivity extends BaseActivity
                 coordinatorLayout, getString(R.string.alert_search_keyword_no_empty),
                 R.drawable.icon_error,
                 ContextCompat.getColor(context,R.color.star_yellow));
+        btn_clear.setVisibility(View.GONE);
     }
 
     private void addListener() {
@@ -147,11 +153,33 @@ public class SearchActivity extends BaseActivity
                 return true;
             }
         });
+        edit_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(charSequence.length()>0){
+                    btn_clear.setVisibility(View.VISIBLE);
+                }else{
+                    btn_clear.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
         //搜索按钮点击事件
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 searching(view);
+            }
+        });
+        btn_clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                edit_search.setText("");
             }
         });
     }

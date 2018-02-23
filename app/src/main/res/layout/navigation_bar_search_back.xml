@@ -45,6 +45,17 @@
             android:paddingRight="2dp"
             android:imeOptions="actionSearch" />
 
+        <ImageView
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/icon_error"
+            android:id="@+id/edit_clear"
+            android:tint="@color/gray_dark"
+            android:layout_width="32dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/white"
+            android:paddingRight="6dp"
+            android:paddingLeft="6dp" />
+
         <FrameLayout
             android:layout_width="1dp"
             android:layout_height="match_parent"

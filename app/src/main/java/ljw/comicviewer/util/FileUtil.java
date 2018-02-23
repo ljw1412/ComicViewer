@@ -6,8 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ljw.comicviewer.R;
-
 /**
  * 文件工具类
  */
@@ -43,5 +41,25 @@ public class FileUtil {
             e.printStackTrace();
         }
         return content;
+    }
+
+    public static long getGlideCacheSize(Context context){
+        File glideCacheDir = new File(context.getExternalCacheDir(),"GlideCache");
+        if (glideCacheDir.exists()){
+            return getFileSize(glideCacheDir);
+        }
+        return 0;
+    }
+
+    public static long getFileSize(File file){
+        long size = 0;
+        if(file.isDirectory()){
+            for(File aFile : file.listFiles()){
+                size += getFileSize(aFile);
+            }
+        }else{
+            size += file.length();
+        }
+        return size;
     }
 }

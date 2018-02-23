@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,6 +31,8 @@ public class SettingsActivity extends BaseActivity {
     TextView title;
     @BindView(R.id.setting_content)
     RelativeLayout content;
+    @BindView(R.id.setting_coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,10 @@ public class SettingsActivity extends BaseActivity {
         //即使反馈，修改当前页面的主题
         ThemeUtil.setThemeByColor(context,color);
         setResult(Global.THEME_CHANGE,new Intent().putExtra("theme_change",true));
+    }
+
+    public CoordinatorLayout getCoordinatorLayout(){
+        return coordinatorLayout;
     }
 
     //按标题栏返回按钮

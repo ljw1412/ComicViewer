@@ -16,4 +16,11 @@
         android:layout_below="@+id/nav_bar_child"
         android:id="@+id/setting_content">
     </RelativeLayout>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/setting_coordinatorLayout">
+
+    </android.support.design.widget.CoordinatorLayout>
 </RelativeLayout>

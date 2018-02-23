@@ -287,7 +287,7 @@ public class CollectionFragment extends BaseFragment
 
     //切换为搜索模式
     private void changeSearchMode(){
-        RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Only_LoadMore);
+//        RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Only_LoadMore);
         view_search.setVisibility(View.VISIBLE);
         edit_search.requestFocus();
         //显示虚拟键盘
@@ -297,7 +297,7 @@ public class CollectionFragment extends BaseFragment
 
     //切换为正常模式
     public void changeNormalMode(){
-        RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Both);
+//        RefreshLayoutUtil.setMode(refreshLayout,RefreshLayoutUtil.Mode.Both);
         view_search.setVisibility(View.GONE);
         edit_search.setText(null);
         //隐藏虚拟键盘
