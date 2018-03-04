@@ -49,7 +49,7 @@
         </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/setting_title_read"
+        android:title="@string/setting_title_storage_cache"
         android:layout="@layout/preference_category_material">
         <ljw.comicviewer.ui.preference.MyTextPreference
             android:title="@string/setting_sub_title_clear_image_cache"
