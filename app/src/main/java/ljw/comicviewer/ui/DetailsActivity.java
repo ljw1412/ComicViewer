@@ -299,9 +299,9 @@ public class DetailsActivity extends AppCompatActivity
     //加载封面
     public void getCover(){
         if(!isDestroyed()) {
-            History history = getHistory();
             //如果封面地址改变了，更新历史记录数据库中的数据
-            if(!history.getImgUrl().equals(comic.getImageUrl())){
+            History history = getHistory();
+            if(history!=null && !comic.getImageUrl().equals(history.getImgUrl())){
                 history.setImgUrl(comic.getImageUrl());
                 historyHolder.updateOrAddHistory(history);
                 setResult(Global.STATUS_COVER_UPDATE,getIntent().putExtra("cover_update",true));
