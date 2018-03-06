@@ -17,8 +17,10 @@ public class Global {
 
     public static final int REQUEST_COMIC_HISTORY = 100;//漫画历史记录标识
     public static final int THEME_CHANGE = 101;//换肤标识
-    public static final int CollectionToDetails = 10001;//从收藏到详细页的标识
-    public static final int HomeToSetting = 10002;
+    public static final int STATUS_CollectionToDetails = 10001;//从收藏到详细页的标识
+    public static final int STATUS_HomeToSetting = 10002; //主页与设置页切换
+
+    public static final int STATUS_COVER_UPDATE = 20001;//封面更新
     //参数
     public static final int SNACKBAR_DURATION = 2000;//SNACKBAR的延迟
 

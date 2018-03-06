@@ -11,6 +11,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ljw.comicviewer.Global;
 import ljw.comicviewer.R;
 import ljw.comicviewer.bean.History;
 import ljw.comicviewer.db.HistoryHolder;
@@ -130,4 +132,19 @@ public class HistoryActivity extends BaseActivity {
         finish();
     }
 
+    //TODO:未测试
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(data==null) return;
+        switch (resultCode){
+            case Global.STATUS_COVER_UPDATE:
+                if(data.getBooleanExtra("cover_update",false)){
+                    Log.d(TAG, "onActivityResult: 封面更新");
+                    getHistoriesByDB();
+                    recyclerViewAdapter.notifyDataSetChanged();
+                }
+                break;
+        }
+    }
 }

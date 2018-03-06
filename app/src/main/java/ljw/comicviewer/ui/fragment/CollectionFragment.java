@@ -335,14 +335,14 @@ public class CollectionFragment extends BaseFragment
             intent.putExtra("id",comic.getComicId());
             intent.putExtra("score",comic.getScore());
             intent.putExtra("title",comic.getName());
-            startActivityForResult(intent, Global.CollectionToDetails);
+            startActivityForResult(intent, Global.STATUS_CollectionToDetails);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
-            case Global.CollectionToDetails:
+            case Global.STATUS_CollectionToDetails:
                 Log.d(TAG, "onActivityResult: "+data);
                 if( data!=null ){
                     if(data.getBooleanExtra("like_change",false)){

@@ -141,6 +141,7 @@ public class DetailsActivity extends AppCompatActivity
     LinearLayout view_authors;
     @BindView(R.id.details_chapters_loading)
     LinearLayout view_loading;
+    private HistoryHolder historyHolder;
 
 
     @Override
@@ -151,6 +152,7 @@ public class DetailsActivity extends AppCompatActivity
 
         //view绑定代码生成
         ButterKnife.bind(this);
+        historyHolder = new HistoryHolder(context);
 
         initViewAndData();
         initListener();
@@ -244,7 +246,7 @@ public class DetailsActivity extends AppCompatActivity
                 if(!like){
                     collectionHolder.addCollection(comic);
                     updateLikeStatus();
-                    context.setResult(Global.CollectionToDetails,intent.putExtra("like_change",false));
+                    context.setResult(Global.STATUS_CollectionToDetails,intent.putExtra("like_change",false));
                     SnackbarUtil.newAddImageColorfulSnackar(
                             coordinatorLayout,
                             getString(R.string.alert_add_collect_success),
@@ -253,7 +255,7 @@ public class DetailsActivity extends AppCompatActivity
                 }else{
                     collectionHolder.deleteComic(comic.getComicId());
                     updateLikeStatus();
-                    context.setResult(Global.CollectionToDetails,intent.putExtra("like_change",true));
+                    context.setResult(Global.STATUS_CollectionToDetails,intent.putExtra("like_change",true));
                     SnackbarUtil.newAddImageColorfulSnackar(
                             coordinatorLayout,
                             getString(R.string.alert_del_collect_success),
@@ -297,6 +299,13 @@ public class DetailsActivity extends AppCompatActivity
     //加载封面
     public void getCover(){
         if(!isDestroyed()) {
+            History history = getHistory();
+            //如果封面地址改变了，更新历史记录数据库中的数据
+            if(!history.getImgUrl().equals(comic.getImageUrl())){
+                history.setImgUrl(comic.getImageUrl());
+                historyHolder.updateOrAddHistory(history);
+                setResult(Global.STATUS_COVER_UPDATE,getIntent().putExtra("cover_update",true));
+            }
             RequestOptions options = new RequestOptions();
             options.placeholder(R.drawable.img_load_before)
                     .error(R.drawable.img_load_failed)
@@ -416,7 +425,6 @@ public class DetailsActivity extends AppCompatActivity
     }
     //获取当前漫画历史记录
     private History getHistory(){
-        HistoryHolder historyHolder = new HistoryHolder(context);
         return historyHolder.getHistory(comic_id);
     }
     //继续阅读（查询所在列表，并模拟点击）
@@ -514,7 +522,7 @@ public class DetailsActivity extends AppCompatActivity
                 history.setReadTime(System.currentTimeMillis());
                 history.setComeFrom(RuleStore.get().getComeFrom());
 //                Log.d(TAG, "onActivityResult: "+history.toString());
-                HistoryHolder historyHolder = new HistoryHolder(context);
+//                HistoryHolder historyHolder = new HistoryHolder(context);
                 historyHolder.updateOrAddHistory(history);
                 //刷新章节界面
                 for(int i = 0 ; i<TYPE_MAX ;i++){

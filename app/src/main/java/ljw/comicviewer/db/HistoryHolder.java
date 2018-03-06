@@ -94,6 +94,7 @@ public class HistoryHolder {
             history.setEnd(cursor.getInt(cursor.getColumnIndex("isEnd"))==0?false:true);
             history.setReadTime(cursor.getLong(cursor.getColumnIndex("readTime")));
             history.setPage(cursor.getInt(cursor.getColumnIndex("page")));
+            history.setComeFrom(cursor.getString(cursor.getColumnIndex("comeFrom")));
             list.add(history);
         }
         return list;
@@ -156,6 +157,7 @@ public class HistoryHolder {
             history.setEnd(cursor.getInt(cursor.getColumnIndex("isEnd"))==0?false:true);
             history.setReadTime(cursor.getLong(cursor.getColumnIndex("readTime")));
             history.setPage(cursor.getInt(cursor.getColumnIndex("page")));
+            history.setComeFrom(cursor.getString(cursor.getColumnIndex("comeFrom")));
             return history;
         }
         return null;

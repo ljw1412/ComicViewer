@@ -76,7 +76,7 @@ public class MineFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, SettingsActivity.class);
-                startActivityForResult(intent, Global.HomeToSetting);
+                startActivityForResult(intent, Global.STATUS_HomeToSetting);
             }
         });
         btn_about.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +93,7 @@ public class MineFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
-            case Global.HomeToSetting:
+            case Global.STATUS_HomeToSetting:
                 if(data!=null && data.getBooleanExtra("theme_change",false)){
                     Log.d(TAG, "onActivityResult: "+data.getBooleanExtra("theme_change",false));
                     ((HomeActivity) context).changeTheme();
