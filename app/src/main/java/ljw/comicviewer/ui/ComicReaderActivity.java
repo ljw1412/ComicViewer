@@ -535,7 +535,7 @@ public class ComicReaderActivity extends AppCompatActivity {
         Glide.with(context)
                 .asBitmap()
                 .load(new GlideUrl(url
-                        ,new LazyHeaders.Builder().addHeader("Referer",ruleStore.getHost()).build()
+                        ,new LazyHeaders.Builder().addHeader("Referer",parseUrl()).build()
                 ))
                 .into(new BitmapImageViewTarget(pic){
             @Override

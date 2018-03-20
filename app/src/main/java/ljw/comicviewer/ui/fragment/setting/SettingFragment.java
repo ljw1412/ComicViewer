@@ -95,6 +95,7 @@ public class SettingFragment extends PreferenceFragment {
                                 preference.setSummary(
                                         String.format(getString(R.string.setting_sub_summary_source),items[i]));
                                 PreferenceUtil.modify(context,"sourceId",i);
+                                currentSelected = i;
                                 dialog.dismiss();
                             }
                         })
