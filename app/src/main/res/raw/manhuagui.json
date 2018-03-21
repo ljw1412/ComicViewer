@@ -2,7 +2,7 @@
 	"title":"漫画柜",
 	"comeFrom":"manhuagui",
 	"host":"http://www.manhuagui.com",
-	"imghost":"http://dx.hamreus.com:8080",
+	"imghost":"http://dx.hamreus.com",
 	"domain":".manhuagui.com",
 	"cookie":"country=US",
 	"home":{
@@ -226,9 +226,9 @@
 	},
 	"read_page":{
 		"url":"/comic/{comic:}/{chapter:}/",
-		"wv-js":"var res=[];var path=pVars.manga.filePath,suffixes = pVars.curFile.match(/.(?:jpg|jpeg|png|gif|bmp).+/)[0],len = cInfo.len;for(var i=1;i<=len;i++){var index = i;if(i<100) index = '0' + index;if(i<10) index = '0' + index;var url = path + index + suffixes;res.push(url);}res;",
+		"wv-js":"var res=[];try{var temp=document.querySelectorAll('script')[5].innerHTML;var info=eval(temp.substring(temp.indexOf('(')));info=info.substring(info.indexOf('{'),info.lastIndexOf('}')+1);info=JSON.parse(info);var path=pVars.manga.filePath;for(var i=0;i<info.files.length;i++){var url=path+info.files[i]+'?cid='+info.cid;for(t in info.sl){url+='&'+t+'='+info.sl[t]}res.push(url)}}catch(error){res=null;}res;",
 		"items":{
-			"imghost":"http://lt.hamreus.com"
+			"imghost":"http://us.hamreus.com"
 		}
 	},
 	"author_page":{
