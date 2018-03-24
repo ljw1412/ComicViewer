@@ -1,11 +1,9 @@
 package ljw.comicviewer.http;
 
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
-import retrofit2.http.Path;
 import retrofit2.http.Url;
 
 /**
@@ -14,7 +12,7 @@ import retrofit2.http.Url;
 
 public class HttpInterface {
     public interface ComicRequestServices{
-        @Headers("Cookie: country=HK")
+        @Headers("Cookie: country=US; isAdult=1")
         @GET
         Call<String> getHTML(@Url String url);
     }

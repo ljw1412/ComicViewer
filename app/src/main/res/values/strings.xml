@@ -17,9 +17,9 @@
     <string name="dialog_content_warming_network">您正在使用移动网络，是否观看？</string>
     <string name="dialog_content_warming_no_network">没有网络！</string>
     <string name="dialog_content_warming">该漫画中有部份章节可能含有暴力、血腥、色情或不当的语言等内容，根据中国法律法规，我们将对其进行屏蔽。</string>
-    <string name="dialog_text_ok">我就是要看啊</string>
+    <string name="dialog_comic_ban_retry">翻wall后重试</string>
+    <string name="dialog_comic_ban_cancel">我还是不看了</string>
     <string name="dialog_title_comic_name">漫画标题</string>
-    <string name="dialog_text_cancel">我还是不看了</string>
     <string name="dialog_btn_copy">复制</string>
     <string name="dialog_btn_ok">确定</string>
     <string name="dialog_btn_close">关闭</string>

@@ -17,8 +17,8 @@ public class DialogUtil {
         bottomDialog.create();
         bottomDialog.setTitle(R.string.dialog_title_warming);
         bottomDialog.setText(R.string.dialog_content_warming);
-        bottomDialog.setTextOk(R.string.dialog_text_ok);
-        bottomDialog.setTextCancel(R.string.dialog_text_cancel);
+        bottomDialog.setTextOk(R.string.dialog_comic_ban_retry);
+        bottomDialog.setTextCancel(R.string.dialog_comic_ban_cancel);
         return bottomDialog;
     }
 }

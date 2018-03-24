@@ -318,6 +318,7 @@ public class DetailsActivity extends AppCompatActivity
     //获得章节信息(webView方式)
     public void getChapters(){
 //        details_container.setRefreshing(true);
+        int interval = 2000;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -349,7 +350,7 @@ public class DetailsActivity extends AppCompatActivity
                     onError("js is null","Details");
                 }
             }
-        }, 1500);
+        }, interval);
     }
 
     //设置界面中的漫画信息文字

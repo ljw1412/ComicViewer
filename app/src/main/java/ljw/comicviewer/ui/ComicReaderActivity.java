@@ -475,6 +475,7 @@ public class ComicReaderActivity extends AppCompatActivity {
             @Override
             public void run() {
                 final String js = RuleStore.get().getReadRule().get("wv-js");
+                final int interval = 1000;
                 if(js!=null) {
                     webView.evaluateJavascript(js, new ValueCallback<String>() {
                         @Override
@@ -482,7 +483,7 @@ public class ComicReaderActivity extends AppCompatActivity {
                             Log.d(TAG, "debug!!=" + s);
                             if (s.equals("null")) {
                                 //加载失败
-                                if (tryTime >= 3) {
+                                if (tryTime >= 5) {
                                     layout_load_fail.setVisibility(View.VISIBLE);
                                     layout_loading.setVisibility(View.GONE);
                                     txt_err.setText(R.string.data_load_fail);
@@ -504,7 +505,7 @@ public class ComicReaderActivity extends AppCompatActivity {
                                     public void run() {
                                         view_loading.setVisibility(View.GONE);
                                     }
-                                }, 500);
+                                }, interval);
                                 return;
                             }
                         }

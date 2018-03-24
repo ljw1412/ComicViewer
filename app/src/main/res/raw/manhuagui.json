@@ -4,7 +4,7 @@
 	"host":"http://www.manhuagui.com",
 	"imghost":"http://dx.hamreus.com",
 	"domain":".manhuagui.com",
-	"cookie":"country=US",
+	"cookie":"isAdult=1;country=US",
 	"home":{
 		"url":"/",
 		"cssQuery":{
@@ -211,7 +211,7 @@
 			"comic-update-status":"$('.detail-list li.status span a').text()",
 			"comic-end":"$('.detail-list li.status span span').first().text().indexOf('完结')!=-1",
 			"comic-info":"$('.book-detail #intro-all').text()",
-			"comic-is-ban":"$('.result-none').size()!=0"
+			"comic-is-ban":"$('#__VIEWSTATE').length==1"
 		}
 	},
 	"details_page_chapter":{
