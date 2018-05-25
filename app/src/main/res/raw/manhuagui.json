@@ -1,8 +1,8 @@
 {
 	"title":"漫画柜",
 	"comeFrom":"manhuagui",
-	"host":"http://www.manhuagui.com",
-	"imghost":"http://dx.hamreus.com",
+	"host":"https://www.manhuagui.com",
+	"imghost":"https://dx.hamreus.com",
 	"domain":".manhuagui.com",
 	"cookie":"isAdult=1;country=US",
 	"home":{
@@ -225,10 +225,10 @@
 		}
 	},
 	"read_page":{
-		"url":"/comic/{comic:}/{chapter:}/",
-		"wv-js":"var res=[];try{var temp=document.querySelectorAll('script')[5].innerHTML;var info=eval(temp.substring(temp.indexOf('(')));info=info.substring(info.indexOf('{'),info.lastIndexOf('}')+1);info=JSON.parse(info);var path=pVars.manga.filePath;for(var i=0;i<info.files.length;i++){var url=path+info.files[i]+'?cid='+info.cid;for(t in info.sl){url+='&'+t+'='+info.sl[t]}res.push(url)}}catch(error){res=null;}res;",
+		"url":"/comic/{comic:}/{chapter:}.html",
+		"wv-js":"var res=[];try{var scriptList = document.querySelectorAll('script');for(script of scriptList){if(script.innerHTML.includes('window[')){var temp = script.innerHTML;break}};var info=eval(temp.substring(temp.indexOf('(')));info=info.substring(info.indexOf('{'),info.lastIndexOf('}')+1);info=JSON.parse(info);var path=pVars.manga.filePath;for(var i=0;i<info.files.length;i++){var url=path+info.files[i]+'?cid='+info.cid;for(t in info.sl){url+='&'+t+'='+info.sl[t]}res.push(url)}}catch(error){res=null;}res;",
 		"items":{
-			"imghost":"http://us.hamreus.com"
+			"imghost":"https://us.hamreus.com"
 		}
 	},
 	"author_page":{
