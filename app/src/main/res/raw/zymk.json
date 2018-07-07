@@ -112,7 +112,7 @@
 	},
 	"read_page":{
 		"url":"/{comic:}/{chapter:}",
-		"wv-js":"var res = [];for(var i = 1;i<=__cr.end_var;i++){res.push(__cr.getPicUrl(i));}res;"
+		"wv-js":"var res = [];for(var i = 1;i<=__cr.end_var;i++){let url='https:'+__cr.getPicUrl(i); res.push(url);}res;"
 	},
 	"search_page":{
 		"url":"/sort/all_p{page:}.html?key={keyword:}",

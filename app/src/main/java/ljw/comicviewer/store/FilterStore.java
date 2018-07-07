@@ -16,7 +16,7 @@ public class FilterStore {
     private final String TAG = this.getClass().getSimpleName()+"----";
     private static FilterStore filterStore;
     private List<String> order;//父类型的筛选顺序
-    private Map<String,String> filterStatus;//当前筛选状态//TODO:改为Map<String,String>,<父类型，子类型>
+    private Map<String,String> filterStatus;//当前筛选状态
     private String endStr;//结尾添加
     private String separate;//分隔符号
 

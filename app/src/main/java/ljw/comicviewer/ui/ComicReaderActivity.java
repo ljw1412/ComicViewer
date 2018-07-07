@@ -164,7 +164,7 @@ public class ComicReaderActivity extends AppCompatActivity {
             case 1:
                 viewPager.setVisibility(View.VISIBLE);
                 rvPicture.setVisibility(View.GONE);
-                viewPager.setOffscreenPageLimit(preloadPageNumber);//TODO:之后改为可以设置的
+                viewPager.setOffscreenPageLimit(preloadPageNumber);
                 break;
             case 2:
                 viewPager.setVisibility(View.GONE);
@@ -470,7 +470,7 @@ public class ComicReaderActivity extends AppCompatActivity {
 
     //获得漫画章节信息
     public void getInfo(){
-        setHistory();//TODO:准备规则化
+        setHistory();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

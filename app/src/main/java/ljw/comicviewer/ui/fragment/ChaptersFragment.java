@@ -62,7 +62,7 @@ public class ChaptersFragment extends Fragment  {
         return rootView;
     }
 
-    //TODO:网格对象点击事件
+    //网格对象点击事件
     class  ItemClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
