@@ -1,0 +1,34 @@
+{
+  "baseUrl":
+    "https://raw.githubusercontent.com/ljw1412/ComicViewer/master/app/src/main/res/raw/",
+  "ruleList": [
+    {
+      "id": 1001,
+      "name": "漫画柜",
+      "description": "",
+      "filename": "manhuagui.json",
+      "version": 20181013
+    },
+    {
+      "id": 1002,
+      "name": "知音漫客",
+      "description": "",
+      "filename": "zymk.json",
+      "version": 20181013
+    },
+    {
+      "id": 1003,
+      "name": "漫画台",
+      "description": "",
+      "filename": "manhuatai.json",
+      "version": 20181013
+    },
+    {
+      "id": 1004,
+      "name": "比比猴",
+      "description": "",
+      "filename": "bbhou.json",
+      "version": 20181013
+    }
+  ]
+}
