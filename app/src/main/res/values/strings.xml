@@ -51,8 +51,10 @@
     <string name="btn_all_comics">全部漫画</string>
     <string name="btn_new_comic">最近上新</string>
     <string name="btn_update_comic">最近更新</string>
+    <string name="mine_comic_source">漫画源</string>
     <string name="mine_setting">设置</string>
     <string name="mine_history">观看记录</string>
+    <string name="mine_source">漫画源</string>
     <string name="mine_about">关于</string>
     <string name="title_filter">分类</string>
     <string name="title_author_comics">\"%1$s\"的漫画</string>
@@ -82,6 +84,7 @@
     <string name="setting_sub_summary_read_mode">当前模式:%1$s</string>
     <string name="setting_title_storage_cache">缓存设置</string>
     <string name="setting_sub_title_clear_image_cache">清理图片缓存</string>
+    <string name="rule_add">添加</string>
     <string name="tips_calculating">计算中</string>
     <string name="tips_clear_success">清理成功</string>
 </resources>

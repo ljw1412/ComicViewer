@@ -14,6 +14,7 @@ public class Global {
     public static final String REQUEST_COMICS_INFO = "REQUEST_COMICS_INFO";//获得漫画信息
     public static final String REQUEST_COMICS_SEARCH = "REQUEST_COMICS_SEARCH";//获得搜索漫画
     public static final String REQUEST_AUTHOR_COMICS = "REQUEST_AUTHOR_COMICS";//获得作者漫画
+    public static final String REQUEST_RULE_LIST = "REQUEST_RULE_LIST"; // 获得规则列表
 
     public static final int REQUEST_COMIC_HISTORY = 100;//漫画历史记录标识
     public static final int THEME_CHANGE = 101;//换肤标识

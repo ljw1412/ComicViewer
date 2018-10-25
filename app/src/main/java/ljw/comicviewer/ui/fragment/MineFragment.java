@@ -21,6 +21,7 @@ import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.ui.AboutActivity;
 import ljw.comicviewer.ui.HistoryActivity;
 import ljw.comicviewer.ui.HomeActivity;
+import ljw.comicviewer.ui.RuleManagerActivity;
 import ljw.comicviewer.ui.SettingsActivity;
 
 /**
@@ -31,6 +32,8 @@ public class MineFragment extends BaseFragment {
     private Context context;
     @BindView(R.id.layout_my_setting)
     RelativeLayout btn_setting;
+    @BindView(R.id.layout_my_source)
+    RelativeLayout btn_source;
     @BindView(R.id.layout_my_history)
     RelativeLayout btn_history;
     @BindView(R.id.layout_my_about)
@@ -65,28 +68,22 @@ public class MineFragment extends BaseFragment {
     }
 
     private void initListener(){
-        btn_history.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, HistoryActivity.class);
-                startActivity(intent);
-            }
+        btn_history.setOnClickListener(view -> {
+            Intent intent = new Intent(context, HistoryActivity.class);
+            startActivity(intent);
         });
-        btn_setting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, SettingsActivity.class);
-                startActivityForResult(intent, Global.STATUS_HomeToSetting);
-            }
+        btn_source.setOnClickListener(view -> {
+            Intent intent = new Intent(context, RuleManagerActivity.class);
+            startActivity(intent);
         });
-        btn_about.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, AboutActivity.class);
-                startActivity(intent);
-            }
+        btn_setting.setOnClickListener(view -> {
+            Intent intent = new Intent(context, SettingsActivity.class);
+            startActivityForResult(intent, Global.STATUS_HomeToSetting);
         });
-
+        btn_about.setOnClickListener(view -> {
+            Intent intent = new Intent(context, AboutActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override

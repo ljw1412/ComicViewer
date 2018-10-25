@@ -62,6 +62,38 @@
         android:background="@color/black_pressed" />
 
     <RelativeLayout
+        android:id="@+id/layout_my_source"
+        android:background="?sectionBackground"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/long_line_option_button_height">
+        <TextView
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="10dp"
+            android:drawablePadding="7dp"
+            android:layout_centerVertical="true"
+            android:id="@+id/txt_my_source"
+            android:text="@string/mine_comic_source"
+            android:drawableLeft="@drawable/img_icon_source"
+            android:gravity="center_vertical"
+            android:textSize="15sp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10.0dip"
+            android:src="@drawable/img_more_grey"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black_pressed" />
+
+    <RelativeLayout
         android:id="@+id/layout_my_setting"
         android:background="?sectionBackground"
         android:foreground="?attr/selectableItemBackground"
