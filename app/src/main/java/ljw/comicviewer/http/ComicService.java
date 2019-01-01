@@ -6,6 +6,8 @@ import ljw.comicviewer.Global;
 import ljw.comicviewer.store.FilterStore;
 import ljw.comicviewer.store.RuleStore;
 import ljw.comicviewer.util.StringUtil;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,8 +36,22 @@ public class ComicService {
         return comicService;
     }
 
+    private static OkHttpClient getOkHttpClient() {
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    Request request = chain.request()
+                            .newBuilder()
+                            .removeHeader("User-Agent")//移除旧的
+                            .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")//添加真正的头部
+                            .build();
+                    return chain.proceed(request);
+                }).build();
+        return httpClient;
+    }
+
     private Retrofit getRetrofit(String host){
         return new Retrofit.Builder()
+                .client(getOkHttpClient())
                 .baseUrl(host)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
